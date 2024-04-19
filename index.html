@@ -90,7 +90,10 @@
                   <td><a href="https://github.com/Zach-Vance" target="_blank">Link</a></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><button id="downloadResumeBtn">Download Resume</button></td>
+                    <td colspan="2">
+                        <div class="g-recaptcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j" data-callback="enableBtn"></div>
+                        <button id="downloadResumeBtn" disabled>Download Resume</button>
+                    </td>
                 </tr>
               </table> 
               
@@ -300,7 +303,8 @@
                     <td><textarea id="message" name="message" required></textarea></td>
                 </form>
                 </tr>
-                <tr><td><div class="g-recaptcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j"></div></td><td ><button id="contactBtn" >Send</button></td></tr>
+                <tr><td colspan="2"><div class="g-recaptcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j"></div></td></tr>
+                <tr><td colspan="2"><button id="contactBtn" >Send</button></td></tr>
             </table>
         </footer>
     </div>
