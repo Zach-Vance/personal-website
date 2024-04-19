@@ -326,7 +326,7 @@ form#contact-form {
         display: block;
     }
 
-    input, select {
+    input, select, textarea {
         width: 100%;
         padding: 10px;
         margin-top: 5px;
