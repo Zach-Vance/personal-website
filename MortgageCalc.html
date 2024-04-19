@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Calculator</title>
+    <link rel="stylesheet" href="Mortgage.css">
+    <script src="MortgageCalc.js"></script>
+    <script src="ThemeScript.js"></script>
+</head>
+<body>
+    <header> 
+    </header>
+    <!-- Nav bar -->
+    <nav>
+        <ul class = "horizontal">
+            <li><a href="VanceZachProject.html">Home</a></li>
+            <li><div class="dropdown">
+                <button class="dropbtn">Projects 
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="MortgageCalc.html">Mortgage Calculator</a>
+                </div>
+              </div> 
+            </li>
+            <li><a href="VanceZachProject.html#about">About</a></li>
+            <li><a href="VanceZachProject.html#contact-form">Contact</a></li>
+        </ul>
+        
+    </nav>
+    
+    <main>
+        <div class="theme-switch-wrapper">
+        <p>Toggle Dark Mode</p>  
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider round"></span>
+        </label>
+
+        </div>
+        <h1>Welcome to My Mortgage Calculator</h1>
+        <fieldset>
+            <form>
+                <table class="form">
+                    <tr>
+                        <td><label class="input">Loan:</label></td>
+                        <td><input type="text" id="loan"></td>
+                    </tr>
+                    <tr>
+                        <td><label class="input">Rate:</label></td>
+                        <td>
+                            <select id="rate">
+                                <option value="1">1%</option>
+                                <option value="2">2%</option>
+                                <option value="3">3%</option>
+                                <option value="4">4%</option>
+                                <option value="5">5%</option>
+                                <option value="6">6%</option>
+                                <option value="7">7%</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="input">Number of Years:</label></td>
+                        <td>
+                            <select id="years">
+                                <option value="5">5 years</option>
+                                <option value="10">10 years</option>
+                                <option value="15">15 years</option>
+                                <option value="20">20 years</option>
+                                <option value="25">25 years</option>
+                                <option value="30">30 years</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button id="calculate" class="input">Calculate</button></td>
+                    </tr>
+                </table>
+            </form>
+        </fieldset>
+        <br><br>
+        <div id = "payment_table_div"></div>
+        <div id="payment-calculations-div"></div>
+    </main>
+</body>
+</html>
