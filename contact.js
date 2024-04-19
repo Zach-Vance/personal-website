@@ -17,6 +17,7 @@ function contactPrep(){
         to_name: "Zach Resume Site",
         message: document.getElementById("message").value,
         reply_to: document.getElementById("email").value,
+        "g-recaptcha-response": grecaptcha.getResponse()
     }; 
     contact(templateParams); 
     return false;
