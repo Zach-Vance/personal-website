@@ -17,7 +17,7 @@ function contactPrep(){
         to_name: "Zach Resume Site",
         message: document.getElementById("message").value,
         reply_to: document.getElementById("email").value,
-        "g-recaptcha-response": grecaptcha.getResponse()
+        "g-recaptcha-response": grecaptcha.getResponse(),
     }; 
     contact(templateParams); 
     return false;
@@ -44,4 +44,20 @@ function downloadResume() {
     console.log("clicked");
     window.open('https://drive.google.com/uc?export=download&id=16-h96MBrNqvrVeJJ3KOw7CDWhipa-qLS', '_blank');
 };
-  
+
+
+var enableBtn = function() {
+    document.getElementById('downloadResumeBtn').disabled = false;
+};
+
+var onloadCallback = function() {
+    grecaptcha.render('example3', {
+        'sitekey' : '6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j',
+        'callback' : enableBtn,
+        'expired-callback': disableBtn
+    });
+};
+
+var disableBtn = function() {
+    document.getElementById('downloadResumeBtn').disabled = true;
+};
