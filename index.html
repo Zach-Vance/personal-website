@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="index.css">
     <script src="ThemeScript.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="contact.js"></script>
     <title>Zach Vance | Portfolio & Resume</title>
 </head>
@@ -299,7 +300,7 @@
                     <td><textarea id="message" name="message" required></textarea></td>
                 </form>
                 </tr>
-                <tr><td colspan="2"><button id="contactBtn" >Send</button></td></tr>
+                <tr><td><div class="g-recaptcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j"></div></td><td ><button id="contactBtn" >Send</button></td></tr>
             </table>
         </footer>
     </div>
