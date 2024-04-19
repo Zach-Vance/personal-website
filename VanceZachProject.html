@@ -1,0 +1,308 @@
+<!-- 
+    Zach Vance
+    CS 270 Project
+
+    Completed:
+    - Contact form
+    - light/dark theme toggle
+    - basic layout and content for the webpage
+    - links and photos
+    - PDF Download for Resume
+    - translate lab 10 into JS
+    - project link dropdown on hover to mortgage calc and business tickers
+    - make contact button jump link to contact
+
+
+    I need to implement:
+    - add recaptcha for contact form and resume download
+    - implement buisiness profit tickers page
+
+    Not Going to Be implemented:
+    - JS analytics 
+    - JS Display
+
+    The scope of this project has been adjusted.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="VanceZachProject.css">
+    <script src="ThemeScript.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="contact.js"></script>
+    <title>Zach Vance | Portfolio & Resume</title>
+</head>
+<body>
+    <header> 
+    </header>
+    <!-- Nav bar -->
+    <nav>
+        <ul class = "horizontal">
+            <li><a href="VanceZachProject.html">Home</a></li>
+            <li><div class="dropdown">
+                <button class="dropbtn">Projects 
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="MortgageCalc.html">Mortgage Calculator</a>
+                </div>
+              </div> 
+            </li>
+            <li><a href="VanceZachProject.html#about">About</a></li>
+            <li><a href="VanceZachProject.html#contact-form">Contact</a></li>
+        </ul>
+        
+    </nav>
+    <div class="theme-switch-wrapper">
+    <p id="toggle-label">Toggle Dark Mode</p>  
+    <label class="switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider round"></span>
+    </label>
+
+    </div>
+
+    <!--Container Tag-->
+    <div id = "container">
+
+        <!--Section Tag-->
+        <section id="about">
+            <img src="images/vanceZach.jpg">
+            <table>
+                <tr>
+                  <td>Name:</td>
+                  <td>Zachary Vance</td>
+                </tr>
+                <tr>
+                  <td>Location:</td>
+                  <td>Bowling Green, KY</td>
+                </tr>
+                <tr>
+                  <td>Linked-in:</td>
+                  <td><a href="https://www.linkedin.com/in/zachary-vance/" target="_blank">Link</a></td>
+                </tr>
+                <tr>
+                  <td>Github:</td>
+                  <td><a href="https://github.com/Zach-Vance" target="_blank">Link</a></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button id="downloadResumeBtn">Download Resume</button></td>
+                </tr>
+              </table> 
+              
+             
+        </section>
+
+        <!--Main Tag-->
+        <main>
+            <h2>Education</h2><hr/>
+            <p>
+                <table>
+                    <tr>
+                        <td><h4>Western Kentucky University</h4></td>
+                        <td>Bowling Green, KY</td>
+                    </tr>
+                    <tr>
+                        <td><h4>Bachelors of Science Computer Science</h4></td>
+                        <td>GPA: 3.7</td>
+                    </tr>
+                    <tr>
+                        <td><h4>Systems and Scientific Concentration</h4></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </p>
+            <hr/>
+            <h2>Work Experience</h2> <hr/>
+            <p>
+                <table>
+                    <tr>
+                        <td><h4>Application Developer</h4></td>
+                        <td>Sept 2022 - Present</td>
+                    </tr>
+                    <tr>
+                        <td><h4>Kentucky Mesonet</h4></td>
+                        <td>Bowling Green, KY</td>
+                    </tr>
+                </table>
+                <ul>
+                    <li>Developed a website using Next.js, Typescript, & React for monitoring weather data quality, displaying
+                    over 100 dynamic charts leading to a reduction in data discrepancies and improved decision-making
+                    processes.</li>
+                    <li>Created a desktop application using Python & Tkinter to view photos in an organized and user-friendly
+                    manner, increasing efficiency by 1100% and reducing cloud storage usage.</li>
+                    <li>Wrote Python scripts to process incoming data from weather stations, improving data availability for
+                    analysis.</li>
+                    <li>Implemented an AI image recognition system for site cameras using Python and TensorFlow allowing
+                    for automated image detection and decreased time spent on image screening.</li>
+                    <li> Utilized Python for data analysis, highlighted trends in data, and presented findings.
+                    Telus International Remote</li>
+                </ul>
+                <hr/>
+                 
+                
+                <table>
+                    <tr>
+                        <td><h4>Internet Search Evaluator</h4></td>
+                        <td>Nov 2019 - Present</td>
+                    </tr>
+                    <tr>
+                        <td><h4>TELUS AI</h4></td>
+                        <td>Remote</td>
+                    </tr>
+                </table>
+                <ul>
+                <li>Evaluated machine learning models according to proprietary guidelines, ensuring brand effectiveness and
+                maintaining high quality standards.</li>
+                <li>Documented error reports and provided precise feedback, resulting in an improved follow-up process and
+                reduced errors.</li>
+                <li>Reviewed and assessed in-development Machine Learning and Chabot projects, conducting detailed
+                analysis on quality and consistency, leading to actionable recommendations for improvement.</li>
+                </ul>
+                <hr/>
+
+                <table>
+                    <tr>
+                        <td><h4>Manager</h4></td>
+                        <td>Sep 2017 - May 2020</td>
+                    </tr>
+                    <tr>
+                        <td><h4>Allred Apartments</h4></td>
+                        <td>Provo, UT</td>
+                    </tr>
+                </table>
+
+                <ul>
+                <li>Created and maintained an online repository to store data from, improving data accessibility and
+                streamlining record management processes.</li>
+                <li>Oversaw maintenance operations, reducing repair times by 30% through efficient coordination of
+                resources and timely communication with tenants.</li>
+                <li>Processed financial transactions, implementing a more streamlined system that reduced computing time
+                by 15% and eliminated errors in monetary intake.</li>
+                </ul>
+                <hr/>
+
+                <table>
+                    <tr>
+                        <td><h4>Research Assistant </h4></td>
+                        <td>Aug 2017 - Jan 2019</td>
+                    </tr>
+                    <tr>
+                        <td><h4>Brigham Young University</h4></td>
+                        <td>Provo, UT</td>
+                    </tr>
+                </table>
+
+                <ul>
+                    <li> Published an article on neurosecurity in BYU's Journal of Undergraduate Research, contributing to
+                    advancements in the field and recognition among peers.</li>
+                    <li>Trained students in Virtual Reality, Augmented Reality, eye-tracking, and fMRI technology, enhancing
+                    research capabilities and expanding the team's skill set.</li>
+                    <li>Extracted information from research articles and presented findings at conferences, contributing to the
+                    development of new insights in the field.</li>
+                    <li>Utilized python in writing scripts to facilitate data collection and communication with eye-tracking
+                    technology, allowing for streamlined data collection and analysis.</li>
+                </ul>
+            </p>
+            <hr/>
+            <h2>Projects</h2>
+            <hr/>
+            <p>
+                <table>
+                    <tr>
+                        <td><h4>Learning Hub</h4></td>
+                        <td>Python, Django, JavaScript</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><p>A web application for online teaching, learning, and community building. Includes built in support for online
+                            lessons, discussions, and quizzes. For teachers there are built in statistical tools for grade analysis.</p></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td><h4>Mirror</h4></td>
+                        <td>Kotlin, SQL, Android Studio, SQLite</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><p>An Android application that collects user data on daily mood fluctuations and journaling. Includes tools for
+                            users to graph mood data over time.</p></td>
+                    </tr>
+                </table>
+                
+                <table>
+                    <tr>
+                        <td><h4>WKU Filmatrix</h4></td>
+                        <td>TypeScript, React, Next.js, PostgreSQL</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><p>A web application for students and professors which will store data related to the WKU Film student's projects. This includes storing data about vendors, locations, and film festivals.</p></td>
+                    </tr>
+                </table>
+                 </p>
+            <hr/>
+            <h2>Skills</h2>
+            <hr/>
+            <div class="skills-container">
+                <div class="skills-column">
+                    <h4>Programming Languages</h4>
+                    <ul>
+                        <li>Java</li>
+                        <li>JavaScript</li>
+                        <li>Python</li>
+                        <li>SQL</li>
+                        <li>React</li>
+                        <li>Kotlin</li>
+                        <li>C#</li>
+                        <li>Bash</li>
+                        <li>C</li>
+                        <li>C++</li>
+                        <li>PHP</li>
+                        <li>HTML</li>
+                        <li>CSS</li>
+                    </ul>
+                </div>
+                <div class="skills-column">
+                    <h4>Tools</h4>
+                    <ul>
+                        <li>Git</li>
+                        <li>Linus</li>
+                        <li>Unix</li>
+                    </ul>
+                </div>
+                <div class="skills-column">
+                    <h4>Frameworks</h4>
+                    <ul>
+                        <li>Next.js</li>
+                        <li>Django</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <h2>Contact Me</h2>
+            <form id="contact-form">
+            <table id = "contact-table">
+                <tr>
+                    <td><label for="name">Name:</label></td>
+                    <td><input type="text" id="name" name="name" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input type="email" id="email" name="email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="message">Message:</label></td>
+                    <td><textarea id="message" name="message" required></textarea></td>
+                </form>
+                </tr>
+                <tr><td colspan="2"><button id="contactBtn" >Send</button></td></tr>
+            </table>
+        </footer>
+    </div>
+</body>
+
+</html>
