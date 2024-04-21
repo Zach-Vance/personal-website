@@ -47,7 +47,19 @@ function downloadResume() {
 
 
 var enableBtn = function() {
-    document.getElementById('downloadResumeBtn').disabled = false;
+    var button = document.getElementById('downloadResumeBtn');
+    var recaptcha = documet.getElementById('resume-recpatcha');
+    var label = document.getElementById('resume-instructions');
+    button.disabled = false;
+    button.style.display = 'inline-block'; 
+    recaptcha.style.display = 'none';
+    label.style.display = 'none';
+};
+
+var disableBtn = function() {
+    var button = document.getElementById('downloadResumeBtn');
+    button.disabled = true;
+    button.style.display = 'none'; 
 };
 
 var onloadCallback = function() {
@@ -58,6 +70,3 @@ var onloadCallback = function() {
     });
 };
 
-var disableBtn = function() {
-    document.getElementById('downloadResumeBtn').disabled = true;
-};

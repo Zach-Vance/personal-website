@@ -1,34 +1,111 @@
 /* Container setup for a grid layout */
-#tickers {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Creates 5 columns */
-    gap: 20px; /* Space between cards */
-    padding: 20px; /* Padding around the grid container */
-}
 
-/* Card styling */
-.ticker-card {
-    border: 1px solid #ccc; /* Border for the card */
-    padding: 10px; /* Padding inside the card */
-    text-align: center; /* Centering the text inside the card */
-    background-color: #f9f9f9; /* Light background for the cards */
-    border-radius: 8px; /* Rounded corners for the cards */
-}
+body {
+    #tickers {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); 
+        gap: 20px; 
+        padding: 20px;
+        width: 97%;
 
-/* Profit/Loss coloring */
-.profit-positive {
-    color: green; /* Positive profit color */
-}
+        .ticker-card {
+            position: relative;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px; 
+            min-height: 180px;
 
-.profit-negative {
-    color: red; /* Negative profit color */
-}
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                opacity: 0.75; /* Adjust as needed */
+                z-index: 1;
+            }
 
-/* Placeholder for the company logo */
-.company-logo {
-    width: 100%; /* Full width of the card */
-    height: 60px; /* Fixed height for the logo */
-    background-color: #ddd; /* Placeholder background color */
-    margin-bottom: 15px; /* Space below the logo */
-    border-radius: 4px; /* Rounded corners for the logo placeholder */
+            .company-name {
+                font-size: 24px; 
+                font-weight: bolder;
+                margin: 0;
+            }
+
+            .info-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 35%; /* Adjust as needed */
+                background: rgba(255, 255, 255, 0.75); /* Light background overlay */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                color:#141414;
+                z-index: 2; /* Ensure it's above the ::after background overlay */
+                border-radius: 8px;
+            }         
+            
+            .amount {
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .company-logo {
+                width: 100%; 
+                height: 60px; 
+                background-color: #ddd; 
+                margin-bottom: 15px; 
+                border-radius: 4px; 
+                text-indent: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .profit-positive {
+                color: green;
+            } 
+            
+            .profit-negative {
+                color: red; 
+            }
+            
+        }
+    }
+
+    .page-footer {
+        text-align: center; 
+        padding: 20px 10px; 
+        margin-top: 30px; 
+        font-size: 0.9rem; 
+        border-radius: 8px;
+    }
+
+    &.light {
+        #tickers {
+            .ticker-card { 
+                border: 1px solid #e9ecef;
+                background-color: #f9f9f9;  
+                border-color: darkgrey;
+            }
+        }
+    }
+
+    &.dark {
+        #tickers {
+            .ticker-card {
+                background-color: #212222;
+                border-color: #141414;
+            }
+        }
+    }
 }
