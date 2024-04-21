@@ -1,0 +1,34 @@
+/* Container setup for a grid layout */
+#tickers {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Creates 5 columns */
+    gap: 20px; /* Space between cards */
+    padding: 20px; /* Padding around the grid container */
+}
+
+/* Card styling */
+.ticker-card {
+    border: 1px solid #ccc; /* Border for the card */
+    padding: 10px; /* Padding inside the card */
+    text-align: center; /* Centering the text inside the card */
+    background-color: #f9f9f9; /* Light background for the cards */
+    border-radius: 8px; /* Rounded corners for the cards */
+}
+
+/* Profit/Loss coloring */
+.profit-positive {
+    color: green; /* Positive profit color */
+}
+
+.profit-negative {
+    color: red; /* Negative profit color */
+}
+
+/* Placeholder for the company logo */
+.company-logo {
+    width: 100%; /* Full width of the card */
+    height: 60px; /* Fixed height for the logo */
+    background-color: #ddd; /* Placeholder background color */
+    margin-bottom: 15px; /* Space below the logo */
+    border-radius: 4px; /* Rounded corners for the logo placeholder */
+}
