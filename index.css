@@ -142,7 +142,7 @@ section {
 
     table {
         margin-left: 2em;
-        margin-right: 1em;
+        margin-right: 2em;
     }
 
     button {
@@ -257,6 +257,13 @@ footer {
         margin-bottom: auto;
         margin-right: 1em;
     }
+}
+
+.g-recaptcha {
+    transform:scale(0.7);
+    transform-origin:0 0;
+    /* float:right; */
+    margin-left: 2em;
 }
 
 .switch {
