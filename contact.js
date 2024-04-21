@@ -48,10 +48,10 @@ function downloadResume() {
 
 var enableBtn = function() {
     var button = document.getElementById('downloadResumeBtn');
-    var recaptcha = documet.getElementById('resume-recpatcha');
+    var recaptcha = document.getElementById('resume-recpatcha');
     var label = document.getElementById('resume-instructions');
     button.disabled = false;
-    button.style.display = 'inline-block'; 
+    button.style.display = 'block'; 
     recaptcha.style.display = 'none';
     label.style.display = 'none';
 };
