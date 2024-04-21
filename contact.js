@@ -60,13 +60,14 @@ var disableBtn = function() {
     var button = document.getElementById('downloadResumeBtn');
     button.disabled = true;
     button.style.display = 'none'; 
+    recaptcha.style.display = 'block';
+    label.style.display = 'block';
 };
 
 var onloadCallback = function() {
-    grecaptcha.render('example3', {
+    grecaptcha.render('resume-recpatcha', {
         'sitekey' : '6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j',
         'callback' : enableBtn,
         'expired-callback': disableBtn
     });
 };
-
