@@ -11,17 +11,28 @@
     - translate lab 10 into JS
     - project link dropdown on hover to mortgage calc and business tickers
     - make contact button jump link to contact
-
-
-    I need to implement:
     - add recaptcha for contact form and resume download
     - implement buisiness profit tickers page
 
+
+    I need to implement:
+    - The scope of this project has been adjusted the following were not implemented.
+     
     Not Going to Be implemented:
     - JS analytics 
     - JS Display
 
-    The scope of this project has been adjusted.
+    future work:
+    - redesign homepage, remove resume information because download is provided
+    - add personal statemnets
+    - create fun background image
+    - remove navbar in favor of a more innovative design
+    - link additional projects via github
+    - purchase domain name
+
+
+    note: CSS format was refactored to be nested and more readable
+
 
 -->
 <!DOCTYPE html>
@@ -96,7 +107,10 @@
                     </td>
                 </tr>
               </table> 
-              <div class="g-recaptcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j" data-callback="enableBtn"></div>
+              <div class="g-recaptcha" id= "resume-recpatcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j" data-callback="enableBtn">
+              </div>
+              <p id ="resume-instructions">Complete the above reCaptcha to download my resume.</p>
+
 
               
              
