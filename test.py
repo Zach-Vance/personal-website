@@ -95,7 +95,7 @@ domain_mapping = {
     "FDX": "fedex.com",
     "HUM": "humana.com",
     "ET": "energytransfer.com",
-    #State Farm doesn't have a ticker but is well known
+    #State Farm doesn't have a ticker
     "": "statefarm.com",
     "FMCC": "freddiemac.com",
     "PEP": "pepsico.com",
