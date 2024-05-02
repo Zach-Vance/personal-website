@@ -1,67 +1,47 @@
-
 (function(){
-    emailjs.init({
-      publicKey: "7D7mt9Q2257zWKmTp",
-    });
- })();
+    emailjs.init("7D7mt9Q2257zWKmTp");  
+})();
 
-
- window.onclick = function() {
-    document.getElementById("contactBtn").onclick = contactPrep;
-    document.getElementById('downloadResumeBtn').onclick = downloadResume; 
-}
-
-function contactPrep(){
+function contactPrep() {
     var templateParams = {
         from_name: document.getElementById("name").value,
         to_name: "Zach Resume Site",
         message: document.getElementById("message").value,
         reply_to: document.getElementById("email").value,
-        "g-recaptcha-response": grecaptcha.getResponse(),
+        "g-recaptcha-response": grecaptcha.getResponse()
     }; 
     contact(templateParams); 
     return false;
 }
 
 function contact(templateParams) {
-    console.log(templateParams);
-    emailjs.send('service_wzkl0dk', 'template_kmyuvmp', templateParams).then(
-        (response) => {
+    console.log("Sending email", templateParams);
+    emailjs.send('service_wzkl0dk', 'template_kmyuvmp', templateParams)
+        .then(response => {
             console.log('SUCCESS!', response.status, response.text);
-            document.getElementById("contact-table").innerHTML = "<tr><td colspan=\"2\"><h3>Email sent successfully!</h3></td></tr>";
-        },
-        (error) => {
+            document.getElementById("contact-form").innerHTML = "<h3>Email sent successfully!</h3>";
+        }, error => {
             console.log('FAILED...', error);
-            document.getElementById("contact-table").innerHTML = "<tr><td colspan=\"2\"><h3>Sorry, there was an error.</h3></td></tr>";
-        },
-    );
+            document.getElementById("contact-form").innerHTML = "<h3>Sorry, there was an error.</h3>";
+        });
 }
 
-
-let resume_url = "https://drive.google.com/uc?export=download&id=16-h96MBrNqvrVeJJ3KOw7CDWhipa-qLS";
-
 function downloadResume() {
-    console.log("clicked");
-    window.open('https://drive.google.com/uc?export=download&id=16-h96MBrNqvrVeJJ3KOw7CDWhipa-qLS', '_blank');
-};
-
+    window.open('https://drive.google.com/file/d/1BPOHaALFcMz3noIyA5HVWjiad6XYx9H_/view?usp=sharing', '_blank');
+}
 
 var enableBtn = function() {
-    var button = document.getElementById('downloadResumeBtn');
-    var recaptcha = document.getElementById('resume-recpatcha');
-    var label = document.getElementById('resume-instructions');
-    button.disabled = false;
-    button.style.display = 'block'; 
-    recaptcha.style.display = 'none';
-    label.style.display = 'none';
+    document.getElementById('downloadResumeBtn').disabled = false;
+    document.getElementById('downloadResumeBtn').style.display = 'block';
+    document.getElementById('resume-recpatcha').style.display = 'none';
+    document.getElementById('resume-instructions').style.display = 'none';
 };
 
 var disableBtn = function() {
-    var button = document.getElementById('downloadResumeBtn');
-    button.disabled = true;
-    button.style.display = 'none'; 
-    recaptcha.style.display = 'block';
-    label.style.display = 'block';
+    document.getElementById('downloadResumeBtn').disabled = true;
+    document.getElementById('downloadResumeBtn').style.display = 'none';
+    document.getElementById('resume-recpatcha').style.display = 'block';
+    document.getElementById('resume-instructions').style.display = 'block';
 };
 
 var onloadCallback = function() {
@@ -70,4 +50,11 @@ var onloadCallback = function() {
         'callback' : enableBtn,
         'expired-callback': disableBtn
     });
+};
+
+
+window.onload = function() {
+    document.getElementById("contactBtn").onclick = contactPrep;
+    document.getElementById('downloadResumeBtn').onclick = downloadResume;
+    onloadCallback();  
 };
