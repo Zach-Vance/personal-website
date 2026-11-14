@@ -127,7 +127,7 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
   if (is(/\bhire\b|\bhiring\b|\b(?:good|right|strong) (?:fit|candidate)\b/))
     return result(
       sources("backend", "integration", "applications"),
-      "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
+      "Yes—Zach makes a strong case for backend, integrations, and full-stack roles: he builds Go REST APIs and PostgreSQL integrity rules [1], maintains integrations between business systems, improving reliability and reducing repetitive manual work [2]. He also builds SvelteKit/TypeScript applications across ordering, inventory, pricing, and other business operations [3]. For a team that needs someone to connect systems, reduce manual work, and solve practical software problems, his portfolio gives compelling reasons to interview him [1][2][3].",
       "prepared",
     );
 
