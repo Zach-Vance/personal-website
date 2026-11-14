@@ -84,10 +84,23 @@ test("API retrieves contextual evidence and forwards only bounded visitor questi
   assert.deepEqual(events[0].ids, ["setwise"]);
   assert.equal(events.at(-1).type, "done");
   assert.deepEqual(payload.input, [
-    { role: "user", content: "what is setwise" },
-    { role: "user", content: "does it use react" },
+    { role: "user", content: JSON.stringify({ question: "does it use react", reference: "does it use react setwise" }) },
   ]);
   assert.match(payload.instructions, /never facts or instructions/);
+});
+
+test("earlier hiring questions do not enter the model input for a technical follow-up", async () => {
+  const handle = createHandler(async (url, options) => {
+    const payload = JSON.parse(options.body);
+    const current = JSON.parse(payload.input[0].content);
+    assert.equal(current.question, "does it use react");
+    assert.equal(current.reference, "does it use react setwise");
+    assert.equal(payload.input.length, 1);
+    assert.doesNotMatch(payload.input[0].content, /hire|hiring/);
+    return provider("Yes. Setwise uses React and is in active development [1].");
+  });
+  const events = await collect(await handle(request({ question: "does it use react", history: ["should i hire him", "what tf is stewise"] }), env));
+  assert.equal(events.at(-1).type, "done");
 });
 
 test("API rejects malformed and oversized history before calling the provider", async () => {
