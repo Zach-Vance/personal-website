@@ -26,7 +26,7 @@ The deployment allowlist excludes backend code, source notes, tests, and develop
 
 ### Works immediately: evidence search
 
-With `assets/config.js` unchanged, the panel performs local lexical retrieval over the curated public facts in `assets/knowledge.mjs`, displaying excerpts and verified links. It is labeled **Portfolio search**, never presented as live AI. It does not send questions to a server or simulate token streaming.
+With `askEndpoint` empty in `assets/config.js`, the panel performs local lexical retrieval over the curated public facts in `assets/knowledge.mjs`, displaying excerpts and verified links. It is labeled **Portfolio search**, never presented as live AI. It does not send questions to a server or simulate token streaming. Production currently points to `https://zach-vance-portfolio-api.vercel.app/api/ask` and uses this evidence search as the fallback.
 
 ### Grounded, streamed AI answers on Vercel
 
@@ -47,7 +47,7 @@ To configure the key securely:
 
 References: [Groq Responses compatibility](https://console.groq.com/docs/responses-api), [Groq free-tier limits](https://console.groq.com/docs/rate-limits), [Groq billing](https://console.groq.com/docs/billing-faqs).
 
-The frontend validates citation numbers against the retrieved sources before accepting an AI answer. This checks reference integrity, not semantic truth. Unsupported or interrupted answers fall back to the original published evidence. Each question is independent; Start over clears the in-memory conversation. The browser cancels requests after thirty seconds.
+The frontend validates citation numbers against the retrieved sources before accepting an AI answer. This checks reference integrity, not semantic truth. The backend additionally rejects Setwise answers that omit its active-development status. Unsupported or interrupted answers fall back to the original published evidence. Each question is independent; Start over clears the in-memory conversation. The browser cancels requests after thirty seconds.
 
 Build the backend with `node scripts/build-api.mjs`; `vercel.json` deploys only its landing page and API function. `scripts/build.mjs` remains the separate allowlisted Pages build. A staged production API deployment should be tested before promotion and before setting `assets/config.js` to its stable `/api/ask` URL.
 
