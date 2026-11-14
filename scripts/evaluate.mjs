@@ -98,7 +98,8 @@ const page = html
   .replace(
     "An AI-powered portfolio assistant with cited sources, conversational context, streaming, and local evidence fallback.",
     "Reproducible synthetic evaluation of portfolio source selection, response requirements, citation references, and API failure behavior.",
-  );
+  )
+  .replace(/[ \t]+$/gm, "");
 const pageFile = new URL(
   "../projects/assistant-evaluation.html",
   import.meta.url,
