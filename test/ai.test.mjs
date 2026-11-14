@@ -62,21 +62,22 @@ test("per-instance limits separate clients, cap aggregate traffic, and reset", a
   assert.ok((await l.ASK_LIMITER.limit({ key: "a" })).success);
   assert.ok((await l.SITE_LIMITER.limit()).success);
 });
-test("Vercel adapter obtains identity for each request and uses Gateway, not provider keys", async () => {
+test("Vercel adapter uses only the server-side Groq key and compatible Responses parameters", async () => {
   let calls = 0;
   const handle = createVercelHandler({
-    env: { ALLOWED_ORIGIN: allowed, AI_GATEWAY_MODEL: "test-model" },
+    env: { ALLOWED_ORIGIN: allowed, GROQ_API_KEY: "test-groq-key" },
     limits,
     getClientIp: () => "192.0.2.1",
-    getToken: async () => `test-identity-${++calls}`,
     upstreamFetch: async (url, options) => {
-      assert.equal(url, "https://ai-gateway.vercel.sh/v1/responses");
-      assert.equal(
-        options.headers.Authorization,
-        `Bearer test-identity-${calls}`,
-      );
+      calls++;
+      assert.equal(url, "https://api.groq.com/openai/v1/responses");
+      assert.equal(options.headers.Authorization, "Bearer test-groq-key");
       const data = JSON.parse(options.body);
-      assert.equal(data.reasoning.effort, "none");
+      assert.equal(data.model, "openai/gpt-oss-20b");
+      assert.equal(data.reasoning.effort, "low");
+      assert.equal(data.max_output_tokens, 1536);
+      assert.equal(data.stream, true);
+      assert.ok(!Object.hasOwn(data, "store"));
       return provider("Durable offline logging [1].");
     },
   });
@@ -86,20 +87,37 @@ test("Vercel adapter obtains identity for each request and uses Gateway, not pro
   }
   assert.equal(calls, 2);
 });
-test("Vercel preflight works without identity and rejected origins cannot obtain a token", async () => {
+test("Vercel preflight works without a key; missing Groq configuration cannot fall back to Gateway", async () => {
   const handle = createVercelHandler({
-    env: { ALLOWED_ORIGIN: allowed },
+    env: {
+      ALLOWED_ORIGIN: allowed,
+      AI_GATEWAY_MODEL: "unused-model",
+      OPENAI_API_KEY: "unused-key",
+    },
     limits,
     getClientIp: () => "a",
-    getToken: async () => {
-      throw new Error("Must not get token");
+    upstreamFetch: async () => {
+      throw new Error("Must not call provider");
     },
   });
   assert.equal((await handle(makeRequest("OPTIONS"))).status, 204);
+  assert.equal((await handle(makeRequest())).status, 503);
   assert.equal(
     (await handle(makeRequest("POST", "https://untrusted.example"))).status,
     403,
   );
+});
+test("Groq free-tier exhaustion returns a sanitized failure for evidence fallback", async () => {
+  const handle = createVercelHandler({
+    env: { ALLOWED_ORIGIN: allowed, GROQ_API_KEY: "test-groq-key" },
+    limits,
+    getClientIp: () => "a",
+    upstreamFetch: async () =>
+      new Response("private-provider-detail", { status: 429 }),
+  });
+  const response = await handle(makeRequest());
+  assert.equal(response.status, 502);
+  assert.equal((await response.json()).error, "AI service unavailable.");
 });
 test("complete generation with invalid citations produces an error, never done", async () => {
   const handle = createHandler(async () =>

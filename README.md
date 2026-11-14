@@ -4,7 +4,7 @@ Static-first portfolio for **GitHub Pages**, with project case studies, a printa
 
 ## Develop and verify
 
-Node.js 24 is used for development and deployment. The static frontend has no runtime dependencies; Vercel identity helpers are server-only.
+Node.js 24 is used for development and deployment. The static frontend has no runtime dependencies; the Vercel request helper is server-only.
 
 ```sh
 npm ci
@@ -30,11 +30,22 @@ With `assets/config.js` unchanged, the panel performs local lexical retrieval ov
 
 ### Grounded, streamed AI answers on Vercel
 
-The API is a separate Vercel project, `purple-toad/zach-vance-portfolio-api`; the website remains on GitHub Pages. `api/ask.mjs` uses a fresh deployment OIDC token for each request, then calls AI Gateway through the shared `backend/core.mjs` handler. No provider key is sent to the browser or committed.
+The API is a separate Vercel project, `purple-toad/zach-vance-portfolio-api`; the website remains on GitHub Pages. `api/ask.mjs` calls Groq's Responses API through the shared `backend/core.mjs` handler. No provider key is sent to the browser or committed. There is no automatic switch to a paid provider.
 
-Runtime configuration: `ALLOWED_ORIGIN=https://zach-vance.github.io` and `AI_GATEWAY_MODEL=openai/gpt-6-luna`. The model was verified against the live Gateway catalog on November 13, 2026. It is configured in the project, not hard-coded as a reusable model recommendation.
+Runtime configuration: `ALLOWED_ORIGIN=https://zach-vance.github.io`, secret `GROQ_API_KEY`, and optional `GROQ_MODEL` (defaults to `openai/gpt-oss-20b`). The model and free-tier availability were checked against Groq's documentation on November 13, 2026. Low reasoning effort and a 1,536-token total output budget leave room for reasoning and a short cited answer. Groq does not support the Responses `store` parameter, so the adapter omits it; this app does not persist questions or conversations, but provider retention is governed by Groq's policies.
 
-The project has a $1/month AI Gateway budget. Gateway budgets are soft caps: an in-flight request can cross the limit before subsequent requests are rejected. No credits were purchased and no auto top-up was enabled. The server also applies bounded **per-instance** request throttles (six per client/minute, thirty aggregate/minute); these reset on cold starts and are not distributed limits. For a larger public audience, use a shared rate-limit store or configure platform rate limits.
+Keep the Groq account on the Free plan. Its published base limits for this model are 30 requests/minute, 1,000 requests/day, 8,000 tokens/minute, and 200,000 tokens/day; check your account for exact limits. Exhaustion returns an error and the browser falls back to evidence search. Upgrading the Groq account changes billing behavior; the code cannot enforce the account's billing tier. No credits were purchased or auto top-up enabled. The earlier $1/month AI Gateway budget is unused by this adapter.
+
+The server also applies bounded **per-instance** request throttles (six per client/minute, thirty aggregate/minute); these reset on cold starts and are not distributed limits. For a larger public audience, use a shared rate-limit store or configure platform rate limits.
+
+To configure the key securely:
+
+1. Create a key at [Groq API keys](https://console.groq.com/keys), keeping the account on Free.
+2. In the [Vercel project's environment settings](https://vercel.com/purple-toad/zach-vance-portfolio-api/settings/environment-variables), add `GROQ_API_KEY` as a Sensitive variable for Production. Never paste it into chat or commit it.
+3. Deploy a new staged production build; environment changes do not update existing deployments.
+4. Test cited answers and failure fallback before promotion and before setting the frontend endpoint.
+
+References: [Groq Responses compatibility](https://console.groq.com/docs/responses-api), [Groq free-tier limits](https://console.groq.com/docs/rate-limits), [Groq billing](https://console.groq.com/docs/billing-faqs).
 
 The frontend validates citation numbers against the retrieved sources before accepting an AI answer. This checks reference integrity, not semantic truth. Unsupported or interrupted answers fall back to the original published evidence. Each question is independent; Start over clears the in-memory conversation. The browser cancels requests after thirty seconds.
 
