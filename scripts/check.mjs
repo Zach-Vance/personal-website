@@ -1,13 +1,25 @@
-import { readFile, readdir, access } from "node:fs/promises";
+import { readFile, readdir, access, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 const root = fileURLToPath(new URL("../", import.meta.url));
+async function htmlPages(folder) {
+  const files = [];
+  for (const entry of await readdir(path.join(root, folder), {
+    withFileTypes: true,
+  })) {
+    const relative = `${folder}/${entry.name}`;
+    if (entry.isDirectory()) files.push(...(await htmlPages(relative)));
+    else if (entry.name.endsWith(".html")) files.push(relative);
+  }
+  return files;
+}
 const pages = [
   "index.html",
   "resume.html",
   ...(await readdir(path.join(root, "projects")))
     .filter((f) => f.endsWith(".html"))
     .map((f) => `projects/${f}`),
+  ...(await htmlPages("play")),
 ];
 const errors = [];
 for (const file of pages) {
@@ -25,8 +37,11 @@ for (const file of pages) {
       path.dirname(file),
       target || path.basename(file),
     );
-    const actual = href === "./" ? path.join(root, "index.html") : resolved;
+    let actual = resolved;
     try {
+      await access(actual);
+      if ((await stat(actual)).isDirectory())
+        actual = path.join(actual, "index.html");
       await access(actual);
       if (anchor && actual.endsWith(".html")) {
         const content = await readFile(actual, "utf8");

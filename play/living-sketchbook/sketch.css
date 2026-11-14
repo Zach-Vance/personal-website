@@ -1,0 +1,188 @@
+.sketch-page {
+  background: #f0efe7;
+  --ink: #374c3c;
+  --muted: #75806a;
+}
+.sketch-page .studio-heading h1 em {
+  color: #8a9473;
+}
+.sketch-stage {
+  width: min(100%, 96svh);
+  aspect-ratio: 3 / 2;
+  height: auto;
+  min-height: 0;
+  margin-inline: auto;
+  background: #f6f2e6;
+  border-color: #b3b7a280;
+  border-radius: 5px;
+  box-shadow: 0 15px 60px #5c634116;
+}
+.sketch-stage canvas {
+  touch-action: none;
+  cursor: crosshair;
+  outline-offset: -4px;
+}
+.paper-label {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  font: 8px var(--mono);
+  letter-spacing: 0.12em;
+  color: #8c9670;
+  pointer-events: none;
+}
+.sketch-settings {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 48px;
+  padding: 28px 0;
+}
+.setting-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font: 9px var(--mono);
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+.setting-label > span:last-child {
+  color: #838b70;
+}
+.palette-options {
+  display: flex;
+  gap: 7px;
+}
+.palette-options button {
+  display: flex;
+  padding: 6px;
+  gap: 3px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+}
+.palette-options button[aria-pressed="true"] {
+  border-color: #627758;
+}
+.palette-options i {
+  width: 17px;
+  height: 20px;
+  border-radius: 2px;
+}
+.seed-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.seed-input input {
+  width: 90px;
+  background: #fafaf133;
+  color: #40533d;
+  border: 1px solid #9eaf9180;
+  border-radius: 4px;
+  padding: 7px;
+  font: 11px var(--mono);
+}
+.seed-input button {
+  background: transparent;
+  border: 0;
+  font-size: 10px;
+  color: #536c4d;
+  padding: 7px;
+  white-space: nowrap;
+}
+.sketch-tools {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #a5baaa80;
+}
+.sketch-page .export-button {
+  background: #345c46;
+  color: #f4f6e9;
+  border-color: #345c46;
+}
+.sketch-page .export-button:hover {
+  background: #264934;
+}
+#sketch-status {
+  font-size: 11px;
+  color: #6e7a60;
+  min-height: 40px;
+  padding-top: 15px;
+}
+.example-row {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  padding: 20px 0;
+  border-bottom: 1px solid #a5baaa80;
+}
+.example-row > .overline {
+  font-size: 9px;
+  color: #7c866c;
+}
+.sketch-page .studio-note h2 em {
+  color: #858f6e;
+}
+@media (max-width: 800px) {
+  .sketch-settings {
+    gap: 20px;
+  }
+  .palette-options {
+    gap: 3px;
+  }
+  .palette-options i {
+    width: 13px;
+    height: 19px;
+  }
+}
+@media (max-width: 600px) {
+  .sketch-page .studio-heading h1 {
+    font-size: 52px;
+  }
+  .sketch-stage {
+    height: auto;
+    min-height: 0;
+  }
+  .sketch-settings {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px 15px;
+  }
+  .sketch-settings > div:last-child {
+    grid-column: 1/-1;
+  }
+  .seed-input input {
+    width: 110px;
+  }
+  .sketch-tools {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .example-row {
+    display: block;
+    padding: 20px 0;
+  }
+  .example-row .studio-actions {
+    margin-top: 12px;
+    gap: 6px;
+  }
+  .example-row button {
+    font-size: 9px;
+  }
+  .paper-label {
+    left: 15px;
+    bottom: 14px;
+    font-size: 7px;
+  }
+  .sketch-page .studio-toolbar {
+    gap: 13px;
+  }
+  .sketch-page .studio-toolbar .studio-actions {
+    gap: 6px;
+  }
+  .sketch-page .studio-toolbar button {
+    font-size: 10px;
+    padding: 9px 11px;
+  }
+}
