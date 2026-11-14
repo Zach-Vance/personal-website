@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "zach-vance-portfolio-ask",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-11-13",
+  "vars": {
+    "ALLOWED_ORIGIN": "https://zach-vance.github.io",
+  },
+  "ratelimits": [
+    {
+      "name": "ASK_LIMITER",
+      "namespace_id": "41701",
+      "simple": { "limit": 5, "period": 60 },
+    },
+    {
+      "name": "SITE_LIMITER",
+      "namespace_id": "41702",
+      "simple": { "limit": 30, "period": 60 },
+    },
+  ],
+}
