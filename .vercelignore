@@ -11,13 +11,6 @@ projects
 play
 index.html
 resume.html
-index.css
-Mortgage*
-tickers*
-ThemeScript.js
-contact.js
-test.py
 assets/config.js
 assets/main.js
 assets/styles.css
-backend/wrangler.jsonc
