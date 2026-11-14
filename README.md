@@ -59,10 +59,22 @@ Build the backend with `node scripts/build-api.mjs`; `vercel.json` deploys only 
 
 References: [GitHub Pages deployment](https://docs.github.com/en/get-started/start-your-journey/deploying-your-website-automatically).
 
+## AI evidence and positioning
+
+Broad AI questions prioritize the Shopify reconciliation workflow and this website’s
+conversational assistant. Coding assistants are supporting tools, discussed when relevant
+to a coding question. The assistant’s retrieval, citations, context, failure handling,
+static delivery, and playground features have public references in
+`projects/portfolio.html`. Keep those references aligned with the implementation.
+Hiring answers lead with a positive recommendation backed by actual work and reported
+outcomes, without promising fit for every role. API contract version 3 prevents the
+updated frontend from accepting the previous API’s answer behavior; deploy both services
+to enable updated live answers. Until then, the browser uses updated local evidence.
+
 ## Content
 
 - `index.html`: homepage and Q&A surface.
-- `projects/`: engineering write-ups.
+- `projects/`: engineering write-ups, including the portfolio assistant itself.
 - `resume.html`: printable résumé (Print / Save as PDF).
 - `assets/knowledge.mjs`: public evidence corpus shared with the backend. Update it alongside page content.
 - Setwise’s preview is explicitly an **interface study**, not a screenshot of the live product.

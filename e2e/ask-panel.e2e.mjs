@@ -101,3 +101,35 @@ test("rejects a stale API contract version and shows local evidence instead", as
   );
   expect(calls.count).toBe(1);
 });
+
+test("AI workflow and hiring answers remain persuasive when the provider fails", async ({
+  page,
+}) => {
+  await mockApi(page, (route) =>
+    route.fulfill({
+      status: 502,
+      headers: corsHeaders,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "Unavailable" }),
+    }),
+  );
+  await ask(page, "How does Zach integrate AI into systems?");
+  let turn = page.locator(".chat-turn").last();
+  await expect(turn.locator(".chat-answer")).toContainText("Shopify-to-ERP");
+  await expect(turn.locator(".chat-answer")).toContainText(
+    "conversational AI assistant",
+  );
+  await expect(turn.locator(".chat-answer")).not.toContainText("Claude");
+  await expect(turn.locator(".answer-sources a")).toHaveCount(2);
+  await expect(turn.locator(".answer-sources a").last()).toHaveAttribute(
+    "href",
+    "projects/portfolio.html#assistant",
+  );
+  await page.locator("#question").fill("Should I hire Zach?");
+  await page.locator("#ask-submit").click();
+  turn = page.locator(".chat-turn").last();
+  await expect(turn.locator(".chat-answer")).toContainText(
+    "Yes—Zach makes a strong case",
+  );
+  await expect(turn.locator(".chat-answer")).toContainText("17% to under 1%");
+});

@@ -86,10 +86,15 @@ export function createHandler(upstreamFetch = fetch) {
     }
     const answerPlan = portfolioAnswer(question, history);
     // Lead with retrieved evidence but let broad portfolio questions draw on the
-    // whole public corpus. Keep named-project questions within their own scope.
+    // whole public corpus. Keep named projects and workflow AI questions focused.
     const docs =
       answerPlan.kind === "evidence" &&
-      !/\b(setwise|mesonet|super sod)\b/.test(answerPlan.query)
+      !/\b(setwise|mesonet|super sod|portfolio|website|chatbot|assistant|this site|personal site)\b/.test(
+        answerPlan.query,
+      ) &&
+      !answerPlan.docs.every((doc) =>
+        ["ai-reconciliation", "portfolio-agent"].includes(doc.id),
+      )
         ? [
             ...answerPlan.docs,
             ...evidence.filter(
