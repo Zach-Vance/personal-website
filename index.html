@@ -1,274 +1,473 @@
-<!-- 
-
-    future work:
-    - redesign homepage, remove resume information because download is provided
-    - add personal statemnets
-    - create fun background image
-    - remove navbar in favor of a more innovative design
-    - link additional projects via github
-    - purchase domain name
-
--->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
-    <script src="ThemeScript.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="contact.js"></script>
-    <title>Zach Vance | Portfolio & Resume</title>
-</head>
-<body>
-    <header> 
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f5ef" />
+    <title>Zach Vance — Software Developer</title>
+    <meta
+      name="description"
+      content="Zach Vance builds reliable applications, backend APIs, and integrations. Explore his engineering work, Setwise, and approach to better software."
+    />
+    <meta property="og:title" content="Zach Vance — Software Developer" />
+    <meta
+      property="og:description"
+      content="Thoughtful software. Connected systems. Less friction."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://zach-vance.github.io/personal-website/"
+    />
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script type="module" src="assets/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="brand" href="./" aria-label="Zach Vance, home"
+        ><span class="monogram">z<span>v</span><i>.</i></span
+        ><span>Zach Vance</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#work">Work</a><a href="#experience">Experience</a
+        ><a href="#about">About</a
+        ><a class="nav-ask" href="#ask"
+          ><span aria-hidden="true">✳</span> Ask about my work</a
+        >
+      </nav>
     </header>
-    <!-- Nav bar -->
-    <nav>
-        <ul class = "horizontal">
-            <li><a href="index.html">Home</a></li>
-            <li><div class="dropdown">
-                <button class="dropbtn">Projects 
-                  <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                  <a href="MortgageCalc.html">Mortgage Calculator</a>
-                  <a href="tickers.html">Business Profit Tickers</a>
-                </div>
-              </div> 
-            </li>
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#contact-form">Contact</a></li>
-        </ul>
-        
-    </nav>
-    <div class="theme-switch-wrapper">
-    <p id="toggle-label">Toggle Dark Mode</p>  
-    <label class="switch">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider round"></span>
-    </label>
-
-    </div>
-
-    <!--Container Tag-->
-    <div id = "container">
-
-        <!--Section Tag-->
-        <section id="about">
-            <img src="images/vanceZach.jpg">
-            <table>
-                <tr>
-                  <td>Name:</td>
-                  <td>Zachary Vance</td>
-                </tr>
-                <tr>
-                  <td>Location:</td>
-                  <td>Bowling Green, KY</td>
-                </tr>
-                <tr>
-                  <td>Linked-in:</td>
-                  <td><a href="https://www.linkedin.com/in/zachary-vance/" target="_blank">Link</a></td>
-                </tr>
-                <tr>
-                  <td>Github:</td>
-                  <td><a href="https://github.com/Zach-Vance" target="_blank">Link</a></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button id="downloadResumeBtn" disabled>Download Resume</button>
-                    </td>
-                </tr>
-              </table> 
-              <div class="g-recaptcha" id= "resume-recpatcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j" data-callback="enableBtn">
-              </div>
-              <p id ="resume-instructions">Complete the above reCaptcha to download my resume.</p>
-
-
-              
-             
-        </section>
-
-        <!--Main Tag-->
-        <main>
-            <h2>Education</h2><hr/>
-            <p>
-                <table>
-                    <tr>
-                        <td><h4>Western Kentucky University</h4></td>
-                        <td>Bowling Green, KY</td>
-                    </tr>
-                    <tr>
-                        <td><h4>Bachelors of Science Computer Science</h4></td>
-                        <td>GPA: 3.7</td>
-                    </tr>
-                    <tr>
-                        <td><h4>Systems and Scientific Concentration</h4></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </p>
-            <hr/>
-            <h2>Work Experience</h2> <hr/>
-            <p>
-                <table>
-                    <tr>
-                        <td><h4>Application Developer, Intern</h4></td>
-                        <td>Sept 2022 - May 2024</td>
-                    </tr>
-                    <tr>
-                        <td><h4>Kentucky Mesonet</h4></td>
-                        <td>Bowling Green, KY</td>
-                    </tr>
-                </table>
-                <ul>
-                    <li>Developed a weather data quality monitoring website using Next.js, TypeScript, and React, which enhanced quality assurance by providing comprehensive data visualizations across multiple graphs.</li>
-                    <li>Implemented an AI image recognition system using Python and TensorFlow.</li>
-                    <li>Created a desktop application using Python to view photos in an organized and user-friendly manner,
-                    increasing efficiency and reducing storage resources.</li>
-                    <li>Wrote Python scripts to process incoming data from weather stations, enhancing data availability and
-                    reliability for subsequent analysis.</li>
-                    <li>Utilized Python for data analysis and identified trends.</li>
-                </ul>
-                <hr/>
-
-                <table>
-                    <tr>
-                        <td><h4>Rater (Quality Assurance)</h4></td>
-                        <td>Nov 2019 - Dec 2023</td>
-                    </tr>
-                    <tr>
-                        <td><h4>TELUS International</h4></td>
-                        <td>Las Vegas, NV</td>
-                    </tr>
-                </table>
-                <ul>
-                    <li>Conducted detailed assessments of machine learning models and chatbot projects, delivering precise
-                    feedback that enhanced system accuracy and user interaction quality.</li>
-                    <li>Authored detailed reports and provided targeted feedback, streamlining the follow-up process and
-                    markedly reducing operational errors.</li>
-                </ul>
-                <hr/>
-
-                <table>
-                    <tr>
-                        <td><h4>Computing Assistant</h4></td>
-                        <td>Oct 2017 - Jan 2019</td>
-                    </tr>
-                    <tr>
-                        <td><h4>Brigham Young University</h4></td>
-                        <td>Provo, UT</td>
-                    </tr>
-                </table>
-                <ul>
-                    <li>Published a research article on Computer Security in BYU's Journal of Undergraduate Research,
-                    contributing to advancements in the field and earning recognition within the academic and technology
-                    communities.</li>
-                    <li>Authored and presented detailed technical findings to support future software development research,
-                    culminating in submissions to prestigious industry journals.</li>
-                </ul>
-                <hr/>
-            </p>
-            <hr/>
-            <h2>Projects</h2>
-            <hr/>
-            <p>
-                <table>
-                    <tr>
-                        <td><h4>WKU Filmatrix</h4></td>
-                        <td>NextJS, TypeScript, React, Prisma, Next-Auth, RESTful API, Axios</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><p>Developed a robust web application aimed at students and professors in the WKU Film
-                            department to efficiently track film projects and related data. The platform offers a streamlined,
-                            intuitive interface for managing project timelines, contributions, and outcomes.</p></td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <td><h4>Learning Hub</h4></td>
-                        <td>Python, Django, JavaScript, HTML, CSS</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><p>A comprehensive web application for online education. Includes built-in support for online
-                            lessons, discussions, quizzes, and grade analytics.</p></td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <td><h4>Mirror</h4></td>
-                        <td>Kotlin, SQLite, Android Studio</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><p>An Android application designed to assist users in tracking daily mood fluctuations and
-                            journaling. Features advanced graphing capabilities to visualize mood trends over time, providing
-                            users with insights into their emotional well-being.</p></td>
-                    </tr>
-                </table>
-            </p>
-            <hr/>
-            <h2>Skills</h2>
-            <hr/>
-            <div class="skills-container">
-                <div class="skills-column">
-                    <h4>Programming Languages</h4>
-                    <ul>
-                        <li>Java</li>
-                        <li>JavaScript</li>
-                        <li>Python</li>
-                        <li>SQL</li>
-                        <li>React</li>
-                        <li>Kotlin</li>
-                        <li>C#</li>
-                        <li>Bash</li>
-                        <li>C</li>
-                        <li>C++</li>
-                        <li>PHP</li>
-                        <li>HTML</li>
-                        <li>CSS</li>
-                    </ul>
-                </div>
-                <div class="skills-column">
-                    <h4>Tools</h4>
-                    <ul>
-                        <li>Git</li>
-                        <li>Linus</li>
-                        <li>Unix</li>
-                    </ul>
-                </div>
-                <div class="skills-column">
-                    <h4>Frameworks</h4>
-                    <ul>
-                        <li>Next.js</li>
-                        <li>Django</li>
-                    </ul>
-                </div>
+    <main id="main">
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="status-dot"></span> SOFTWARE DEVELOPER · CHARLESTON, SC
+          </p>
+          <h1 id="hero-title">Good software.<br /><em>Less friction.</em></h1>
+          <p class="hero-description">
+            I’m Zach. I build applications, APIs, and integrations that turn
+            complicated workflows into systems people can depend on.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-dark" href="#work"
+              >Explore my work <span aria-hidden="true">↗</span></a
+            ><a class="text-link" href="resume.html"
+              >View résumé <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="hero-footnote">
+            <span class="fine-line"></span> Thoughtful engineering, from the
+            data to the details.
+          </div>
+        </div>
+        <div
+          class="system-art"
+          aria-label="Illustration of connected commerce, application, and data systems"
+        >
+          <div class="art-grid"></div>
+          <span class="art-coordinate">FIG. 01 / MAKING CONNECTIONS</span>
+          <div class="system-window">
+            <div class="window-bar">
+              <span class="window-dots"><i></i><i></i><i></i></span
+              ><span>systems / connected</span
+              ><span class="window-symbol">↗</span>
             </div>
-        </main>
-
-        <footer>
-            <h2>Contact Me</h2>
-            <form id="contact-form">
-            <table id = "contact-table">
-                <tr>
-                    <td><label for="name">Name:</label></td>
-                    <td><input type="text" id="name" name="name" required></td>
-                </tr>
-                <tr>
-                    <td><label for="email">Email:</label></td>
-                    <td><input type="email" id="email" name="email" required></td>
-                </tr>
-                <tr>
-                    <td><label for="message">Message:</label></td>
-                    <td><textarea id="message" name="message" required></textarea></td>
-                </form>
-                </tr>
-                <tr><td colspan="2"><div class="g-recaptcha" data-sitekey="6Lf5BcApAAAAAF0t3oWMDWZfr0-5gQm2XY4YSb9j"></div></td></tr>
-                <tr><td colspan="2"><button id="contactBtn" >Send</button></td></tr>
-            </table>
-        </footer>
-    </div>
-</body>
-
+            <div class="window-content">
+              <span class="mini-label">A LITTLE ORDER IN THE COMPLEXITY</span>
+              <div class="system-flow">
+                <div>
+                  <span class="node-icon">{ }</span><span>Commerce</span>
+                </div>
+                <span class="flow-line"></span>
+                <div>
+                  <span class="node-icon active">↔</span
+                  ><span>Application</span>
+                </div>
+                <span class="flow-line"></span>
+                <div><span class="node-icon">≡</span><span>Data</span></div>
+              </div>
+              <div class="code-lines">
+                <p>
+                  <span>01</span> receive<span class="code-muted">(event)</span>
+                </p>
+                <p>
+                  <span>02</span> validate<span class="code-muted">(data)</span>
+                </p>
+                <p>
+                  <span>03</span> make_it_work<span class="code-muted"
+                    >(together)</span
+                  ><i class="code-caret"></i>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="art-note">
+            <span class="note-check">✓</span>
+            <div>
+              Connected by design.<small>Built to stay that way.</small>
+            </div>
+            <span class="note-spark">✳</span>
+          </div>
+          <span class="art-bottom">APIs / DATA / HUMAN PROBLEMS</span
+          ><span class="art-cross" aria-hidden="true">+</span>
+        </div>
+      </section>
+      <div class="discipline-strip">
+        <div class="wrap">
+          <span>Backend engineering</span><i aria-hidden="true">/</i
+          ><span>Data & integrations</span><i aria-hidden="true">/</i
+          ><span>Reliable applications</span><i aria-hidden="true">/</i
+          ><span>Practical automation</span>
+        </div>
+      </div>
+      <section id="work" class="section wrap" aria-labelledby="work-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / SELECTED WORK</p>
+            <h2 id="work-title">Real problems.<br />Considered solutions.</h2>
+          </div>
+          <p>
+            A few things I’ve been building,<br />connecting, and making more
+            dependable.
+          </p>
+        </div>
+        <article class="project project-setwise" id="setwise">
+          <div class="project-preview training-preview">
+            <div class="preview-top">
+              <span class="setwise-wordmark"><i></i> setwise</span
+              ><span class="preview-caption">INTERFACE STUDY</span>
+            </div>
+            <div class="workout-ui">
+              <div class="workout-heading">
+                <span>MONDAY / UPPER BODY</span
+                ><span class="tiny-badge">In progress</span>
+              </div>
+              <h3>Make every<br />set count.</h3>
+              <div class="exercise">
+                <span class="exercise-number">01</span>
+                <div>
+                  <strong>Incline dumbbell press</strong
+                  ><small>3 working sets</small>
+                </div>
+                <span>↗</span>
+              </div>
+              <div class="set-grid">
+                <span>SET</span><span>WEIGHT</span><span>REPS</span
+                ><span>DONE</span><strong>1</strong
+                ><strong>50 <small>lb</small></strong
+                ><strong>10</strong><b>✓</b><strong>2</strong
+                ><strong>50 <small>lb</small></strong
+                ><strong>10</strong><b>✓</b><strong>3</strong
+                ><strong>50 <small>lb</small></strong
+                ><strong>—</strong><b class="pending">○</b>
+              </div>
+              <div class="sync-line">
+                <span class="status-dot"></span> Your effort, saved. Even
+                offline.
+              </div>
+            </div>
+            <span class="preview-index">PERSONAL PROJECT / 2026–PRESENT</span>
+          </div>
+          <div class="project-copy">
+            <p class="eyebrow">01 — APPLICATION ENGINEERING</p>
+            <h3>Setwise</h3>
+            <p class="project-lead">
+              Training software that keeps up.<br />Even when the connection
+              doesn’t.
+            </p>
+            <p>
+              A strength-training application built around durable workout
+              logging, history-based recommendations, and careful data
+              boundaries.
+            </p>
+            <div class="tag-list">
+              <span>Next.js</span><span>TypeScript</span><span>PostgreSQL</span
+              ><span>Offline sync</span>
+            </div>
+            <a class="text-link" href="projects/setwise.html"
+              >Explore the engineering <span aria-hidden="true">↗</span></a
+            ><span class="project-status"
+              ><span class="status-dot"></span> In active development</span
+            >
+          </div>
+        </article>
+        <article class="project project-integration" id="integrations">
+          <div class="project-copy">
+            <p class="eyebrow">02 — PROFESSIONAL WORK</p>
+            <h3>Better together.</h3>
+            <p class="project-lead">
+              Connecting commerce, CRM,<br />and the people behind them.
+            </p>
+            <p>
+              Reliable business integrations, backend automation, and self-service
+              tools that take repetitive work off people’s plates.
+            </p>
+            <div class="tag-list">
+              <span>Go</span><span>PostgreSQL</span><span>Shopify</span
+              ><span>HubSpot</span>
+            </div>
+            <a class="text-link" href="projects/integrations.html"
+              >See how it connects <span aria-hidden="true">↗</span></a
+            ><span class="project-status">Built at Super-Sod</span>
+          </div>
+          <div class="project-preview integration-preview">
+            <div class="preview-top">
+              <span class="mini-label">FROM SILOS TO SYSTEMS</span
+              ><span class="preview-caption">CONCEPT DIAGRAM</span>
+            </div>
+            <div class="integration-map">
+              <div class="integration-source">
+                <span class="integration-logo shopify">S</span>
+                <div>
+                  <strong>Commerce</strong><small>Orders & customers</small>
+                </div>
+                <span>↘</span>
+              </div>
+              <div class="integration-center">
+                <span>{ ↔ }</span><strong>One connected workflow</strong
+                ><small>Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.</small>
+              </div>
+              <div class="integration-dest">
+                <div>
+                  <span class="integration-logo erp">≡</span
+                  ><strong>Operations</strong>
+                </div>
+                <span>↔</span>
+                <div>
+                  <span class="integration-logo crm">⌘</span
+                  ><strong>CRM</strong>
+                </div>
+              </div>
+            </div>
+            <div class="integration-caption">
+              <span class="note-check">✓</span> Clear records. Fewer manual
+              steps.
+            </div>
+          </div>
+        </article>
+        <a class="project-compact" href="projects/mesonet.html"
+          ><span class="weather-symbol" aria-hidden="true">☷</span>
+          <div>
+            <p class="eyebrow">03 — WEATHER, DATA & MACHINE LEARNING</p>
+            <h3>Making observations useful.</h3>
+            <p>
+              Quality dashboards, Python data processing, and TensorFlow at
+              Kentucky Mesonet.
+            </p>
+          </div>
+          <span class="compact-arrow" aria-hidden="true">↗</span></a
+        >
+      </section>
+      <section
+        id="experience"
+        class="experience-section section"
+        aria-labelledby="experience-title"
+      >
+        <div class="wrap experience-layout">
+          <div>
+            <p class="eyebrow">02 / EXPERIENCE</p>
+            <h2 id="experience-title">
+              Built in the<br /><em>real world.</em>
+            </h2>
+            <p class="section-intro">
+              Across business applications, data systems, and a few very
+              interesting edge cases.
+            </p>
+            <a class="text-link" href="resume.html"
+              >The full résumé <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="experience-list">
+            <article>
+              <div class="role-heading">
+                <h3>Super-Sod</h3>
+                <span>2024 — PRESENT</span>
+              </div>
+              <p class="role-title">Junior Python Developer</p>
+              <p>
+                Building and maintaining the applications and integrations
+                behind ordering, invoicing, inventory, and dispatch.
+              </p>
+              <ul>
+                <li>
+                  Improved reliability of business data integrations
+                </li>
+                <li>Backend automation and relational data integrity</li>
+                <li>
+                  Go APIs, PostgreSQL workflows, and asynchronous processing
+                </li>
+              </ul>
+            </article>
+            <article>
+              <div class="role-heading">
+                <h3>Kentucky Mesonet</h3>
+                <span>2022 — 2024</span>
+              </div>
+              <p class="role-title">Application Developer Intern</p>
+              <p>
+                Weather-data quality dashboards, Python processing and analysis,
+                and a trained TensorFlow image-recognition model.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="ask" class="ask-section section" aria-labelledby="ask-title">
+        <div class="wrap ask-layout">
+          <div class="ask-copy">
+            <p class="eyebrow">03 / A DIFFERENT WAY TO EXPLORE</p>
+            <span class="ask-star" aria-hidden="true">✳</span>
+            <h2 id="ask-title">A little curious?<br /><em>Ask away.</em></h2>
+            <p>
+              Explore my experience in your own words. Every response points
+              back to the work behind it.
+            </p>
+            <div class="ask-principles">
+              <span>Grounded in my portfolio</span
+              ><span>Sources you can follow</span
+              ><span>No invented credentials</span>
+            </div>
+          </div>
+          <div class="ask-panel">
+            <div class="ask-panel-header">
+              <span
+                ><span class="small-star" aria-hidden="true">✳</span> Ask about
+                my work</span
+              ><span id="ask-mode" class="mode-label">Portfolio search</span>
+            </div>
+            <div
+              id="conversation"
+              class="conversation"
+              role="log"
+              aria-label="Portfolio questions and answers"
+              aria-live="off"
+            >
+              <div class="welcome-message">
+                <span class="assistant-avatar" aria-hidden="true">zv.</span>
+                <div>
+                  <strong>A good place to start.</strong>
+                  <p>
+                    Ask about my projects, backend experience, or approach to
+                    reliable software. I’ll point you to the relevant evidence.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="suggested-questions" aria-label="Suggested questions">
+              <button
+                type="button"
+                data-question="What backend experience does Zach have?"
+              >
+                Backend experience <span>↗</span></button
+              ><button
+                type="button"
+                data-question="How does Setwise handle offline logging?"
+              >
+                How Setwise works <span>↗</span></button
+              ><button
+                type="button"
+                data-question="How has Zach used AI in automation?"
+              >
+                AI & automation <span>↗</span>
+              </button>
+            </div>
+            <form id="ask-form" class="ask-form">
+              <label class="sr-only" for="question"
+                >Your question about Zach’s work</label
+              ><textarea
+                id="question"
+                name="question"
+                rows="1"
+                maxlength="600"
+                placeholder="What would you like to know?"
+                required
+                aria-describedby="ask-note"
+              ></textarea
+              ><button id="ask-submit" type="submit" aria-label="Ask question">
+                <span aria-hidden="true">↑</span></button
+              ><button id="ask-stop" type="button" hidden>Stop</button>
+            </form>
+            <p
+              id="ask-status"
+              class="sr-only"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <p id="ask-note" class="ask-note">
+              Searches published portfolio evidence. AI answers aren’t connected
+              yet.
+            </p>
+            <noscript
+              ><p class="ask-note">
+                Enable JavaScript to search, or explore the
+                <a href="resume.html">résumé</a> directly.
+              </p></noscript
+            >
+          </div>
+        </div>
+      </section>
+      <section
+        id="about"
+        class="section wrap about-section"
+        aria-labelledby="about-title"
+      >
+        <div class="about-image">
+          <img
+            src="images/vanceZach.jpg"
+            alt="Zach Vance smiling"
+            width="600"
+            height="800"
+            loading="lazy"
+          /><span>THE PERSON BEHIND THE CODE</span>
+        </div>
+        <div class="about-copy">
+          <p class="eyebrow">04 / A BIT ABOUT ME</p>
+          <h2 id="about-title">
+            I like figuring out<br /><em>how things fit.</em>
+          </h2>
+          <p>
+            Especially when there’s a messy workflow, a few disconnected
+            systems, and a better way waiting to be built.
+          </p>
+          <p>
+            I’m a Charleston-based developer with a B.S. in Computer Science
+            from Western Kentucky University. My work lives at the intersection
+            of applications, data, and the people who use them.
+          </p>
+          <p>
+            I care about the part after “it works”: how it fails, how it’s
+            maintained, and how it grows. I use AI tools to support development,
+            with engineering judgment, review, and testing guiding what ships.
+          </p>
+          <div class="about-details">
+            <span>Based in Charleston, SC</span
+            ><a href="https://github.com/Zach-Vance">Find me on GitHub ↗</a>
+          </div>
+        </div>
+      </section>
+      <section id="contact" class="contact-section wrap">
+        <p class="eyebrow">HAVE SOMETHING IN MIND?</p>
+        <div>
+          <h2>Let’s make it <em>work.</em></h2>
+          <a class="button button-dark" href="mailto:zach.a.vance@gmail.com"
+            >Get in touch <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <p>I’m interested in thoughtful teams building useful software.</p>
+      </section>
+    </main>
+    <footer class="site-footer wrap">
+      <a class="brand" href="./"
+        ><span class="monogram">z<span>v</span><i>.</i></span
+        ><span>Built with care. By Zach.</span></a
+      >
+      <div>
+        <a href="https://github.com/Zach-Vance">GitHub ↗</a
+        ><a href="https://www.linkedin.com/in/zachary-vance/">LinkedIn ↗</a
+        ><a href="resume.html">Résumé ↗</a
+        ><span>© <span data-year>2026</span></span>
+      </div>
+    </footer>
+  </body>
 </html>
