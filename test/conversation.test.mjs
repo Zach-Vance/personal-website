@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { portfolioAnswer } from "../assets/conversation.mjs";
+import { portfolioAnswer, API_CONTRACT_VERSION } from "../assets/conversation.mjs";
 import { retrieve } from "../assets/knowledge.mjs";
 import { hasValidCitations } from "../assets/answer.mjs";
 import { createHandler } from "../backend/core.mjs";
@@ -112,6 +112,69 @@ test("API gives a specific missing-detail answer with verified location evidence
 
 test("citing Setwise requires project status even when its name is omitted", async () => {
   const handle = createHandler(async () => provider("His strength-training app uses React [1]."));
-  const events = await collect(await handle(request({ question: "what is Setwise" }), env));
+  const events = await collect(await handle(request({ question: "what React stack does Setwise use" }), env));
   assert.equal(events.at(-1).type, "error");
+});
+
+test("experience totals use role dates and understand exp and yrs", () => {
+  const now = new Date("2026-11-14T12:00:00Z");
+  for (const question of ["how many years exp does he have in software", "how many yrs experience does he have?", "how long has he been a developer?"]) {
+    const answer = portfolioAnswer(question, [], now);
+    assert.equal(answer.kind, "prepared");
+    assert.match(answer.text, /about 4 years/);
+    assert.match(answer.text, /including his internship/);
+    assert.ok(hasValidCitations(answer.text, answer.docs.length));
+  }
+  assert.match(portfolioAnswer("how many years experience?", [], new Date("2027-02-01T00:00:00Z")).text, /about 4 years and 3 months/);
+});
+
+test("the new transcript's typos and informal phrasing resolve to the intended topic", () => {
+  assert.equal(portfolioAnswer("what is his abckend approach").docs[0].id, "backend");
+  const setwise = portfolioAnswer("what tf is stewise");
+  assert.equal(setwise.docs[0].id, "setwise");
+  assert.equal(setwise.kind, "prepared");
+  assert.match(setwise.text, /active development/);
+  assert.match(portfolioAnswer("implmenet binary search tree").text, /general coding exercises/);
+});
+
+test("common portfolio answers remain available when AI quota is exhausted", async () => {
+  const deny = { limit: async () => ({ success: false }) };
+  const handle = createHandler(() => { throw new Error("Must not call provider"); });
+  for (const question of ["how many years exp does he have in software", "should i hire him", "why should i hire zach", "what tf is stewise"]) {
+    const response = await handle(request({ question }), { ...env, ASK_LIMITER: deny, SITE_LIMITER: deny });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("X-Portfolio-API-Version"), API_CONTRACT_VERSION);
+    assert.match(response.headers.get("Access-Control-Expose-Headers"), /X-Portfolio-API-Version/);
+    const events = await collect(response);
+    assert.equal(events.at(-1).type, "done");
+    assert.ok(events[0].ids.length);
+    assert.ok(hasValidCitations(events[1].text, events[0].ids.length));
+  }
+});
+
+test("unfamiliar portfolio phrasing reaches the model with public evidence beyond three sources", async () => {
+  let calls = 0;
+  const handle = createHandler(async (url, options) => {
+    calls++;
+    const payload = JSON.parse(options.body);
+    assert.match(payload.instructions, /Kentucky Mesonet/);
+    assert.match(payload.instructions, /Engineering approach/);
+    return provider("His weather-data dashboard work used React and TypeScript [10].");
+  });
+  const events = await collect(await handle(request({ question: "What makes him stand out?" }), env));
+  assert.equal(calls, 1);
+  assert.equal(events[0].ids.length, 12);
+  assert.equal(events.at(-1).type, "done");
+});
+
+test("a weak lexical match does not hide work-history evidence from the model", async () => {
+  const handle = createHandler(async (url, options) => {
+    const payload = JSON.parse(options.body);
+    assert.match(payload.instructions, /Since July 2024/);
+    assert.match(payload.instructions, /September 2022 to May 2024/);
+    return provider("He has developed operational applications at Super-Sod since July 2024 [2].");
+  });
+  const events = await collect(await handle(request({ question: "what is his software experience" }), env));
+  assert.equal(events[0].ids.length, 12);
+  assert.equal(events.at(-1).type, "done");
 });

@@ -11,6 +11,7 @@ export const evidence = [
   },
   {
     id: "applications",
+    period: { start: "2024-07", end: null },
     title: "Super-Sod · Application development",
     url: "index.html#experience",
     keywords:
@@ -75,6 +76,7 @@ export const evidence = [
   },
   {
     id: "mesonet",
+    period: { start: "2022-09", end: "2024-05" },
     title: "Kentucky Mesonet · Weather & machine learning",
     url: "projects/mesonet.html",
     keywords:
@@ -104,6 +106,7 @@ const stopwords = new Set(
     " ",
   ),
 );
+const topicVocabulary = ["backend", "frontend", "setwise", "mesonet", "react", "python", "typescript", "postgresql", "experience", "integrations"];
 export const normalize = (value) =>
   value
     .toLowerCase()
@@ -114,8 +117,10 @@ export const normalize = (value) =>
     .replace(/\bback[\s-]+end\b/g, "backend")
     .replace(/\b(?:user interfaces?|ui|client[\s-]+side)\b/g, "frontend")
     .replace(/\bfull[\s-]+stack\b/g, "full stack")
-    .replace(/\brecat\b/g, "react")
-    .replace(/\bhite\b/g, "hire");
+    .replace(/\bexp\b/g, "experience")
+    .replace(/\byrs?\b/g, "years")
+    .replace(/\bhite\b/g, "hire")
+    .replace(/\b[a-z]{5,}\b/g, (word) => topicVocabulary.find((topic) => nearTerm(word, topic)) || word);
 export function tokenize(value) {
   return [...new Set(normalize(value).match(/[a-z0-9]+/g) || [])].filter(
     (word) => !stopwords.has(word) && word.length > 1,
