@@ -5,7 +5,7 @@ export const cases = [
     id: "ai-workflows",
     question: "How does Zach integrate AI into systems?",
     sources: ["ai-reconciliation", "portfolio-agent"],
-    includes: ["staff for review", "conversational AI assistant"],
+    includes: ["human review", "conversational AI assistant"],
     excludes: ["Claude", "Codex"],
   },
   {
@@ -37,7 +37,7 @@ export const cases = [
     id: "hire",
     question: "Should I hire Zach?",
     sources: ["backend", "integration", "applications"],
-    includes: ["Yes—Zach makes a strong case", "17% to under 1%"],
+    includes: ["Yes—Zach makes a strong case", "reduces manual corrections"],
   },
   {
     id: "tenure",

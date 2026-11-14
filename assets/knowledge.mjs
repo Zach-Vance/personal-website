@@ -22,7 +22,7 @@ export const evidence = [
     url: "projects/integrations.html",
     keywords:
       "commerce crm integrations api synchronization automation reliability data integrity self-service workflows ai-assisted review backend applications",
-    text: "At Super-Sod, Zach improved the reliability of commerce and operations integrations, reduced manual correction work, and implemented AI-assisted data review. He built self-service tools that made routine business maintenance easier for nontechnical staff and maintained integrations between business applications and external services. His work includes APIs, relational data integrity, backend automation, and practical application development.",
+    text: "At Super-Sod, Zach improved reliability in business-data integrations, reduced repetitive manual corrections, and implemented AI-assisted review. He built self-service tools for nontechnical staff and maintained integrations among business applications and external services.",
   },
   {
     id: "backend",
@@ -99,11 +99,11 @@ export const evidence = [
   },
   {
     id: "ai-reconciliation",
-    title: "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
+    title: "AI workflow · Data consistency",
     url: "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
     keywords:
       "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
-    text: "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
+    text: "At Super-Sod, Zach implemented AI-assisted review of business data to support integration reliability and reduce manual correction work, with exceptions available for human review.",
   },
   {
     id: "portfolio-agent",

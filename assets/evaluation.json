@@ -9,7 +9,7 @@
       "history": [],
       "kind": "evidence",
       "sourceIds": ["ai-reconciliation", "portfolio-agent"],
-      "answer": "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
+      "answer": "At Super-Sod, Zach implemented AI-assisted review of business data to support integration reliability and reduce manual correction work, with exceptions available for human review. [1]\n\nZach built this personal website’s conversational AI assistant. It resolves follow-up questions using up to four recent questions, retrieves curated public portfolio evidence, and sends the current question, resolved topic, and evidence to a server-side Groq Responses API integration. Answers stream to the browser with numbered source links. This is an AI-powered question-to-evidence-to-answer workflow; it does not autonomously change external systems. [2]",
       "sourcesPass": true,
       "contentPass": true,
       "citationsPass": true
@@ -64,7 +64,7 @@
       "history": [],
       "kind": "prepared",
       "sourceIds": ["backend", "integration", "applications"],
-      "answer": "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
+      "answer": "Yes—Zach makes a strong case for backend, integrations, and full-stack roles: he builds Go REST APIs and PostgreSQL integrity rules [1], improves integration reliability and reduces manual corrections through backend automation and AI-assisted review [2]. He also builds SvelteKit/TypeScript applications across ordering, inventory, pricing, and other business operations [3]. For a team that needs someone to connect systems, reduce manual work, and solve practical software problems, his portfolio gives compelling reasons to interview him [1][2][3].",
       "sourcesPass": true,
       "contentPass": true,
       "citationsPass": true

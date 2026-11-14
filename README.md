@@ -30,7 +30,7 @@ With `askEndpoint` empty in `assets/config.js`, the panel performs local lexical
 
 ### Grounded, streamed AI answers on Vercel
 
-The API is a separate Vercel project, `purple-toad/zach-vance-portfolio-api`; the website remains on GitHub Pages. `api/ask.mjs` calls Groq's Responses API through the shared `backend/core.mjs` handler. No provider key is sent to the browser or committed. There is no automatic switch to a paid provider.
+The API is a separate Vercel project, a separate privately managed API deployment; the website remains on GitHub Pages. `api/ask.mjs` calls Groq's Responses API through the shared `backend/core.mjs` handler. No provider key is sent to the browser or committed. There is no automatic switch to a paid provider.
 
 Runtime configuration: `ALLOWED_ORIGIN=https://zach-vance.github.io`, secret `GROQ_API_KEY`, and optional `GROQ_MODEL` (defaults to `openai/gpt-oss-120b`). The model and free-tier availability were checked against Groq's documentation on November 13, 2026. Low reasoning effort and a 1,536-token total output budget leave room for reasoning and a short cited answer. Groq does not support the Responses `store` parameter, so the adapter omits it; the API can log redacted questions and responses to a private Supabase table, while provider retention is governed by Groq's policies.
 
@@ -41,7 +41,7 @@ The Origin check is a browser-side restriction, not authentication; anyone can s
 To configure the key securely:
 
 1. Create a key at [Groq API keys](https://console.groq.com/keys), keeping the account on Free.
-2. In the [Vercel project's environment settings](https://vercel.com/purple-toad/zach-vance-portfolio-api/settings/environment-variables), add `GROQ_API_KEY` as a Sensitive variable for Production. Never paste it into chat or commit it.
+2. In the [Vercel project's environment settings](https://vercel.com/docs/projects/environment-variables), add `GROQ_API_KEY` as a Sensitive variable for Production. Never paste it into chat or commit it.
 3. Deploy a new staged production build; environment changes do not update existing deployments.
 4. Test cited answers and failure fallback before promotion and before setting the frontend endpoint.
 
@@ -53,7 +53,7 @@ The browser keeps up to four recent questions in memory and sends them with the 
 
 Common questions about tenure, hiring, and Setwise’s purpose return cited portfolio answers without consuming model quota. Tenure is approximated from the published month-level role dates, includes the internship, and is labeled with the current month. Topic normalization handles abbreviations such as “exp” and transpositions such as “abckend” and “stewise.” Unfamiliar portfolio questions can reach the model with the full public corpus instead of being refused solely because lexical retrieval found no match. General coding exercises remain outside the portfolio scope.
 
-**Release both services:** merging a PR publishes the GitHub Pages frontend only. The Vercel API is deployed separately; a successful Pages deployment does not update it. From a clean, tested checkout linked to `purple-toad/zach-vance-portfolio-api`, stage with `vercel deploy --prod --skip-domain`, test `/api/ask` on that deployment using `vercel curl`, then promote the tested deployment with `vercel promote`. Verify the stable API URL after promotion. The browser checks the exposed `X-Portfolio-API-Version` header and uses local evidence if the API contract is stale, rather than accepting the old scope refusals.
+**Release both services:** merging a PR publishes the GitHub Pages frontend only. The Vercel API is deployed separately; a successful Pages deployment does not update it. From a clean, tested checkout linked to a separate privately managed API deployment, stage with `vercel deploy --prod --skip-domain`, test `/api/ask` on that deployment using `vercel curl`, then promote the tested deployment with `vercel promote`. Verify the stable API URL after promotion. The browser checks the exposed `X-Portfolio-API-Version` header and uses local evidence if the API contract is stale, rather than accepting the old scope refusals.
 
 Build the backend with `node scripts/build-api.mjs`; `vercel.json` deploys only its landing page and API function. `scripts/build.mjs` remains the separate allowlisted Pages build. A staged production API deployment should be tested before promotion and before setting `assets/config.js` to its stable `/api/ask` URL.
 
@@ -61,7 +61,7 @@ References: [GitHub Pages deployment](https://docs.github.com/en/get-started/sta
 
 ## AI evidence and positioning
 
-Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.
+Broad AI questions prioritize data integration improvements and this website’s
 conversational assistant. Coding assistants are supporting tools, discussed when relevant
 to a coding question. The assistant’s retrieval, citations, context, failure handling,
 static delivery, and playground features have public references in
@@ -81,7 +81,7 @@ to enable updated live answers. Until then, the browser uses updated local evide
 
 ## Private API analytics
 
-Supabase project: `portfolio-analytics` (`aagvjcvqmjlhovwwauum`) in Forge Labs, on Free.
+A privately managed Supabase project hosts optional analytics.
 The browser never connects to the log database. `public.ai_api_calls` has RLS enabled,
 no public policies, and no `anon`/`authenticated` grants. The server sends an allowlisted,
 best-effort redacted record to the `ingest-ai-call` Edge Function using a dedicated
@@ -104,7 +104,7 @@ leave reusable pages and autovacuum maintains reuse. The private notebook shows 
 database/table allocation too. This is a conservative free-tier budget, not a provider
 billing guarantee. Existing API spam limits are unchanged. No paid services were enabled.
 
-[Open private analytics in Supabase](https://supabase.com/dashboard/project/aagvjcvqmjlhovwwauum/explorer/notebook/e1e7f98b-9d56-4302-880a-148be5e902d2).
+Open analytics using your authenticated Supabase dashboard.
 The report highlights **possible hiring interest**, a database keyword heuristic for
 hiring/interview/availability/role-fit questions. It does not identify visitors, prove
 that they are employers, or send notifications. Use the report to inspect real questions,
@@ -113,7 +113,7 @@ answers. Never publish raw visitor logs.
 
 Configuration in the existing Vercel API project (server-only):
 
-- `AI_LOG_INGEST_URL`: `https://aagvjcvqmjlhovwwauum.supabase.co/functions/v1/ingest-ai-call`
+- `AI_LOG_INGEST_URL`: your private Edge Function ingestion URL
 - `AI_LOG_INGEST_TOKEN`: dedicated secret from the ignored local `.env.local`; copy securely
   into the Vercel secret store, never chat or Git. Only Production should write production logs.
 - Optional `AI_CALL_LOGGING=off` disables app logging; `AI_LOG_CONTENT=off` retains metadata only.
