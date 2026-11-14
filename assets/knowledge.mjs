@@ -14,7 +14,7 @@ export const evidence = [
     title: "Super-Sod · Application development",
     url: "index.html#experience",
     keywords:
-      "work job current professional experience super sod frontend full stack sveltekit typescript javascript erp application operations",
+      "work job current professional experience career employment super sod frontend full stack sveltekit typescript javascript erp application operations",
     text: "Since July 2024, Zach has worked at Super-Sod as a Junior Python Developer. He builds and maintains operational applications for ordering, invoicing, inventory, pricing, dispatch, and purchasing with SvelteKit, TypeScript, and PostgreSQL.",
   },
   {
@@ -78,7 +78,7 @@ export const evidence = [
     title: "Kentucky Mesonet · Weather & machine learning",
     url: "projects/mesonet.html",
     keywords:
-      "mesonet weather dashboard visualization python tensorflow machine learning ml image recognition model train trained internship intern",
+      "mesonet weather dashboard visualization frontend nextjs react typescript python tensorflow machine learning ml image recognition model train trained internship intern",
     text: "As an Application Developer Intern at Kentucky Mesonet from September 2022 to May 2024, Zach developed weather-data quality dashboards with Next.js, React, and TypeScript, wrote Python scripts for processing and analyzing observations, and developed and trained a Python/TensorFlow image-recognition model.",
   },
   {
@@ -104,15 +104,37 @@ const stopwords = new Set(
     " ",
   ),
 );
-const normalize = (value) =>
+export const normalize = (value) =>
   value
     .toLowerCase()
+    .replace(/[\u2010-\u2015]/g, "-")
     .replace(/next\.js/g, "nextjs")
-    .replace(/super-sod/g, "super sod");
+    .replace(/super-sod/g, "super sod")
+    .replace(/\bfront[\s-]+end\b/g, "frontend")
+    .replace(/\bback[\s-]+end\b/g, "backend")
+    .replace(/\b(?:user interfaces?|ui|client[\s-]+side)\b/g, "frontend")
+    .replace(/\bfull[\s-]+stack\b/g, "full stack")
+    .replace(/\brecat\b/g, "react")
+    .replace(/\bhite\b/g, "hire");
 export function tokenize(value) {
   return [...new Set(normalize(value).match(/[a-z0-9]+/g) || [])].filter(
     (word) => !stopwords.has(word) && word.length > 1,
   );
+}
+
+// Allow one missed, extra, substituted, or transposed letter in longer terms.
+// Short words stay exact to avoid turning unrelated questions into matches.
+function nearTerm(a, b) {
+  if (a === b) return true;
+  if (Math.min(a.length, b.length) < 5 || Math.abs(a.length - b.length) > 1) return false;
+  let i = 0;
+  while (a[i] === b[i] && i < Math.min(a.length, b.length)) i++;
+  if (a.length === b.length)
+    return a.slice(i + 1) === b.slice(i + 1) ||
+      (a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2));
+  return a.length > b.length
+    ? a.slice(i + 1) === b.slice(i)
+    : a.slice(i) === b.slice(i + 1);
 }
 
 export function retrieve(question, limit = 3) {
@@ -135,19 +157,13 @@ export function retrieve(question, limit = 3) {
       const title = tokenize(doc.title);
       const keys = tokenize(doc.keywords);
       const body = tokenize(doc.text);
-      const matches = query.filter(
-        (term) =>
-          keys.includes(term) || title.includes(term) || body.includes(term),
+      const weights = query.map((term) =>
+        (title.some((word) => nearTerm(term, word)) ? 5 : 0) +
+        (keys.some((word) => nearTerm(term, word)) ? 3 : 0) +
+        (body.some((word) => nearTerm(term, word)) ? 1 : 0),
       );
-      const score = matches.reduce(
-        (sum, term) =>
-          sum +
-          (title.includes(term) ? 5 : 0) +
-          (keys.includes(term) ? 3 : 0) +
-          (body.includes(term) ? 1 : 0),
-        0,
-      );
-      return { ...doc, score, coverage: matches.length / query.length };
+      const score = weights.reduce((sum, weight) => sum + weight, 0);
+      return { ...doc, score, coverage: weights.filter(Boolean).length / query.length };
     })
     .filter((doc) => doc.score >= 3)
     .sort((a, b) => b.score - a.score || b.coverage - a.coverage)

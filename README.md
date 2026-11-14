@@ -47,13 +47,15 @@ To configure the key securely:
 
 References: [Groq Responses compatibility](https://console.groq.com/docs/responses-api), [Groq free-tier limits](https://console.groq.com/docs/rate-limits), [Groq billing](https://console.groq.com/docs/billing-faqs).
 
-The frontend validates citation numbers against the retrieved sources before accepting an AI answer. This checks reference integrity, not semantic truth. The backend additionally rejects Setwise answers that omit its active-development status. Unsupported or interrupted answers fall back to the original published evidence. Each question is independent; Start over clears the in-memory conversation. The browser cancels requests after thirty seconds.
+The frontend validates citation numbers against the retrieved sources before accepting an AI answer. This checks reference integrity, not semantic truth. The backend additionally rejects answers that name or cite Setwise without its active-development status. Unsupported or interrupted answers fall back to published evidence using the same question interpretation as the server. The browser cancels requests after thirty seconds.
+
+The browser keeps up to four recent questions in memory and sends them with the current question so follow-ups such as “does it use React?” can refer to the previous project. Start over clears that context; stopped answers are excluded. No generated answer is reused as factual evidence, and the server validates history length and shape. Shared retrieval handles common frontend/backend phrasing and small spelling errors. Evidence-only answers cover React and frontend work across projects, work-history dates, and role-fit questions. Missing personal details receive a specific limitation: current location is not treated as birthplace, and age is not inferred from graduation dates.
 
 Build the backend with `node scripts/build-api.mjs`; `vercel.json` deploys only its landing page and API function. `scripts/build.mjs` remains the separate allowlisted Pages build. A staged production API deployment should be tested before promotion and before setting `assets/config.js` to its stable `/api/ask` URL.
 
 ### Alternative Cloudflare adapter
 
-`backend/worker.mjs` is an optional Cloudflare Worker adapter using the same shared handler and OpenAI’s Responses API directly. Both adapters retrieve the same public corpus on the server, supply numbered evidence to the model, and forward text-delta events to the browser. The browser only constructs source links from its approved evidence IDs, and renders model text as text rather than HTML. Conversations are not stored by this app; each question is independent. The request uses `store: false`, which is not a promise of zero provider retention.
+`backend/worker.mjs` is an optional Cloudflare Worker adapter using the same shared handler and OpenAI’s Responses API directly. Both adapters retrieve the same public corpus on the server, supply numbered evidence to the model, and forward text-delta events to the browser. The browser only constructs source links from its approved evidence IDs, and renders model text as text rather than HTML. Conversations are not stored on the server; recent visitor questions are sent as bounded context for follow-ups. The request uses `store: false`, which is not a promise of zero provider retention.
 
 To activate it:
 
