@@ -18,6 +18,7 @@
     "@vercel/functions": "3.11.3"
   },
   "devDependencies": {
-    "prettier": "3.10.1"
+    "prettier": "3.10.1",
+    "sharp": "0.35.5"
   }
 }
