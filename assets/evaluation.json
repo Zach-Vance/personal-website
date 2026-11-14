@@ -1,0 +1,151 @@
+{
+  "suite": "portfolio-regression-v1",
+  "asOf": "2026-11-14T12:00:00Z",
+  "methodology": "Synthetic fixtures evaluated against deterministic evidence-mode answers and mocked API failures. Content checks test required phrases and exclusions, not semantic truth. Citation checks verify reference numbers, not claim support. No live model accuracy measurement or visitor data.",
+  "rows": [
+    {
+      "id": "ai-workflows",
+      "question": "How does Zach integrate AI into systems?",
+      "history": [],
+      "kind": "evidence",
+      "sourceIds": ["ai-reconciliation", "portfolio-agent"],
+      "answer": "At Super-Sod, Zach implemented an AI-assisted Shopify-to-ERP reconciliation workflow: compare order records, correct discrepancies, log actions, and route remaining exceptions to staff for review. Alongside order-ingestion improvements, orders needing manual correction fell from 17% to under 1% (user-reported before/after figures). [1]\n\nZach built this personal website’s conversational AI assistant. It resolves follow-up questions using up to four recent questions, retrieves curated public portfolio evidence, and sends the current question, resolved topic, and evidence to a server-side Groq Responses API integration. Answers stream to the browser with numbered source links. This is an AI-powered question-to-evidence-to-answer workflow; it does not autonomously change external systems. [2]",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "backend",
+      "question": "What backend APIs has Zach developed?",
+      "history": [],
+      "kind": "evidence",
+      "sourceIds": ["backend", "overview"],
+      "answer": "Zach develops Go REST APIs and PostgreSQL functions, triggers, views, and integrity rules supporting operational and analytical data flows. His work connects application behavior, relational data, external APIs, and business requirements. [1]\n\nZach Vance is a software developer based in Charleston, South Carolina. He builds backend APIs, data-intensive applications, integrations, and practical automation. His approach emphasizes finding underlying problems and building reliable, maintainable systems that can grow with the business. [2]",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "offline",
+      "question": "How does Setwise handle offline logging?",
+      "history": [],
+      "kind": "evidence",
+      "sourceIds": ["offline"],
+      "answer": "Setwise is in active development and is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns. [1]",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "recommendations",
+      "question": "Does Setwise use AI for recommendations?",
+      "history": [],
+      "kind": "evidence",
+      "sourceIds": ["recommendations", "setwise", "offline"],
+      "answer": "Setwise is in active development and uses workout history and deterministic domain logic to suggest loads, repetitions, and reps in reserve, with conservative, user-overridable volume adjustments. These recommendations are not described as generative AI. The recommendation logic is separate from AI-assisted development. [1]\n\nSetwise is Zach’s personal strength-training application, under active development in 2026. It uses Next.js, React, TypeScript, Prisma, PostgreSQL, and Supabase. The work includes backend services, relational data modeling, durable offline workout logging and synchronization, history-based recommendations, and database migration validation. [2]\n\nSetwise is in active development and is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns. [3]",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "react",
+      "question": "What React work has he done?",
+      "history": [],
+      "kind": "evidence",
+      "sourceIds": ["mesonet", "setwise"],
+      "answer": "Zach used React, Next.js, and TypeScript to develop weather-data quality dashboards at Kentucky Mesonet [1]. He also uses that stack in Setwise, his strength-training application in active development [2].",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "hire",
+      "question": "Should I hire Zach?",
+      "history": [],
+      "kind": "prepared",
+      "sourceIds": ["backend", "integration", "applications"],
+      "answer": "Yes—Zach makes a strong case for backend, integrations, and full-stack roles: he builds Go REST APIs and PostgreSQL integrity rules [1], delivers Shopify/ERP and HubSpot integrations, and has reported reducing orders needing manual correction from 17% to under 1% alongside ingestion improvements and AI-assisted reconciliation [2]. He also builds SvelteKit/TypeScript applications across ordering, inventory, pricing, and other business operations [3]. For a team that needs someone to connect systems, reduce manual work, and solve practical software problems, his portfolio gives compelling reasons to interview him [1][2][3].",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "tenure",
+      "question": "How many years experience does he have?",
+      "history": [],
+      "kind": "prepared",
+      "sourceIds": ["applications", "mesonet"],
+      "answer": "As of November 2026, Zach has about 4 years across his published software-development roles, including his internship [1][2]. He has worked at Super-Sod since July 2024 [1] and was an Application Developer Intern at Kentucky Mesonet from September 2022 to May 2024 [2]. The total includes internship time; it is not a measure of full-time experience alone.",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "follow-up",
+      "question": "How does it handle failures?",
+      "history": ["Tell me about the website chatbot"],
+      "kind": "evidence",
+      "sourceIds": ["portfolio-reliability"],
+      "answer": "The portfolio assistant validates citation numbers against supplied sources and checks Setwise answers for active-development status; these checks do not prove every claim is true. Provider failures, invalid or incomplete answers, timeouts, and API version mismatches fall back to local portfolio evidence. The interface supports stopping answers and clearing recent-question context. Provider credentials stay server-side; request validation and per-instance throttles bound requests. Automated tests cover API behavior, follow-up resolution, citations, and browser fallback flows. [1]",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "scope",
+      "question": "Implement binary search tree",
+      "history": [],
+      "kind": "limitation",
+      "sourceIds": [],
+      "answer": "This chat focuses on Zach’s portfolio. I can explain his backend APIs, data work, or engineering approach; general coding exercises such as implementing a binary search tree are outside that scope.",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": null
+    },
+    {
+      "id": "personal",
+      "question": "What is his salary?",
+      "history": [],
+      "kind": "limitation",
+      "sourceIds": [],
+      "answer": "I don’t have published evidence for that personal detail. I can help with Zach’s experience, projects, or technical approach instead.",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": null
+    },
+    {
+      "id": "backend-typo",
+      "question": "What is his abckend approach?",
+      "history": [],
+      "kind": "evidence",
+      "sourceIds": ["backend", "approach"],
+      "answer": "Zach develops Go REST APIs and PostgreSQL functions, triggers, views, and integrity rules supporting operational and analytical data flows. His work connects application behavior, relational data, external APIs, and business requirements. [1]\n\nZach focuses on understanding underlying problems and building reliable, maintainable systems. He owns requirements, technical decisions, code review, testing, and release decisions. AI coding assistants (Claude Code at work and Codex for personal projects) are supporting development tools. [2]",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    },
+    {
+      "id": "topic-switch",
+      "question": "Tell me about Mesonet",
+      "history": ["What is Setwise?"],
+      "kind": "evidence",
+      "sourceIds": ["mesonet"],
+      "answer": "As an Application Developer Intern at Kentucky Mesonet from September 2022 to May 2024, Zach developed weather-data quality dashboards with Next.js, React, and TypeScript, wrote Python scripts for processing and analyzing observations, and developed and trained a Python/TensorFlow image-recognition model. [1]",
+      "sourcesPass": true,
+      "contentPass": true,
+      "citationsPass": true
+    }
+  ],
+  "fallback": [
+    { "id": "provider-unavailable", "status": 502, "pass": true },
+    { "id": "invalid-citation", "status": 200, "pass": true },
+    { "id": "incomplete-stream", "status": 200, "pass": true },
+    { "id": "quota-exhausted", "status": 429, "pass": true }
+  ],
+  "summary": {
+    "sourceSelection": { "passed": 12, "total": 12 },
+    "contentChecks": { "passed": 12, "total": 12 },
+    "citationReferences": { "passed": 10, "total": 10 },
+    "fallback": { "passed": 4, "total": 4 }
+  }
+}

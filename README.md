@@ -32,7 +32,7 @@ With `askEndpoint` empty in `assets/config.js`, the panel performs local lexical
 
 The API is a separate Vercel project, `purple-toad/zach-vance-portfolio-api`; the website remains on GitHub Pages. `api/ask.mjs` calls Groq's Responses API through the shared `backend/core.mjs` handler. No provider key is sent to the browser or committed. There is no automatic switch to a paid provider.
 
-Runtime configuration: `ALLOWED_ORIGIN=https://zach-vance.github.io`, secret `GROQ_API_KEY`, and optional `GROQ_MODEL` (defaults to `openai/gpt-oss-120b`). The model and free-tier availability were checked against Groq's documentation on November 13, 2026. Low reasoning effort and a 1,536-token total output budget leave room for reasoning and a short cited answer. Groq does not support the Responses `store` parameter, so the adapter omits it; this app does not persist questions or conversations, but provider retention is governed by Groq's policies.
+Runtime configuration: `ALLOWED_ORIGIN=https://zach-vance.github.io`, secret `GROQ_API_KEY`, and optional `GROQ_MODEL` (defaults to `openai/gpt-oss-120b`). The model and free-tier availability were checked against Groq's documentation on November 13, 2026. Low reasoning effort and a 1,536-token total output budget leave room for reasoning and a short cited answer. Groq does not support the Responses `store` parameter, so the adapter omits it; the API can log redacted questions and responses to a private Supabase table, while provider retention is governed by Groq's policies.
 
 Keep the Groq account on the Free plan. Its published base limits for this model are 30 requests/minute, 1,000 requests/day, 8,000 tokens/minute, and 200,000 tokens/day; check your account for exact limits. Exhaustion returns an error and the browser falls back to evidence search. Upgrading the Groq account changes billing behavior; the code cannot enforce the account's billing tier. No credits were purchased or auto top-up enabled.
 
@@ -67,7 +67,7 @@ to a coding question. The assistant’s retrieval, citations, context, failure h
 static delivery, and playground features have public references in
 `projects/portfolio.html`. Keep those references aligned with the implementation.
 Hiring answers lead with a positive recommendation backed by actual work and reported
-outcomes, without promising fit for every role. API contract version 3 prevents the
+outcomes, without promising fit for every role. API contract version 4 prevents the
 updated frontend from accepting the previous API’s answer behavior; deploy both services
 to enable updated live answers. Until then, the browser uses updated local evidence.
 
@@ -78,3 +78,69 @@ to enable updated live answers. Until then, the browser uses updated local evide
 - `resume.html`: printable résumé (Print / Save as PDF).
 - `assets/knowledge.mjs`: public evidence corpus shared with the backend. Update it alongside page content.
 - Setwise’s preview is explicitly an **interface study**, not a screenshot of the live product.
+
+## Private API analytics
+
+Supabase project: `portfolio-analytics` (`aagvjcvqmjlhovwwauum`) in Forge Labs, on Free.
+The browser never connects to the log database. `public.ai_api_calls` has RLS enabled,
+no public policies, and no `anon`/`authenticated` grants. The server sends an allowlisted,
+best-effort redacted record to the `ingest-ai-call` Edge Function using a dedicated
+256-bit token. Only its one-way hash is committed. The Edge Function authenticates the
+request and uses its built-in server credential to insert the record. Duplicate call IDs
+are ignored. Rejected API requests log status metadata, not submitted content.
+
+The API logs final provider responses (including rejected/partial responses marked
+`accepted: false`), prepared answers, errors, source IDs, latency, and history count.
+Headers, IPs, user agents, and prior question text are not included in application logs.
+Hosting/provider infrastructure may keep its own logs. Redaction catches common emails,
+phone numbers, URLs, and secret formats; it is not anonymization. Logs are untrusted
+input for manual review, never automatic training labels or portfolio facts.
+Logging is best effort: outages, process termination, or timeouts can lose records.
+
+Retention is **three calendar months**, shortened under storage pressure. An hourly
+cleanup keeps at most **100,000 rows** and **150 MiB estimated live data** (payload size
+with a conservative overhead factor). Allocated PostgreSQL size can differ; deletes
+leave reusable pages and autovacuum maintains reuse. The private notebook shows actual
+database/table allocation too. This is a conservative free-tier budget, not a provider
+billing guarantee. Existing API spam limits are unchanged. No paid services were enabled.
+
+[Open private analytics in Supabase](https://supabase.com/dashboard/project/aagvjcvqmjlhovwwauum/explorer/notebook/e1e7f98b-9d56-4302-880a-148be5e902d2).
+The report highlights **possible hiring interest**, a database keyword heuristic for
+hiring/interview/availability/role-fit questions. It does not identify visitors, prove
+that they are employers, or send notifications. Use the report to inspect real questions,
+spot weak answers, and manually create sanitized regression cases with reviewed expected
+answers. Never publish raw visitor logs.
+
+Configuration in the existing Vercel API project (server-only):
+
+- `AI_LOG_INGEST_URL`: `https://aagvjcvqmjlhovwwauum.supabase.co/functions/v1/ingest-ai-call`
+- `AI_LOG_INGEST_TOKEN`: dedicated secret from the ignored local `.env.local`; copy securely
+  into the Vercel secret store, never chat or Git. Only Production should write production logs.
+- Optional `AI_CALL_LOGGING=off` disables app logging; `AI_LOG_CONTENT=off` retains metadata only.
+
+`waitUntil` keeps the bounded asynchronous database write alive after the answer finishes;
+write failures leave only a call ID in Vercel runtime logs and never fail the answer.
+Runtime logs contain metadata only. The existing privacy note accurately mentions logging;
+there is no popup or separate announcement. Publish that note before enabling live logging.
+
+The Supabase project, table, retention job, authenticated ingestion function, and private
+notebook are provisioned. Live Vercel integration still requires its environment variables
+and a tested API deployment. The connected Vercel account currently cannot see the API
+project, so no live API release was made.
+
+Schema snapshots are in `supabase/schema.sql`, `supabase/retention.sql`, and
+`supabase/hiring-analytics.sql`, in application order; hosted migration history records
+the corresponding changes. Notebook definitions are in `supabase/analytics-notebook.json`.
+To rotate ingestion access, generate a fresh token, deploy its SHA-256 hash in
+`supabase/functions/ingest-ai-call/token-hash.mjs`, update the Vercel secret, and redeploy.
+No Supabase service-role key is needed in Vercel or the browser.
+
+## Published assistant evaluation
+
+`npm run evaluate` regenerates `assets/evaluation.json` and
+`projects/assistant-evaluation.html`. `npm run evaluate:check` verifies the published
+artifacts in CI. The suite uses 12 public synthetic questions and four mocked API
+failures. It checks expected sources, required content/exclusions, and citation-number
+validity. These are deterministic evidence-mode regressions, not a live-model accuracy
+benchmark or proof of semantic citation support. Browser tests cover the fallback UI.
+No visitor logs or secrets are included in the published evaluation.

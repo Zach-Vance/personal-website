@@ -2,7 +2,7 @@ import { evidence, normalize, retrieve, sourceFor } from "./knowledge.mjs";
 
 // Only recent questions travel with a request. Generated answers are never evidence.
 export const MAX_HISTORY = 4;
-export const API_CONTRACT_VERSION = "3";
+export const API_CONTRACT_VERSION = "4";
 const sources = (...ids) => ids.map(sourceFor);
 const topics = [
   ["setwise", /\bsetwise\b/],
@@ -76,6 +76,13 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
     kind,
   });
   const is = (pattern) => pattern.test(query);
+  // Current question only: a prior mention must never leak this joke into follow-ups.
+  if (
+    /^(?:kyle[?.!]*|(?:who is|who['’]s|what about|tell me about|what do you think (?:of|about)|do you know|how is)\s+kyle[?.!]*|(?:is|does)\s+kyle\s+[^?]+\?)$/i.test(
+      question.trim(),
+    )
+  )
+    return result([], "Kyle Sucks", "easter-egg");
   if (
     is(
       /\b(implement|implmenet|write|code|solve)\b.*\b(binary search|algorithm|leetcode|sorting|tree)\b/,
@@ -167,7 +174,12 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
         "backend",
         "delivery",
       ],
-      portfolio: ["portfolio-agent", "portfolio-reliability", "portfolio-site"],
+      portfolio: [
+        "portfolio-agent",
+        "portfolio-reliability",
+        "portfolio-site",
+        "assistant-evaluation",
+      ],
     }[explicitTopic[0]];
     const scopedQuery = query.replace(explicitTopic[1], "");
     const relevant = retrieve(scopedQuery, 12).filter((doc) =>

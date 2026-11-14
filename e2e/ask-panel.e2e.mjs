@@ -133,3 +133,46 @@ test("AI workflow and hiring answers remain persuasive when the provider fails",
   );
   await expect(turn.locator(".chat-answer")).toContainText("17% to under 1%");
 });
+
+test("the Kyle joke stays limited to direct questions, including local fallback", async ({
+  page,
+}) => {
+  await mockApi(page, (route) =>
+    route.fulfill({ status: 502, headers: corsHeaders, body: "Unavailable" }),
+  );
+  await ask(page, "Who is Kyle?");
+  await expect(
+    page.locator(".chat-turn").last().locator(".chat-answer"),
+  ).toHaveText("Kyle Sucks");
+  await page
+    .locator("#question")
+    .fill("What backend experience does Zach have?");
+  await page.locator("#ask-submit").click();
+  const answer = page.locator(".chat-turn").last().locator(".chat-answer");
+  await expect(answer).toContainText("Go REST APIs");
+  await expect(answer).not.toContainText("Kyle Sucks");
+});
+
+test("the public evaluation links to synthetic results and states its measurement limits", async ({
+  page,
+}) => {
+  await page.goto("projects/portfolio.html");
+  await page
+    .getByRole("link", { name: "published assistant evaluation" })
+    .click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Show how the assistant holds up.",
+  );
+  await expect(page.locator("#methodology")).toContainText(
+    "No live model accuracy measurement or visitor data.",
+  );
+  await expect(page.locator("#cases details")).toHaveCount(12);
+  const href = await page
+    .getByRole("link", { name: "Download the synthetic results as JSON" })
+    .getAttribute("href");
+  const response = await page.request.get(new URL(href, page.url()).toString());
+  expect(response.ok()).toBe(true);
+  const report = await response.json();
+  expect(report.summary.fallback).toEqual({ passed: 4, total: 4 });
+  expect(JSON.stringify(report)).not.toContain("Kyle");
+});
