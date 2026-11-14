@@ -78,7 +78,9 @@ test("Vercel adapter uses only the server-side Groq key and compatible Responses
       assert.equal(data.max_output_tokens, 1536);
       assert.equal(data.stream, true);
       assert.ok(!Object.hasOwn(data, "store"));
-      return provider("Setwise is in active development and is designed for durable offline logging [1].");
+      return provider(
+        "Setwise is in active development and is designed for durable offline logging [1].",
+      );
     },
   });
   for (let i = 0; i < 2; i++) {

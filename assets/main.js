@@ -1,6 +1,10 @@
 import { config } from "./config.js";
 import { evidence, sourceFor } from "./knowledge.mjs";
-import { portfolioAnswer, MAX_HISTORY, API_CONTRACT_VERSION } from "./conversation.mjs";
+import {
+  portfolioAnswer,
+  MAX_HISTORY,
+  API_CONTRACT_VERSION,
+} from "./conversation.mjs";
 import { readEvents } from "./stream.mjs";
 import { hasValidCitations } from "./answer.mjs";
 
@@ -131,7 +135,8 @@ if (form) {
         });
         if (
           !response.ok ||
-          response.headers.get("X-Portfolio-API-Version") !== API_CONTRACT_VERSION ||
+          response.headers.get("X-Portfolio-API-Version") !==
+            API_CONTRACT_VERSION ||
           !response.body ||
           !response.headers.get("content-type")?.includes("text/event-stream")
         )
@@ -140,7 +145,10 @@ if (form) {
         let docs = [];
         for await (const event of readEvents(response.body)) {
           if (event.type === "sources") {
-            docs = (event.ids || []).map(sourceFor).filter(Boolean).slice(0, evidence.length);
+            docs = (event.ids || [])
+              .map(sourceFor)
+              .filter(Boolean)
+              .slice(0, evidence.length);
             if (docs.length <= 3) sourceLinks(sources, docs);
           } else if (event.type === "delta") {
             if (typeof event.text !== "string")

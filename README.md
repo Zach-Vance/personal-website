@@ -66,4 +66,3 @@ References: [GitHub Pages deployment](https://docs.github.com/en/get-started/sta
 - `resume.html`: printable résumé (Print / Save as PDF).
 - `assets/knowledge.mjs`: public evidence corpus shared with the backend. Update it alongside page content.
 - Setwise’s preview is explicitly an **interface study**, not a screenshot of the live product.
-
