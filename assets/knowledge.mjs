@@ -104,7 +104,18 @@ const stopwords = new Set(
     " ",
   ),
 );
-const topicVocabulary = ["backend", "frontend", "setwise", "mesonet", "react", "python", "typescript", "postgresql", "experience", "integrations"];
+const topicVocabulary = [
+  "backend",
+  "frontend",
+  "setwise",
+  "mesonet",
+  "react",
+  "python",
+  "typescript",
+  "postgresql",
+  "experience",
+  "integrations",
+];
 export const normalize = (value) =>
   value
     .toLowerCase()
@@ -118,7 +129,10 @@ export const normalize = (value) =>
     .replace(/\bexp\b/g, "experience")
     .replace(/\byrs?\b/g, "years")
     .replace(/\bhite\b/g, "hire")
-    .replace(/\b[a-z]{5,}\b/g, (word) => topicVocabulary.find((topic) => nearTerm(word, topic)) || word);
+    .replace(
+      /\b[a-z]{5,}\b/g,
+      (word) => topicVocabulary.find((topic) => nearTerm(word, topic)) || word,
+    );
 export function tokenize(value) {
   return [...new Set(normalize(value).match(/[a-z0-9]+/g) || [])].filter(
     (word) => !stopwords.has(word) && word.length > 1,
@@ -129,12 +143,17 @@ export function tokenize(value) {
 // Short words stay exact to avoid turning unrelated questions into matches.
 function nearTerm(a, b) {
   if (a === b) return true;
-  if (Math.min(a.length, b.length) < 5 || Math.abs(a.length - b.length) > 1) return false;
+  if (Math.min(a.length, b.length) < 5 || Math.abs(a.length - b.length) > 1)
+    return false;
   let i = 0;
   while (a[i] === b[i] && i < Math.min(a.length, b.length)) i++;
   if (a.length === b.length)
-    return a.slice(i + 1) === b.slice(i + 1) ||
-      (a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2));
+    return (
+      a.slice(i + 1) === b.slice(i + 1) ||
+      (a[i] === b[i + 1] &&
+        a[i + 1] === b[i] &&
+        a.slice(i + 2) === b.slice(i + 2))
+    );
   return a.length > b.length
     ? a.slice(i + 1) === b.slice(i)
     : a.slice(i) === b.slice(i + 1);
@@ -160,13 +179,18 @@ export function retrieve(question, limit = 3) {
       const title = tokenize(doc.title);
       const keys = tokenize(doc.keywords);
       const body = tokenize(doc.text);
-      const weights = query.map((term) =>
-        (title.some((word) => nearTerm(term, word)) ? 5 : 0) +
-        (keys.some((word) => nearTerm(term, word)) ? 3 : 0) +
-        (body.some((word) => nearTerm(term, word)) ? 1 : 0),
+      const weights = query.map(
+        (term) =>
+          (title.some((word) => nearTerm(term, word)) ? 5 : 0) +
+          (keys.some((word) => nearTerm(term, word)) ? 3 : 0) +
+          (body.some((word) => nearTerm(term, word)) ? 1 : 0),
       );
       const score = weights.reduce((sum, weight) => sum + weight, 0);
-      return { ...doc, score, coverage: weights.filter(Boolean).length / query.length };
+      return {
+        ...doc,
+        score,
+        coverage: weights.filter(Boolean).length / query.length,
+      };
     })
     .filter((doc) => doc.score >= 3)
     .sort((a, b) => b.score - a.score || b.coverage - a.coverage)
