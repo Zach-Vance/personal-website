@@ -27,4 +27,8 @@ await writeFile(
   path.join(out, "404.html"),
   '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found — Zach Vance</title><style>body{font:18px/1.7 system-ui;background:#f5f5ef;color:#193d33;max-width:650px;margin:12vh auto;padding:24px}h1{font-size:48px;letter-spacing:-2px}a{color:inherit}</style></head><body><p>ZACH VANCE / 404</p><h1>A loose connection.</h1><p>That page isn’t here. Let’s get you back to something useful.</p><a href="/personal-website/">Back to the portfolio ↗</a></body></html>',
 );
+await writeFile(
+  path.join(out, "robots.txt"),
+  "User-agent: *\nAllow: /\n",
+);
 console.log("Built GitHub Pages site in dist/");

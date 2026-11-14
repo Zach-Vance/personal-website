@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { hasValidCitations } from "../assets/answer.mjs";
 import { createLimits } from "../backend/limits.mjs";
 import { createVercelHandler } from "../backend/vercel-handler.mjs";
-import { createHandler } from "../backend/worker.mjs";
+import { createHandler } from "../backend/core.mjs";
 import { readEvents } from "../assets/stream.mjs";
 
 const allowed = "https://zach-vance.github.io";

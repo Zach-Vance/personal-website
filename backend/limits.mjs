@@ -1,5 +1,5 @@
-// A bounded per-instance throttle. The AI Gateway project budget separately
-// bounds model spend across instances; this is not a distributed rate limiter.
+// A bounded per-instance throttle. It resets on cold starts and is not a
+// distributed rate limiter; the provider free tier is the real spend cap.
 export function createLimits(clock = Date.now) {
   const clients = new Map();
   let global = { start: clock(), count: 0 };
