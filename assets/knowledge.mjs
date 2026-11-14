@@ -54,7 +54,7 @@ export const evidence = [
     url: "projects/setwise.html#offline",
     keywords:
       "offline sync synchronization durable reliability retries connection connectivity workout logging setwise browser storage",
-    text: "Setwise is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns.",
+    text: "Setwise is in active development and is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns.",
   },
   {
     id: "recommendations",
@@ -62,7 +62,7 @@ export const evidence = [
     url: "projects/setwise.html#recommendations",
     keywords:
       "recommendations prediction algorithm logic history load reps rir volume setwise training ai model",
-    text: "Setwise uses workout history and deterministic domain logic to suggest loads, repetitions, and reps in reserve, with conservative, user-overridable volume adjustments. These recommendations are not described as generative AI. The recommendation logic is separate from AI-assisted development.",
+    text: "Setwise is in active development and uses workout history and deterministic domain logic to suggest loads, repetitions, and reps in reserve, with conservative, user-overridable volume adjustments. These recommendations are not described as generative AI. The recommendation logic is separate from AI-assisted development.",
   },
   {
     id: "verification",
@@ -70,7 +70,7 @@ export const evidence = [
     url: "projects/setwise.html#verification",
     keywords:
       "security authorization rls row level database migrations tests testing ci cd github actions quality verification prisma setwise",
-    text: "Setwise uses reviewed SQL migrations, row-level security, explicit server-side authorization, automated tests, and CI checks that validate migrations against disposable PostgreSQL databases. Server authorization matters because a privileged database connection can bypass row-level security. The public GitHub repository provides the implementation and current development status.",
+    text: "Setwise is in active development and uses reviewed SQL migrations, row-level security, explicit server-side authorization, automated tests, and CI checks that validate migrations against disposable PostgreSQL databases. Server authorization matters because a privileged database connection can bypass row-level security. The public GitHub repository provides the implementation and current development status.",
   },
   {
     id: "mesonet",
@@ -128,6 +128,14 @@ export const evidence = [
     keywords:
       "personal website site portfolio features architecture static github pages vercel resume print games playground neon drift replay ghost simulation",
     text: "Zach’s personal website combines a static-first GitHub Pages frontend, a separate Vercel AI API, engineering case studies, a printable résumé, and an interactive playground. Neon Drift includes a fixed-step driving simulation, checkpoint-validated laps, and a locally saved best-run ghost replay. The site build checks local links and evidence anchors and publishes an allowlisted static output without backend code or credentials.",
+  },
+  {
+    id: "assistant-evaluation",
+    title: "Portfolio assistant · Published regression evaluation",
+    url: "projects/assistant-evaluation.html",
+    keywords:
+      "personal website portfolio assistant chatbot evaluation accuracy quality benchmark test testing sources citations fallback reliability",
+    text: "The portfolio assistant has a published, reproducible regression evaluation with 12 synthetic questions covering AI workflows, backend skills, hiring, project status, follow-ups, and scope. It checks expected source selection, required content, citation-number validity, and four mocked API failure scenarios. These are deterministic evidence-mode checks, not a measurement of live-model answer accuracy or semantic citation support. Visitor logs are private and are not part of the public evaluation dataset.",
   },
 ];
 

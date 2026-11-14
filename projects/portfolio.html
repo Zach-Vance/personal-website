@@ -68,10 +68,19 @@
             or clear their recent-question context.</p>
           <p>Provider credentials stay on the server. Request validation, bounded history,
             and per-instance throttles constrain requests. Recent questions stay in browser
-            memory and are sent for follow-up context; this app does not persist conversations.
+            memory and are sent for follow-up context. Questions and answers may be logged
+            privately for up to three months to improve the assistant, with best-effort
+            redaction of common contact details and secrets.
             Provider retention follows the provider’s policies.</p>
           <p>Automated tests cover API behavior, citation validation, follow-up topic resolution,
             and browser failure and fallback flows.</p>
+        </section>
+        <section id="evaluation">
+          <h2>Make quality inspectable.</h2>
+          <p>The <a href="assistant-evaluation.html">published assistant evaluation</a>
+            shows synthetic questions, expected source selection, content checks, valid
+            citation references, and mocked failure behavior. It separates deterministic
+            regression results from live-model accuracy, which still needs human review.</p>
         </section>
         <section id="site">
           <h2>A static site with a focused backend.</h2>
