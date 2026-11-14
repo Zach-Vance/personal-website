@@ -2,12 +2,16 @@ import { evidence, normalize, retrieve, sourceFor } from "./knowledge.mjs";
 
 // Only recent questions travel with a request. Generated answers are never evidence.
 export const MAX_HISTORY = 4;
-export const API_CONTRACT_VERSION = "2";
+export const API_CONTRACT_VERSION = "3";
 const sources = (...ids) => ids.map(sourceFor);
 const topics = [
   ["setwise", /\bsetwise\b/],
   ["mesonet", /\bmesonet\b/],
   ["super sod", /\bsuper sod\b/],
+  [
+    "portfolio",
+    /\b(portfolio|website|chatbot|assistant|this site|personal site)\b/,
+  ],
 ];
 
 function experienceSummary(now) {
@@ -116,7 +120,7 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
   if (is(/\bhire\b|\bhiring\b|\b(?:good|right|strong) (?:fit|candidate)\b/))
     return result(
       sources("backend", "integration", "applications"),
-      "Zach is worth considering for backend, integrations, or full-stack roles based on his published work: Go REST APIs and PostgreSQL data integrity [1], Shopify/ERP and HubSpot integrations [2], and SvelteKit/TypeScript operational applications [3]. A good interview would explore those implementations and how they match your role. The hiring decision depends on your requirements and an interview.",
+      "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
       "prepared",
     );
 
@@ -156,7 +160,14 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
     const topicDocs = {
       setwise: ["setwise", "offline", "recommendations", "verification"],
       mesonet: ["mesonet"],
-      "super sod": ["applications", "integration", "backend", "delivery"],
+      "super sod": [
+        "applications",
+        "integration",
+        "ai-reconciliation",
+        "backend",
+        "delivery",
+      ],
+      portfolio: ["portfolio-agent", "portfolio-reliability", "portfolio-site"],
     }[explicitTopic[0]];
     const scopedQuery = query.replace(explicitTopic[1], "");
     const relevant = retrieve(scopedQuery, 12).filter((doc) =>
