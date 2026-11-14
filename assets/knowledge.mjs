@@ -1,5 +1,3 @@
-// Approved public portfolio facts. Shared by static search and the AI backend.
-// Never put private résumé notes, employer source, or credentials in this file.
 export const evidence = [
   {
     id: "overview",
@@ -11,10 +9,11 @@ export const evidence = [
   },
   {
     id: "applications",
+    period: { start: "2024-07", end: null },
     title: "Super-Sod · Application development",
     url: "index.html#experience",
     keywords:
-      "work job current professional experience super sod frontend full stack sveltekit typescript javascript erp application operations",
+      "work job current professional experience career employment super sod frontend full stack sveltekit typescript javascript erp application operations",
     text: "Since July 2024, Zach has worked at Super-Sod as a Junior Python Developer. He builds and maintains operational applications for ordering, invoicing, inventory, pricing, dispatch, and purchasing with SvelteKit, TypeScript, and PostgreSQL.",
   },
   {
@@ -22,8 +21,8 @@ export const evidence = [
     title: "Connecting commerce and operations",
     url: "projects/integrations.html",
     keywords:
-      "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
-    text: "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
+      "commerce crm integrations api synchronization automation reliability data integrity self-service workflows ai-assisted review backend applications",
+    text: "At Super-Sod, Zach improved the reliability of commerce and operations integrations, reduced manual correction work, and implemented AI-assisted data review. He built self-service tools that made routine business maintenance easier for nontechnical staff and maintained integrations between business applications and external services. His work includes APIs, relational data integrity, backend automation, and practical application development.",
   },
   {
     id: "backend",
@@ -55,7 +54,7 @@ export const evidence = [
     url: "projects/setwise.html#offline",
     keywords:
       "offline sync synchronization durable reliability retries connection connectivity workout logging setwise browser storage",
-    text: "Setwise is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns. This is an active personal project; the portfolio does not claim that every device or acceptance check is complete.",
+    text: "Setwise is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns.",
   },
   {
     id: "recommendations",
@@ -75,10 +74,11 @@ export const evidence = [
   },
   {
     id: "mesonet",
+    period: { start: "2022-09", end: "2024-05" },
     title: "Kentucky Mesonet · Weather & machine learning",
     url: "projects/mesonet.html",
     keywords:
-      "mesonet weather dashboard visualization python tensorflow machine learning ml image recognition model train trained internship intern",
+      "mesonet weather dashboard visualization frontend nextjs react typescript python tensorflow machine learning ml image recognition model train trained internship intern",
     text: "As an Application Developer Intern at Kentucky Mesonet from September 2022 to May 2024, Zach developed weather-data quality dashboards with Next.js, React, and TypeScript, wrote Python scripts for processing and analyzing observations, and developed and trained a Python/TensorFlow image-recognition model.",
   },
   {
@@ -104,15 +104,59 @@ const stopwords = new Set(
     " ",
   ),
 );
-const normalize = (value) =>
+const topicVocabulary = [
+  "backend",
+  "frontend",
+  "setwise",
+  "mesonet",
+  "react",
+  "python",
+  "typescript",
+  "postgresql",
+  "experience",
+  "integrations",
+];
+export const normalize = (value) =>
   value
     .toLowerCase()
+    .replace(/[\u2010-\u2015]/g, "-")
     .replace(/next\.js/g, "nextjs")
-    .replace(/super-sod/g, "super sod");
+    .replace(/super-sod/g, "super sod")
+    .replace(/\bfront[\s-]+end\b/g, "frontend")
+    .replace(/\bback[\s-]+end\b/g, "backend")
+    .replace(/\b(?:user interfaces?|ui|client[\s-]+side)\b/g, "frontend")
+    .replace(/\bfull[\s-]+stack\b/g, "full stack")
+    .replace(/\bexp\b/g, "experience")
+    .replace(/\byrs?\b/g, "years")
+    .replace(/\bhite\b/g, "hire")
+    .replace(
+      /\b[a-z]{5,}\b/g,
+      (word) => topicVocabulary.find((topic) => nearTerm(word, topic)) || word,
+    );
 export function tokenize(value) {
   return [...new Set(normalize(value).match(/[a-z0-9]+/g) || [])].filter(
     (word) => !stopwords.has(word) && word.length > 1,
   );
+}
+
+// Allow one missed, extra, substituted, or transposed letter in longer terms.
+// Short words stay exact to avoid turning unrelated questions into matches.
+function nearTerm(a, b) {
+  if (a === b) return true;
+  if (Math.min(a.length, b.length) < 5 || Math.abs(a.length - b.length) > 1)
+    return false;
+  let i = 0;
+  while (a[i] === b[i] && i < Math.min(a.length, b.length)) i++;
+  if (a.length === b.length)
+    return (
+      a.slice(i + 1) === b.slice(i + 1) ||
+      (a[i] === b[i + 1] &&
+        a[i + 1] === b[i] &&
+        a.slice(i + 2) === b.slice(i + 2))
+    );
+  return a.length > b.length
+    ? a.slice(i + 1) === b.slice(i)
+    : a.slice(i) === b.slice(i + 1);
 }
 
 export function retrieve(question, limit = 3) {
@@ -135,19 +179,18 @@ export function retrieve(question, limit = 3) {
       const title = tokenize(doc.title);
       const keys = tokenize(doc.keywords);
       const body = tokenize(doc.text);
-      const matches = query.filter(
+      const weights = query.map(
         (term) =>
-          keys.includes(term) || title.includes(term) || body.includes(term),
+          (title.some((word) => nearTerm(term, word)) ? 5 : 0) +
+          (keys.some((word) => nearTerm(term, word)) ? 3 : 0) +
+          (body.some((word) => nearTerm(term, word)) ? 1 : 0),
       );
-      const score = matches.reduce(
-        (sum, term) =>
-          sum +
-          (title.includes(term) ? 5 : 0) +
-          (keys.includes(term) ? 3 : 0) +
-          (body.includes(term) ? 1 : 0),
-        0,
-      );
-      return { ...doc, score, coverage: matches.length / query.length };
+      const score = weights.reduce((sum, weight) => sum + weight, 0);
+      return {
+        ...doc,
+        score,
+        coverage: weights.filter(Boolean).length / query.length,
+      };
     })
     .filter((doc) => doc.score >= 3)
     .sort((a, b) => b.score - a.score || b.coverage - a.coverage)
