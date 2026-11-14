@@ -2,12 +2,16 @@ import { evidence, normalize, retrieve, sourceFor } from "./knowledge.mjs";
 
 // Only recent questions travel with a request. Generated answers are never evidence.
 export const MAX_HISTORY = 4;
-export const API_CONTRACT_VERSION = "2";
+export const API_CONTRACT_VERSION = "4";
 const sources = (...ids) => ids.map(sourceFor);
 const topics = [
   ["setwise", /\bsetwise\b/],
   ["mesonet", /\bmesonet\b/],
   ["super sod", /\bsuper sod\b/],
+  [
+    "portfolio",
+    /\b(portfolio|website|chatbot|assistant|this site|personal site)\b/,
+  ],
 ];
 
 function experienceSummary(now) {
@@ -72,6 +76,13 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
     kind,
   });
   const is = (pattern) => pattern.test(query);
+  // Current question only: a prior mention must never leak this joke into follow-ups.
+  if (
+    /^(?:kyle[?.!]*|(?:who is|who['’]s|what about|tell me about|what do you think (?:of|about)|do you know|how is)\s+kyle[?.!]*|(?:is|does)\s+kyle\s+[^?]+\?)$/i.test(
+      question.trim(),
+    )
+  )
+    return result([], "Kyle Sucks", "easter-egg");
   if (
     is(
       /\b(implement|implmenet|write|code|solve)\b.*\b(binary search|algorithm|leetcode|sorting|tree)\b/,
@@ -116,7 +127,7 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
   if (is(/\bhire\b|\bhiring\b|\b(?:good|right|strong) (?:fit|candidate)\b/))
     return result(
       sources("backend", "integration", "applications"),
-      "Zach is worth considering for backend, integrations, or full-stack roles based on his published work: Go REST APIs and PostgreSQL data integrity [1], Shopify/ERP and HubSpot integrations [2], and SvelteKit/TypeScript operational applications [3]. A good interview would explore those implementations and how they match your role. The hiring decision depends on your requirements and an interview.",
+      "Yes—Zach makes a strong case for backend, integrations, and full-stack roles. He builds Go REST APIs and PostgreSQL integrity rules [1], improves business integration reliability, reduces manual correction work, and builds self-service tools for nontechnical teams [2]. He also builds SvelteKit/TypeScript operational applications for ordering, inventory, pricing, and other business processes [3]. For a team that needs someone to connect systems and reduce repetitive work, his portfolio gives compelling reasons to interview him [1][2][3].",
       "prepared",
     );
 
@@ -156,7 +167,19 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
     const topicDocs = {
       setwise: ["setwise", "offline", "recommendations", "verification"],
       mesonet: ["mesonet"],
-      "super sod": ["applications", "integration", "backend", "delivery"],
+      "super sod": [
+        "applications",
+        "integration",
+        "ai-reconciliation",
+        "backend",
+        "delivery",
+      ],
+      portfolio: [
+        "portfolio-agent",
+        "portfolio-reliability",
+        "portfolio-site",
+        "assistant-evaluation",
+      ],
     }[explicitTopic[0]];
     const scopedQuery = query.replace(explicitTopic[1], "");
     const relevant = retrieve(scopedQuery, 12).filter((doc) =>

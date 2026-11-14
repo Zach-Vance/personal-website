@@ -33,7 +33,7 @@ if (form) {
   if (endpoint) {
     mode.textContent = "AI + sources";
     note.textContent =
-      "AI answers use published portfolio evidence. Your question and up to four recent questions are sent to the AI service for follow-ups. Please leave out personal information.";
+      "AI answers use published portfolio evidence. Your question and up to four recent questions are sent to the AI service for follow-ups. Questions and answers may be logged for up to three months to improve this assistant. Please leave out personal information.";
   }
 
   function sourceLinks(container, docs, answerText = null) {
