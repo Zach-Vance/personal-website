@@ -147,7 +147,7 @@ test("grounded provider request streams text and verified source identifiers", a
       stream([
         {
           type: "response.output_text.delta",
-          delta: "Durable offline logging [1].",
+          delta: "Setwise is in active development and is designed for durable offline logging [1].",
         },
         { type: "response.completed" },
       ]),
@@ -161,7 +161,7 @@ test("grounded provider request streams text and verified source identifiers", a
   assert.match(payload.instructions, /durable through connectivity/);
   assert.equal(payload.model, "test-model");
   assert.equal(result[0].ids[0], "offline");
-  assert.equal(result[1].text, "Durable offline logging [1].");
+  assert.equal(result[1].text, "Setwise is in active development and is designed for durable offline logging [1].");
   assert.equal(result.at(-1).type, "done");
   assert.equal(
     response.headers.get("Access-Control-Allow-Origin"),

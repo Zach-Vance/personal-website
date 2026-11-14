@@ -1,5 +1,6 @@
 import { config } from "./config.js";
-import { retrieve, sourceFor } from "./knowledge.mjs";
+import { sourceFor } from "./knowledge.mjs";
+import { portfolioAnswer, MAX_HISTORY } from "./conversation.mjs";
 import { readEvents } from "./stream.mjs";
 import { hasValidCitations } from "./answer.mjs";
 
@@ -23,11 +24,12 @@ if (form) {
   const suggestions = document.querySelectorAll("[data-question]");
   let active = null;
   let timedOut = false;
+  let history = [];
   const endpoint = config.askEndpoint;
   if (endpoint) {
     mode.textContent = "AI + sources";
     note.textContent =
-      "AI answers use published portfolio evidence. Questions are sent to the AI service. Please leave out personal information.";
+      "AI answers use published portfolio evidence. Your question and up to four recent questions are sent to the AI service for follow-ups. Please leave out personal information.";
   }
 
   function sourceLinks(container, docs) {
@@ -60,11 +62,9 @@ if (form) {
   }
 
   function showEvidence(question, label, answer, sources) {
-    const docs = retrieve(question, 2);
+    const { docs, text } = portfolioAnswer(question, history);
     label.textContent = "FROM THE PORTFOLIO · EVIDENCE SEARCH";
-    answer.textContent = docs.length
-      ? docs.map((doc) => doc.text).join("\n\n")
-      : "I don’t have published evidence for that question. Try asking about backend APIs, integrations, Setwise, or Kentucky Mesonet—or get in touch with Zach directly.";
+    renderCitations(answer, text, docs);
     sourceLinks(sources, docs);
     return answer.textContent;
   }
@@ -123,7 +123,7 @@ if (form) {
         const response = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question }),
+          body: JSON.stringify({ question, history }),
           signal: controller.signal,
         });
         if (
@@ -157,12 +157,13 @@ if (form) {
           throw new Error("Answer has invalid citations");
         label.textContent = docs.length
           ? "ANSWER · PORTFOLIO SOURCES"
-          : "PORTFOLIO SCOPE";
+          : "ABOUT THIS QUESTION";
         renderCitations(answer, result, docs);
       }
       status.textContent = `Answer ready. ${result}`;
     } catch (error) {
       if (controller.signal.aborted && !timedOut) {
+        result = "";
         label.textContent = "STOPPED";
         answer.textContent = "Answer stopped. You can ask another question.";
         sources.replaceChildren();
@@ -175,6 +176,8 @@ if (form) {
         status.textContent = `The AI service is unavailable. Showing published evidence instead. ${result}`;
       }
     } finally {
+      // Stopped answers don't become context. Completed fallback answers do.
+      if (result) history = [...history, question].slice(-MAX_HISTORY);
       active = null;
       clearTimeout(timer);
       log.removeAttribute("aria-busy");
@@ -209,6 +212,7 @@ if (form) {
   clear.addEventListener("click", () => {
     if (active) return;
     log.querySelectorAll(".chat-turn").forEach((turn) => turn.remove());
+    history = [];
     clear.hidden = true;
     status.textContent = "Conversation cleared. Ask a new question.";
     input.value = "";
