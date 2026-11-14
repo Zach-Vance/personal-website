@@ -10,6 +10,10 @@
     "test": "node --test"
   },
   "engines": {
-    "node": ">=22"
+    "node": "24.x"
+  },
+  "dependencies": {
+    "@vercel/functions": "3.11.3",
+    "@vercel/oidc": "4.0.9"
   }
 }

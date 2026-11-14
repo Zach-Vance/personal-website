@@ -5,3 +5,6 @@ dist/
 !.env.example
 .wrangler/
 tmp/
+.vercel/
+.api-static/
+.vercel

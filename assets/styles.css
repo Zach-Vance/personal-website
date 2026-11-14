@@ -1115,6 +1115,17 @@
     padding: 12px 20px 16px;
     line-height: 1.6;
   }
+  .ask-clear {
+    display: block;
+    margin: 12px 22px 0 auto;
+    padding: 4px 6px;
+    border: 0;
+    background: transparent;
+    color: #506841;
+    font-size: 11px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
   .ask-note a {
     text-decoration: underline;
   }
