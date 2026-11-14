@@ -9,6 +9,7 @@ const types = {
   ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8",
   ".jpg": "image/jpeg",
+  ".webp": "image/webp",
   ".svg": "image/svg+xml",
 };
 const prefix = "/personal-website";
