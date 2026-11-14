@@ -1,0 +1,58 @@
+{
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "# Portfolio AI analytics\nPrivate report for project members. Possible hiring interest is a keyword heuristic, not visitor identity or proof of employer intent. Questions/responses have best-effort redaction, which is not anonymization. API acceptance does not prove factual correctness or that the browser displayed the response. Logs are retained for at most three calendar months; hourly cleanup may expire oldest logs sooner to keep under 100,000 rows / 150 MiB estimated live data. Synthetic setup calls are excluded below."
+    },
+    {
+      "type": "database",
+      "title": "Possible hiring interest — newest questions",
+      "row_limit": 50,
+      "view": "table",
+      "sql": "select created_at, question, response, outcome, accepted, citations_valid, source_ids, id from public.ai_api_calls where possible_hiring_interest and model is distinct from 'synthetic-only' order by created_at desc limit 50;"
+    },
+    {
+      "type": "database",
+      "title": "Daily questions and possible hiring interest",
+      "row_limit": 92,
+      "view": "chart",
+      "chart": {
+        "type": "line",
+        "x_column": "day",
+        "y_series": [
+          {
+            "column": "calls"
+          },
+          {
+            "column": "possible_hiring"
+          }
+        ],
+        "scale": "linear",
+        "cumulative": false,
+        "show_labels": true
+      },
+      "sql": "select created_at::date as day, count(*) as calls, count(*) filter(where possible_hiring_interest) as possible_hiring from public.ai_api_calls where model is distinct from 'synthetic-only' group by 1 order by 1;"
+    },
+    {
+      "type": "database",
+      "title": "Recent answer and failure outcomes",
+      "row_limit": 50,
+      "view": "table",
+      "sql": "select outcome, count(*) as calls, round(avg(duration_ms)) as average_ms from public.ai_api_calls where created_at >= now()-interval '7 days' and model is distinct from 'synthetic-only' group by outcome order by calls desc;"
+    },
+    {
+      "type": "database",
+      "title": "Storage and retention headroom",
+      "row_limit": 1,
+      "view": "table",
+      "sql": "select count(*) as records, coalesce(sum(estimated_bytes),0) as estimated_live_bytes, 157286400 as estimated_byte_budget, 100000 as row_budget, min(created_at) as oldest_record, pg_total_relation_size('public.ai_api_calls') as allocated_table_bytes, pg_database_size(current_database()) as allocated_database_bytes from public.ai_api_calls;"
+    },
+    {
+      "type": "database",
+      "title": "Latest API calls",
+      "row_limit": 50,
+      "view": "table",
+      "sql": "select created_at, possible_hiring_interest, question, response, outcome, accepted, model, id from public.ai_api_calls where model is distinct from 'synthetic-only' order by created_at desc limit 50;"
+    }
+  ]
+}

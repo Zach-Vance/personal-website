@@ -4,7 +4,7 @@ import {
   portfolioAnswer,
   API_CONTRACT_VERSION,
 } from "../assets/conversation.mjs";
-import { retrieve } from "../assets/knowledge.mjs";
+import { evidence, retrieve } from "../assets/knowledge.mjs";
 import { hasValidCitations } from "../assets/answer.mjs";
 import { createHandler } from "../backend/core.mjs";
 import { readEvents } from "../assets/stream.mjs";
@@ -29,7 +29,7 @@ test("the reported conversation has useful, grounded answers in evidence mode", 
     [
       "should i hite him",
       ["backend", "integration", "applications"],
-      /depends on your requirements/,
+      /^Yes—Zach makes a strong case/,
     ],
   ];
   const history = [];
@@ -325,7 +325,7 @@ test("unfamiliar portfolio phrasing reaches the model with public evidence beyon
     await handle(request({ question: "What makes him stand out?" }), env),
   );
   assert.equal(calls, 1);
-  assert.equal(events[0].ids.length, 12);
+  assert.equal(events[0].ids.length, evidence.length);
   assert.equal(events.at(-1).type, "done");
 });
 
@@ -341,6 +341,78 @@ test("a weak lexical match does not hide work-history evidence from the model", 
   const events = await collect(
     await handle(request({ question: "what is his software experience" }), env),
   );
-  assert.equal(events[0].ids.length, 12);
+  assert.equal(events[0].ids.length, evidence.length);
+  assert.equal(events.at(-1).type, "done");
+});
+
+test("broad AI questions prioritize workflows in the reported conversation", () => {
+  const history = [];
+  for (const question of [
+    "How does Zach solve problems using ai",
+    "How does he integrate ai into systems",
+    "How has Zach used AI in automation?",
+    "What is his artificial intelligence experience?",
+  ]) {
+    const plan = portfolioAnswer(question, history);
+    assert.deepEqual(
+      plan.docs.map((doc) => doc.id),
+      ["ai-reconciliation", "portfolio-agent"],
+    );
+    assert.match(plan.text, /AI-assisted review.*data consistency/);
+    assert.match(plan.text, /human review/);
+    assert.match(plan.text, /conversational AI assistant/);
+    assert.doesNotMatch(plan.text, /Claude|Codex|coding assistant|Setwise/);
+    assert.ok(hasValidCitations(plan.text, plan.docs.length));
+    history.push(question);
+  }
+});
+
+test("website follow-ups keep the assistant's features in scope", () => {
+  const history = ["Tell me about the website chatbot"];
+  const plan = portfolioAnswer("How does it handle failures?", history);
+  assert.ok(plan.docs.some((doc) => doc.id === "portfolio-reliability"));
+  assert.ok(plan.docs.every((doc) => doc.id.startsWith("portfolio-")));
+  assert.match(plan.text, /fall back|fallback/);
+  assert.doesNotMatch(plan.text, /Claude|Codex/);
+});
+
+test("AI coding and deterministic recommendations retain their own evidence", () => {
+  assert.ok(
+    portfolioAnswer("Does Zach use Claude Code for coding?").docs.some(
+      (doc) => doc.id === "approach",
+    ),
+  );
+  const plan = portfolioAnswer("Does Setwise use AI for recommendations?");
+  assert.ok(
+    plan.docs.every((doc) =>
+      ["setwise", "recommendations", "verification", "offline"].includes(
+        doc.id,
+      ),
+    ),
+  );
+  assert.match(plan.text, /deterministic/);
+});
+
+test("the API gives the model workflow evidence first and explicit positioning rules", async () => {
+  const handle = createHandler(async (url, options) => {
+    const payload = JSON.parse(options.body);
+    assert.match(payload.instructions, /\[1\] AI workflow/);
+    assert.doesNotMatch(payload.instructions, /Claude Code|Codex/);
+    assert.match(
+      payload.instructions,
+      /never make them the default AI example/,
+    );
+    assert.match(payload.instructions, /confident, positive recommendation/);
+    return provider(
+      "He built AI-assisted data review [1] and a conversational portfolio assistant [2].",
+    );
+  });
+  const events = await collect(
+    await handle(
+      request({ question: "How does he integrate AI into systems?" }),
+      env,
+    ),
+  );
+  assert.deepEqual(events[0].ids, ["ai-reconciliation", "portfolio-agent"]);
   assert.equal(events.at(-1).type, "done");
 });

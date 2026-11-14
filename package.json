@@ -10,7 +10,9 @@
     "test": "node --test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "evaluate": "node scripts/evaluate.mjs",
+    "evaluate:check": "node scripts/evaluate.mjs --check"
   },
   "engines": {
     "node": "24.x"

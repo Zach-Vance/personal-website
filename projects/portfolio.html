@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f5ef" />
+    <title>Portfolio assistant &amp; website — Zach Vance</title>
+    <meta
+      name="description"
+      content="An AI-powered portfolio assistant with cited sources, conversational context, streaming, and local evidence fallback."
+    />
+    <link rel="icon" href="../images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/styles.css" />
+    <script type="module" src="../assets/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="brand" href="../index.html" aria-label="Zach Vance, home"
+        ><span class="monogram">z<span>v</span><i>.</i></span
+        ><span>Zach Vance</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../index.html#work">Work</a
+        ><a href="../index.html#experience">Experience</a
+        ><a href="../index.html#about">About</a
+        ><a class="nav-ask" href="../index.html#ask"
+          ><span aria-hidden="true">✳</span> Ask about my work</a
+        >
+      </nav>
+    </header>
+    <main id="main" class="case-main">
+      <a class="back-link" href="../index.html#work">← Back to selected work</a>
+      <header class="case-hero">
+        <p class="eyebrow">PERSONAL PROJECT / AI &amp; WEB ENGINEERING</p>
+        <h1>A portfolio that can explain the work.</h1>
+        <p>A conversational assistant that turns questions into cited portfolio answers,
+          with useful failure behavior built around the model.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>Design &amp; development</dd></div>
+          <div><dt>Tools</dt><dd>JavaScript · Groq · Vercel · GitHub Pages</dd></div>
+          <div><dt>Try it</dt><dd><a href="../index.html#ask">Ask about my work ↗</a></dd></div>
+        </dl>
+      </header>
+      <div class="case-body">
+        <section id="assistant">
+          <h2>A question-to-evidence-to-answer workflow.</h2>
+          <p>I built this site’s AI assistant to help visitors explore my work in their
+            own words and follow an answer back to its published source.</p>
+          <ol>
+            <li>Resolve the question’s topic, using up to four recent questions for follow-ups.</li>
+            <li>Retrieve curated portfolio evidence shared by the browser and API.</li>
+            <li>Send the current question, resolved topic, and evidence to Groq’s Responses API
+              from the server. Generated answers are never reused as evidence.</li>
+            <li>Stream the answer to the browser with numbered, clickable source references.</li>
+          </ol>
+          <p>This is a conversational AI workflow. It answers questions; it does not
+            autonomously change external systems. Common questions such as hiring and
+            work-history duration use prepared, cited answers without consuming model quota.</p>
+        </section>
+        <section id="reliability">
+          <h2>The model is one part of the system.</h2>
+          <p>The assistant validates citation numbers against supplied sources and checks
+            Setwise answers for active-development status. Those checks verify reference
+            integrity and a specific status requirement; they do not prove every claim is true.</p>
+          <p>Provider failures, incomplete or invalid answers, timeouts, and API version
+            mismatches fall back to local portfolio evidence. Visitors can stop a response
+            or clear their recent-question context.</p>
+          <p>Provider credentials stay on the server. Request validation, bounded history,
+            and per-instance throttles constrain requests. Recent questions stay in browser
+            memory and are sent for follow-up context. Questions and answers may be logged
+            privately for up to three months to improve the assistant, with best-effort
+            redaction of common contact details and secrets.
+            Provider retention follows the provider’s policies.</p>
+          <p>Automated tests cover API behavior, citation validation, follow-up topic resolution,
+            and browser failure and fallback flows.</p>
+        </section>
+        <section id="evaluation">
+          <h2>Make quality inspectable.</h2>
+          <p>The <a href="assistant-evaluation.html">published assistant evaluation</a>
+            shows synthetic questions, expected source selection, content checks, valid
+            citation references, and mocked failure behavior. It separates deterministic
+            regression results from live-model accuracy, which still needs human review.</p>
+        </section>
+        <section id="site">
+          <h2>A static site with a focused backend.</h2>
+          <p>The frontend is static-first, hosted on GitHub Pages, with a separate Vercel API
+            for AI answers. Engineering case studies, a printable résumé, and evidence search
+            remain available without a model response.</p>
+          <p>The build validates local links and evidence anchors and publishes an allowlisted
+            static output that excludes backend code and credentials.</p>
+          <p>The <a href="../play/">interactive playground</a> includes Neon Drift: a fixed-step
+            driving simulation with checkpoint-validated laps and a locally saved best-run
+            ghost replay. It is another way to explore the software I build.</p>
+          <div class="case-callout"><p><strong>Engineering focus:</strong> connecting a model
+            to useful evidence, clear interaction design, and explicit failure behavior.</p></div>
+        </section>
+      </div>
+      <div class="case-next">
+        <div>
+          <p>NEXT PROJECT</p>
+          <a href="mesonet.html">Weather, data & machine learning ↗</a>
+        </div>
+        <a class="text-link" href="../index.html#ask">Ask about my work ↗</a>
+      </div>
+    </main>
+    <footer class="site-footer wrap">
+      <a class="brand" href="../index.html"
+        ><span class="monogram">z<span>v</span><i>.</i></span
+        ><span>Built with care. By Zach.</span></a
+      >
+      <div>
+        <a href="https://github.com/Zach-Vance">GitHub ↗</a
+        ><a href="https://www.linkedin.com/in/zachary-vance/">LinkedIn ↗</a
+        ><a href="../resume.html">Résumé ↗</a
+        ><span>© <span data-year>2026</span></span>
+      </div>
+    </footer>
+  </body>
+</html>
