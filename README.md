@@ -4,9 +4,10 @@ Static-first portfolio for **GitHub Pages**, with project case studies, a printa
 
 ## Develop and verify
 
-Node.js 24 recommended. No installation step is needed.
+Node.js 24 is used for development and deployment. The static frontend has no runtime dependencies; Vercel identity helpers are server-only.
 
 ```sh
+npm ci
 npm run check
 npm test
 npm run build
@@ -27,9 +28,21 @@ The deployment allowlist excludes backend code, source notes, tests, and develop
 
 With `assets/config.js` unchanged, the panel performs local lexical retrieval over the curated public facts in `assets/knowledge.mjs`, displaying excerpts and verified links. It is labeled **Portfolio search**, never presented as live AI. It does not send questions to a server or simulate token streaming.
 
-### Optional: grounded, streamed AI answers
+### Grounded, streamed AI answers on Vercel
 
-`backend/worker.mjs` is a Cloudflare Worker adapter using OpenAI’s Responses API. It retrieves the same public corpus on the server, supplies numbered evidence to the model, and forwards text-delta events to the browser. The browser only constructs source links from its approved evidence IDs, and renders model text as text rather than HTML. Conversations are not stored by this app; each question is independent. The request uses `store: false` with OpenAI, which is not a promise of zero provider retention.
+The API is a separate Vercel project, `purple-toad/zach-vance-portfolio-api`; the website remains on GitHub Pages. `api/ask.mjs` uses a fresh deployment OIDC token for each request, then calls AI Gateway through the shared `backend/core.mjs` handler. No provider key is sent to the browser or committed.
+
+Runtime configuration: `ALLOWED_ORIGIN=https://zach-vance.github.io` and `AI_GATEWAY_MODEL=openai/gpt-6-luna`. The model was verified against the live Gateway catalog on November 13, 2026. It is configured in the project, not hard-coded as a reusable model recommendation.
+
+The project has a $1/month AI Gateway budget. Gateway budgets are soft caps: an in-flight request can cross the limit before subsequent requests are rejected. No credits were purchased and no auto top-up was enabled. The server also applies bounded **per-instance** request throttles (six per client/minute, thirty aggregate/minute); these reset on cold starts and are not distributed limits. For a larger public audience, use a shared rate-limit store or configure platform rate limits.
+
+The frontend validates citation numbers against the retrieved sources before accepting an AI answer. This checks reference integrity, not semantic truth. Unsupported or interrupted answers fall back to the original published evidence. Each question is independent; Start over clears the in-memory conversation. The browser cancels requests after thirty seconds.
+
+Build the backend with `node scripts/build-api.mjs`; `vercel.json` deploys only its landing page and API function. `scripts/build.mjs` remains the separate allowlisted Pages build. A staged production API deployment should be tested before promotion and before setting `assets/config.js` to its stable `/api/ask` URL.
+
+### Alternative Cloudflare adapter
+
+`backend/worker.mjs` is an optional Cloudflare Worker adapter using the same shared handler and OpenAI’s Responses API directly. Both adapters retrieve the same public corpus on the server, supply numbered evidence to the model, and forward text-delta events to the browser. The browser only constructs source links from its approved evidence IDs, and renders model text as text rather than HTML. Conversations are not stored by this app; each question is independent. The request uses `store: false`, which is not a promise of zero provider retention.
 
 To activate it:
 
