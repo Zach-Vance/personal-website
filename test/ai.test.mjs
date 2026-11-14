@@ -73,7 +73,7 @@ test("Vercel adapter uses only the server-side Groq key and compatible Responses
       assert.equal(url, "https://api.groq.com/openai/v1/responses");
       assert.equal(options.headers.Authorization, "Bearer test-groq-key");
       const data = JSON.parse(options.body);
-      assert.equal(data.model, "openai/gpt-oss-20b");
+      assert.equal(data.model, "openai/gpt-oss-120b");
       assert.equal(data.reasoning.effort, "low");
       assert.equal(data.max_output_tokens, 1536);
       assert.equal(data.stream, true);
@@ -118,6 +118,24 @@ test("Groq free-tier exhaustion returns a sanitized failure for evidence fallbac
   const response = await handle(makeRequest());
   assert.equal(response.status, 502);
   assert.equal((await response.json()).error, "AI service unavailable.");
+});
+test("Setwise answers must preserve the active-development qualification", async () => {
+  for (const [answer, expected] of [
+    ["Setwise syncs every workout reliably [1].", "error"],
+    [
+      "Setwise is in active development, with offline sync as a design goal [1].",
+      "done",
+    ],
+  ]) {
+    const handle = createVercelHandler({
+      env: { ALLOWED_ORIGIN: allowed, GROQ_API_KEY: "test-groq-key" },
+      limits,
+      getClientIp: () => "a",
+      upstreamFetch: async () => provider(answer),
+    });
+    const result = await collect(await handle(makeRequest()));
+    assert.equal(result.at(-1).type, expected);
+  }
 });
 test("complete generation with invalid citations produces an error, never done", async () => {
   const handle = createHandler(async () =>

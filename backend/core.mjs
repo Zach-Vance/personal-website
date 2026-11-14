@@ -182,6 +182,11 @@ export function createHandler(upstreamFetch = fetch) {
           if (!complete) throw new Error("Incomplete generation");
           if (!hasValidCitations(answer, docs.length))
             throw new Error("Invalid citations");
+          if (
+            /\bsetwise\b/i.test(answer) &&
+            !/\bactive development\b/i.test(answer)
+          )
+            throw new Error("Missing project status");
           controller.enqueue(frame({ type: "done" }));
           controller.close();
         } catch {

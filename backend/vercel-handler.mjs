@@ -12,7 +12,7 @@ export function createVercelHandler({
     return handle(request, {
       ...limits,
       API_TOKEN: env.GROQ_API_KEY,
-      MODEL: env.GROQ_MODEL || "openai/gpt-oss-20b",
+      MODEL: env.GROQ_MODEL || "openai/gpt-oss-120b",
       PROVIDER: "groq",
       REASONING_EFFORT: "low",
       MAX_OUTPUT_TOKENS: 1536,
