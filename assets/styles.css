@@ -1,4 +1,67 @@
 @layer reset, base, components, responsive;
+@layer components {
+  .play-teaser {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 65px;
+    align-items: center;
+    padding-block: 90px;
+    border-bottom: 1px solid var(--line);
+  }
+  .play-teaser h2 {
+    margin-top: 20px;
+  }
+  .play-teaser > div > p:not(.eyebrow) {
+    margin-top: 22px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .play-teaser .text-link {
+    margin-top: 28px;
+    gap: 40px;
+    font-size: 13px;
+  }
+  .play-teaser-art {
+    display: block;
+    position: relative;
+    border-radius: 9px;
+    overflow: hidden;
+    background: #10151b;
+  }
+  .play-teaser-art img {
+    width: 100%;
+    height: auto;
+  }
+  .play-teaser-art > span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    inset: auto 22px 17px;
+    color: #dbf3b4;
+    font: 10px var(--mono);
+    letter-spacing: 0.1em;
+  }
+  .play-teaser-art i {
+    font-size: 25px;
+    font-style: normal;
+  }
+}
+@layer responsive {
+  @media (max-width: 800px) {
+    .play-teaser {
+      gap: 30px;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .play-teaser {
+      grid-template-columns: 1fr;
+      padding-block: 55px;
+      gap: 30px;
+    }
+  }
+}
 @layer reset {
   *,
   *::before,

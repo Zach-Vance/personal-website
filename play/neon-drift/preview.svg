@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" fill="none">
+<defs><radialGradient id="night"><stop stop-color="#223230"/><stop offset="1" stop-color="#10151b"/></radialGradient><pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#c2e7b3" opacity=".12"/></pattern><filter id="glow"><feGaussianBlur stdDeviation="10"/></filter><path id="road" d="M310 145C410 125 500 125 565 150S690 245 748 250S900 150 950 170S1085 200 1070 280S1060 440 1010 490S890 595 835 585S680 505 625 525S500 630 440 625S255 600 220 550S125 440 140 385S145 260 175 230S250 153 310 145Z"/></defs>
+<path fill="url(#night)" d="M0 0h1200v760H0z"/><path fill="url(#dots)" d="M0 0h1200v760H0z"/>
+<use href="#road" stroke="#bfe566" stroke-width="132" opacity=".4" filter="url(#glow)"/><use href="#road" stroke="#c4e97f" stroke-width="128"/><use href="#road" stroke="#19232a" stroke-width="122"/><use href="#road" stroke="#cde3b7" stroke-opacity=".13" stroke-width="1.5" stroke-dasharray="12 16"/>
+<g font-family="Georgia,serif" font-style="italic" fill="#d9f0b7" text-anchor="middle"><text x="598" y="349" font-size="76">Take the</text><text x="598" y="430" font-size="76">long way.</text></g>
+<path d="M309 90v110" stroke="#e6eddd" stroke-width="10" stroke-dasharray="6 6"/>
+<g transform="translate(355 140) rotate(-2)"><rect x="-18" y="-11" width="38" height="22" rx="5" fill="#e6eddd"/><rect x="-2" y="-8" width="11" height="16" rx="2" fill="#26363d"/><path d="M-11-10v20" stroke="#b6d86a" stroke-width="5"/><path d="M17-7v4m0 6v4" stroke="#fff" stroke-width="4"/></g>
+<text x="70" y="705" font-family="Consolas,monospace" font-size="14" letter-spacing="2" fill="#a3b599">SC—01 / AFTER HOURS CIRCUIT</text>
+</svg>

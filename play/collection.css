@@ -1,0 +1,183 @@
+.more-experiments {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+}
+.more-experiments .experiment-description {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.more-experiments .experiment-description > p {
+  max-width: 380px;
+}
+.more-experiments .text-link {
+  justify-self: start;
+  gap: 35px;
+}
+.more-experiments .experiment-art > img {
+  height: 340px;
+  object-fit: cover;
+}
+.more-experiments h2 {
+  font-size: 32px;
+}
+.experiment-badge.paper-badge {
+  color: #66765a;
+}
+@media (max-width: 700px) {
+  .more-experiments {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .more-experiments .experiment-art > img {
+    height: 290px;
+  }
+}
+.play-intro {
+  padding: 90px 0 60px;
+}
+.play-intro > .eyebrow {
+  color: #66835c;
+  margin-bottom: 25px;
+}
+.play-intro h1 {
+  font-size: clamp(58px, 7vw, 96px);
+  letter-spacing: -0.06em;
+}
+.play-intro > p:last-child {
+  font-size: 17px;
+  color: #697265;
+  margin-top: 25px;
+}
+.experiment {
+  display: block;
+  margin-bottom: 64px;
+}
+.experiment-art {
+  position: relative;
+  background: #111a1d;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.experiment-art > img {
+  width: 100%;
+  height: auto;
+  max-height: 590px;
+  object-fit: cover;
+}
+.experiment-badge {
+  position: absolute;
+  left: 27px;
+  top: 25px;
+  color: #d8edba;
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+.experiment-launch {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #d5f68b;
+  color: #263b21;
+  width: 52px;
+  height: 52px;
+  font-size: 25px;
+  transition: transform 0.2s;
+}
+.experiment:hover .experiment-launch {
+  transform: rotate(45deg);
+}
+.experiment-description {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr auto;
+  align-items: center;
+  gap: 50px;
+  padding: 30px 0;
+  border-bottom: 1px solid #d8dcd0;
+}
+.experiment-description .eyebrow {
+  font-size: 8px;
+  color: #6d7863;
+}
+.experiment-description h2 {
+  font-size: 38px;
+  margin-top: 9px;
+}
+.experiment-description > p {
+  font-size: 14px;
+  color: #626d60;
+  max-width: 300px;
+}
+.experiment-description .text-link {
+  font-size: 12px;
+}
+.collection-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 20px 0 75px;
+}
+.collection-note > .eyebrow {
+  color: #6d8265;
+}
+.collection-note > p {
+  font:
+    italic 24px/1.4 Georgia,
+    serif;
+  color: #52694b;
+}
+.collection-note > a {
+  font-size: 12px;
+  text-decoration: underline;
+}
+@media (max-width: 700px) {
+  .play-intro {
+    padding: 55px 0 35px;
+  }
+  .play-intro > p:last-child {
+    font-size: 14px;
+  }
+  .experiment-art > img {
+    height: 320px;
+    object-fit: cover;
+  }
+  .experiment-badge {
+    left: 16px;
+    top: 16px;
+    font-size: 8px;
+  }
+  .experiment-description {
+    grid-template-columns: 1fr;
+    gap: 17px;
+    padding: 24px 0;
+  }
+  .experiment-description > p {
+    max-width: none;
+  }
+  .experiment-description .text-link {
+    justify-self: start;
+    gap: 30px;
+  }
+  .collection-note {
+    display: block;
+    padding-bottom: 50px;
+  }
+  .collection-note > p {
+    margin: 18px 0;
+  }
+  .experiment {
+    margin-bottom: 35px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .experiment-launch {
+    transition: none;
+  }
+  .experiment:hover .experiment-launch {
+    transform: none;
+  }
+}
