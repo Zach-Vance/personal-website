@@ -54,7 +54,7 @@ export const evidence = [
     url: "projects/setwise.html#offline",
     keywords:
       "offline sync synchronization durable reliability retries connection connectivity workout logging setwise browser storage",
-    text: "Setwise is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns. This is an active personal project; the portfolio does not claim that every device or acceptance check is complete.",
+    text: "Setwise is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns.",
   },
   {
     id: "recommendations",
