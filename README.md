@@ -72,7 +72,7 @@ To activate it:
 
 The endpoint fails closed without its credentials, model, and two rate-limit bindings. It bounds request length, accepts only the configured origin, requests at most 650 output tokens, times out upstream calls, and limits requests per client and site per Cloudflare location. Those platform limits are approximate local limits, **not a hard global spending cap**. Configure provider billing limits and alerts before exposing the paid endpoint. CORS is a browser restriction, not authentication.
 
-On upstream failures or interrupted generation, the UI replaces the partial response with published evidence and explains the fallback. Stop cancels an active request. Unknown questions receive a limitation instead of invented facts. No employer code, private evidence bank, internal metrics, or résumé source documents are included in the corpus.
+On upstream failures or interrupted generation, the UI replaces the partial response with published evidence and explains the fallback. Stop cancels an active request. Unknown questions receive a limitation instead of invented facts. 
 
 Live model calls and hosted Worker deployment require account configuration; automated tests use a mock provider stream, not paid requests. Review answer grounding with a real configured model before enabling public AI mode. Prompt constraints reduce hallucinations but cannot guarantee factual correctness.
 
@@ -81,9 +81,8 @@ References: [GitHub Pages deployment](https://docs.github.com/en/get-started/sta
 ## Content
 
 - `index.html`: homepage and Q&A surface.
-- `projects/`: engineering write-ups, not claims of public employer source access.
+- `projects/`: engineering write-ups.
 - `resume.html`: printable résumé (Print / Save as PDF).
 - `assets/knowledge.mjs`: public evidence corpus shared with the backend. Update it alongside page content.
 - Setwise’s preview is explicitly an **interface study**, not a screenshot of the live product.
 
-Professional content is based on the supplied résumé and career conversations. The public copy omits internal counts and employer metrics pending a public-disclosure decision. Setwise is presented as actively developing, not a fully accepted or completed product.
