@@ -153,7 +153,7 @@ export function createHandler(upstreamFetch = fetch) {
             docs
               .map((doc, i) => `[${i + 1}] ${doc.title}\n${doc.text}`)
               .join("\n\n") +
-            "\n\nOUTPUT RULES: Use only literal bracket citations such as [1] and [2]. Never use citation glyphs, line numbers, or references like 【1†L1-L4】. Example: Setwise is in active development and is designed for offline workout logging [1]. Keep every claim within the source wording.",
+            "\n\nOUTPUT RULES: Use only literal bracket citations such as [1] and [2]. Never use citation glyphs, line numbers, or references like 【1†L1-L4】. Example: Setwise is in active development and is designed for offline workout logging [1]. Keep every claim within the source wording. Any answer citing a Setwise source MUST include the exact phrase active development, including short yes/no answers. For example: Yes, Setwise uses React and is in active development [1]. Never omit this status qualification to make an answer shorter.",
           input: [
             { role: "user", content: JSON.stringify({ question, reference: answerPlan.query }) },
           ],
