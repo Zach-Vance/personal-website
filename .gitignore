@@ -3,7 +3,6 @@ dist/
 .dev.vars*
 .env*
 !.env.example
-.wrangler/
 tmp/
 .vercel/
 .api-static/
