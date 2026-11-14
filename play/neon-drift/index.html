@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101418" />
+    <title>Neon Drift — Play by Zach Vance</title>
+    <meta
+      name="description"
+      content="A little sideways. A lot of control. A browser-built neon driving game with two-lap time trials and your own ghost to chase."
+    />
+    <link rel="icon" href="../../images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../shared/shell.css" />
+    <link rel="stylesheet" href="game.css" />
+    <script type="module" src="main.mjs"></script>
+  </head>
+  <body class="drift-page">
+    <a class="skip" href="#main">Skip to game</a>
+    <header class="play-header">
+      <a
+        class="play-brand"
+        href="../../index.html"
+        aria-label="Zach Vance, home"
+        >zv<span>.</span><small>ZACH VANCE</small></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../../index.html#work">Work</a
+        ><a href="../">Play <span aria-hidden="true">↗</span></a
+        ><a href="../../resume.html">Résumé</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="game-heading" aria-labelledby="game-title">
+        <div>
+          <p class="overline">
+            <span class="live-dot"></span> PLAY / 001 — A BROWSER EXPERIMENT
+          </p>
+          <h1 id="game-title">Neon <em>Drift.</em></h1>
+        </div>
+        <div class="game-intro">
+          <p>A little sideways.<br />A lot of control.</p>
+          <span
+            >Two laps. One night circuit. Just you<br class="desktop-break" />
+            and a better version of your last run.</span
+          >
+        </div>
+      </section>
+      <section class="race-shell" aria-label="Neon Drift driving game">
+        <div class="race-topbar">
+          <div class="circuit">
+            <span class="live-dot"></span
+            ><span>AFTER HOURS <small>SC—01</small></span>
+          </div>
+          <span id="race-state">READY WHEN YOU ARE</span
+          ><button id="pause" type="button" disabled aria-label="Pause game">
+            Ⅱ <span>Pause</span>
+          </button>
+        </div>
+        <div class="race-hud" aria-label="Race information">
+          <div>
+            <span>LAP</span><strong id="lap">01 <small>/ 02</small></strong>
+          </div>
+          <div><span>RUN TIME</span><strong id="time">00:00.000</strong></div>
+          <div class="best-hud">
+            <span>PERSONAL BEST</span><strong id="best">—</strong>
+          </div>
+          <div class="pace-hud">
+            <span>PACE</span><strong id="pace">000</strong>
+          </div>
+        </div>
+        <div class="race-stage" id="stage">
+          <canvas
+            id="race-canvas"
+            width="1200"
+            height="760"
+            tabindex="0"
+            role="img"
+            aria-label="Top-down night circuit. Use arrow keys or WASD to drive, Space to handbrake, P or Escape to pause. Complete two laps through the checkpoints."
+          ></canvas>
+          <div class="race-overlay" id="overlay">
+            <div class="overlay-panel">
+              <span class="overline" id="overlay-kicker"
+                >THE NIGHT IS YOURS</span
+              >
+              <h2 id="overlay-title">Find your<br /><em>flow state.</em></h2>
+              <p id="overlay-description">
+                Follow the circuit clockwise. Hit every checkpoint.<br />Make
+                the second lap your best yet.
+              </p>
+              <button class="lime-button" id="start" type="button" disabled>
+                Loading circuit… <span aria-hidden="true">↗</span>
+              </button>
+              <p class="overlay-foot" id="overlay-foot">
+                Arrow keys / WASD to drive · Space to slide
+              </p>
+            </div>
+          </div>
+          <div class="countdown" id="countdown" hidden aria-hidden="true">
+            3
+          </div>
+          <div
+            class="touch-controls"
+            id="touch-controls"
+            aria-label="Touch driving controls"
+            hidden
+          >
+            <div>
+              <button data-control="left" aria-label="Steer left" type="button">
+                ←</button
+              ><button
+                data-control="right"
+                aria-label="Steer right"
+                type="button"
+              >
+                →
+              </button>
+            </div>
+            <button class="touch-drift" data-control="drift" type="button">
+              SLIDE
+            </button>
+            <div>
+              <button
+                data-control="brake"
+                aria-label="Brake or reverse"
+                type="button"
+              >
+                ↓</button
+              ><button
+                data-control="throttle"
+                aria-label="Accelerate"
+                type="button"
+              >
+                ↑
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="race-bottom">
+          <span
+            ><i class="key-light" aria-hidden="true"></i> BUILT FOR THE LONG WAY
+            ROUND</span
+          >
+          <div>
+            <label
+              ><input id="ghost" type="checkbox" checked /> Ghost replay</label
+            ><label><input id="reduced" type="checkbox" /> Fewer effects</label
+            ><button id="restart" type="button" disabled>
+              Restart <span aria-hidden="true">↻</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+      <noscript
+        ><p class="no-js">
+          Neon Drift needs JavaScript to run. You can still explore the
+          <a href="../../index.html#work">portfolio and project case studies</a
+          >.
+        </p></noscript
+      >
+      <section class="controls-guide" aria-label="Game controls">
+        <div>
+          <span class="overline">A FEW POINTERS</span>
+          <p>Easy to start.<br /><em>Room to get better.</em></p>
+        </div>
+        <dl>
+          <div>
+            <dt><kbd>W</kbd> <kbd>↑</kbd></dt>
+            <dd>Accelerate</dd>
+          </div>
+          <div>
+            <dt><kbd>A</kbd> <kbd>D</kbd> / <kbd>←</kbd> <kbd>→</kbd></dt>
+            <dd>Steer</dd>
+          </div>
+          <div>
+            <dt><kbd>S</kbd> <kbd>↓</kbd></dt>
+            <dd>Brake / reverse</dd>
+          </div>
+          <div>
+            <dt><kbd>Space</kbd></dt>
+            <dd>Handbrake</dd>
+          </div>
+          <div>
+            <dt><kbd>P</kbd> / <kbd>Esc</kbd></dt>
+            <dd>Pause</dd>
+          </div>
+          <div>
+            <dt><kbd>R</kbd></dt>
+            <dd>Restart run</dd>
+          </div>
+        </dl>
+        <p class="driving-tip">
+          Brake before the bend. Hold Space briefly to loosen the rear, then
+          release to find your grip. The dotted line marks your next checkpoint.
+        </p>
+      </section>
+      <details class="how-it-works">
+        <summary>
+          <span>Small game. Real engineering.</span
+          ><span aria-hidden="true">+</span>
+        </summary>
+        <div>
+          <p>
+            The car runs on a fixed 60-step simulation, independent of the
+            display’s refresh rate. Steering, lateral grip, and the handbrake
+            create the drift; ordered checkpoints keep lap timing honest.
+          </p>
+          <p>
+            Your fastest valid two-lap run can become a ghost. It is stored only
+            in this browser, with a track and physics version so an old replay
+            won’t race a changed circuit. If browser storage is unavailable, you
+            can still play.
+          </p>
+          <p>
+            The three-minute run limit bounds recording size. Pause or leave the
+            tab and the clock stops. No account, server, or score upload.
+          </p>
+          <a
+            href="https://github.com/Zach-Vance/personal-website/tree/main/play/neon-drift"
+            >Explore the source ↗</a
+          ><button type="button" id="clear-best">Clear saved best</button>
+          <p id="save-note" role="status">Best runs stay on this browser.</p>
+        </div>
+      </details>
+    </main>
+    <footer class="play-footer">
+      <a href="../">← Back to Play</a
+      ><span>A little experiment by Zach Vance.</span
+      ><a href="../../index.html">The portfolio ↗</a>
+    </footer>
+  </body>
+</html>

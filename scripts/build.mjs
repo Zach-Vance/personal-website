@@ -12,6 +12,7 @@ for (const file of [
   ".nojekyll",
   "assets",
   "projects",
+  "play",
 ])
   await cp(path.join(root, file), path.join(out, file), { recursive: true });
 for (const file of ["vanceZach.jpg", "favicon.svg"])
