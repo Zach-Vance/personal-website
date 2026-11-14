@@ -7,3 +7,5 @@ tmp/
 .vercel/
 .api-static/
 .vercel
+test-results/
+playwright-report/
