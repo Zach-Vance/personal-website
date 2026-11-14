@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { retrieve } from "../assets/knowledge.mjs";
 import { readEvents } from "../assets/stream.mjs";
-import { createHandler } from "../backend/worker.mjs";
+import { createHandler } from "../backend/core.mjs";
 
 function stream(events, chunkSize = 9) {
   const bytes = new TextEncoder().encode(

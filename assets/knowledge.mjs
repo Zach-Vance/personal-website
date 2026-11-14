@@ -22,7 +22,7 @@ export const evidence = [
     url: "projects/integrations.html",
     keywords:
       "shopify hubspot crm commerce erp integrations api synchronization sync webhook reconciliation orders automation ai artificial intelligence llm",
-    text: "At Super-Sod, Zach improved Shopify-to-ERP order ingestion and implemented AI-assisted reconciliation that compares orders, corrects discrepancies, and logs actions while routing remaining exceptions for staff review. He also built and maintained ERP-to-HubSpot synchronization for deals, contacts, companies, associations, and line items.",
+    text: "At Super-Sod, Zach improved Shopify-to-ERP order ingestion and implemented AI-assisted reconciliation that compares orders, corrects discrepancies, and logs actions while routing remaining exceptions for staff review. Reported results: orders needing correction fell from 17% to under 1% (user-reported figures); self-service bulk pricing cut major updates from hours to minutes; self-service product setup cut creation from up to 20 minutes to a couple of minutes per item. He also built and maintained ERP-to-HubSpot synchronization for deals, contacts, companies, associations, and line items.",
   },
   {
     id: "backend",
