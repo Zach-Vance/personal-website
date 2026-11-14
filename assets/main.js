@@ -1,6 +1,6 @@
 import { config } from "./config.js";
-import { sourceFor } from "./knowledge.mjs";
-import { portfolioAnswer, MAX_HISTORY } from "./conversation.mjs";
+import { evidence, sourceFor } from "./knowledge.mjs";
+import { portfolioAnswer, MAX_HISTORY, API_CONTRACT_VERSION } from "./conversation.mjs";
 import { readEvents } from "./stream.mjs";
 import { hasValidCitations } from "./answer.mjs";
 
@@ -32,9 +32,10 @@ if (form) {
       "AI answers use published portfolio evidence. Your question and up to four recent questions are sent to the AI service for follow-ups. Please leave out personal information.";
   }
 
-  function sourceLinks(container, docs) {
+  function sourceLinks(container, docs, answerText = null) {
     container.replaceChildren();
     docs.forEach((doc, index) => {
+      if (answerText && !answerText.includes(`[${index + 1}]`)) return;
       const a = document.createElement("a");
       a.href = doc.url;
       a.textContent = `${index + 1}. ${doc.title} ↗`;
@@ -62,7 +63,9 @@ if (form) {
   }
 
   function showEvidence(question, label, answer, sources) {
-    const { docs, text } = portfolioAnswer(question, history);
+    const plan = portfolioAnswer(question, history);
+    const { text } = plan;
+    const docs = plan.kind === "discovery" ? [] : plan.docs;
     label.textContent = "FROM THE PORTFOLIO · EVIDENCE SEARCH";
     renderCitations(answer, text, docs);
     sourceLinks(sources, docs);
@@ -128,6 +131,7 @@ if (form) {
         });
         if (
           !response.ok ||
+          response.headers.get("X-Portfolio-API-Version") !== API_CONTRACT_VERSION ||
           !response.body ||
           !response.headers.get("content-type")?.includes("text/event-stream")
         )
@@ -136,8 +140,8 @@ if (form) {
         let docs = [];
         for await (const event of readEvents(response.body)) {
           if (event.type === "sources") {
-            docs = (event.ids || []).map(sourceFor).filter(Boolean).slice(0, 3);
-            sourceLinks(sources, docs);
+            docs = (event.ids || []).map(sourceFor).filter(Boolean).slice(0, evidence.length);
+            if (docs.length <= 3) sourceLinks(sources, docs);
           } else if (event.type === "delta") {
             if (typeof event.text !== "string")
               throw new Error("Invalid stream");
@@ -159,6 +163,7 @@ if (form) {
           ? "ANSWER · PORTFOLIO SOURCES"
           : "ABOUT THIS QUESTION";
         renderCitations(answer, result, docs);
+        sourceLinks(sources, docs, result);
       }
       status.textContent = `Answer ready. ${result}`;
     } catch (error) {
