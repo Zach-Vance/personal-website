@@ -4,19 +4,21 @@ import { config } from "../assets/config.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Expose-Headers": "X-Portfolio-API-Version",
 };
 
 const frame = (value) => `data: ${JSON.stringify(value)}\n\n`;
+const FALLBACK_LABEL = "AI UNAVAILABLE · SHOWING PORTFOLIO EVIDENCE";
 
+// Routes the production endpoint to `respond` and counts requests so a test
+// fails if the mock never matched (which would otherwise look like a fallback).
 async function mockApi(page, respond) {
+  const calls = { count: 0 };
   await page.route(config.askEndpoint, (route) => {
-    if (route.request().method() === "OPTIONS")
-      return route.fulfill({ status: 204, headers: corsHeaders });
+    calls.count += 1;
     return respond(route);
   });
+  return calls;
 }
 
 async function ask(page, question) {
@@ -26,7 +28,7 @@ async function ask(page, question) {
 }
 
 test("renders a streamed answer with validated citations", async ({ page }) => {
-  await mockApi(page, (route) =>
+  const calls = await mockApi(page, (route) =>
     route.fulfill({
       status: 200,
       headers: {
@@ -52,12 +54,11 @@ test("renders a streamed answer with validated citations", async ({ page }) => {
   );
   await expect(turn.locator(".chat-answer a")).toHaveText("[1]");
   await expect(turn.locator(".answer-sources a")).toHaveCount(1);
+  expect(calls.count).toBe(1);
 });
 
-test("falls back to portfolio evidence when the API fails", async ({
-  page,
-}) => {
-  await mockApi(page, (route) =>
+test("falls back to local evidence when the API fails", async ({ page }) => {
+  const calls = await mockApi(page, (route) =>
     route.fulfill({
       status: 502,
       headers: corsHeaders,
@@ -67,17 +68,16 @@ test("falls back to portfolio evidence when the API fails", async ({
   );
   await ask(page, "What is Setwise?");
   const turn = page.locator(".chat-turn").last();
-  await expect(turn.locator(".chat-label")).toHaveText(
-    "AI UNAVAILABLE · SHOWING PORTFOLIO EVIDENCE",
-  );
-  await expect(turn.locator(".chat-answer")).not.toBeEmpty();
+  await expect(turn.locator(".chat-label")).toHaveText(FALLBACK_LABEL);
+  await expect(turn.locator(".chat-answer")).toContainText("Setwise");
   await expect(turn.locator(".answer-sources a").first()).toBeVisible();
+  expect(calls.count).toBe(1);
 });
 
-test("rejects a stale API contract version and uses local evidence", async ({
+test("rejects a stale API contract version and shows local evidence instead", async ({
   page,
 }) => {
-  await mockApi(page, (route) =>
+  const calls = await mockApi(page, (route) =>
     route.fulfill({
       status: 200,
       headers: {
@@ -85,11 +85,19 @@ test("rejects a stale API contract version and uses local evidence", async ({
         "Content-Type": "text/event-stream; charset=utf-8",
         "X-Portfolio-API-Version": "0",
       },
-      body: frame({ type: "done" }),
+      // A well-formed answer: only the version header should cause rejection.
+      body: [
+        frame({ type: "sources", ids: ["setwise"] }),
+        frame({ type: "delta", text: "STALE API ANSWER [1]" }),
+        frame({ type: "done" }),
+      ].join(""),
     }),
   );
   await ask(page, "What is Setwise?");
-  await expect(page.locator(".chat-label").last()).toHaveText(
-    "AI UNAVAILABLE · SHOWING PORTFOLIO EVIDENCE",
+  const turn = page.locator(".chat-turn").last();
+  await expect(turn.locator(".chat-label")).toHaveText(FALLBACK_LABEL);
+  await expect(turn.locator(".chat-answer")).not.toContainText(
+    "STALE API ANSWER",
   );
+  expect(calls.count).toBe(1);
 });
