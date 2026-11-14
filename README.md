@@ -53,7 +53,7 @@ The browser keeps up to four recent questions in memory and sends them with the 
 
 Common questions about tenure, hiring, and Setwise’s purpose return cited portfolio answers without consuming model quota. Tenure is approximated from the published month-level role dates, includes the internship, and is labeled with the current month. Topic normalization handles abbreviations such as “exp” and transpositions such as “abckend” and “stewise.” Unfamiliar portfolio questions can reach the model with the full public corpus instead of being refused solely because lexical retrieval found no match. General coding exercises remain outside the portfolio scope.
 
-**Release both services:** merging a PR publishes the GitHub Pages frontend only. The Vercel API is deployed separately; a successful Pages deployment does not update it. From a clean, tested checkout linked to a separate privately managed API deployment, stage with `vercel deploy --prod --skip-domain`, test `/api/ask` on that deployment using `vercel curl`, then promote the tested deployment with `vercel promote`. Verify the stable API URL after promotion. The browser checks the exposed `X-Portfolio-API-Version` header and uses local evidence if the API contract is stale, rather than accepting the old scope refusals.
+**Release both services:** the frontend deploys through GitHub Pages. When the API project is connected to GitHub, Vercel also builds branch previews and deploys its configured production branch. Verify both deployment results; a successful Pages deployment alone does not confirm the API release. Without the Git integration, deploy the API separately. From a clean, tested checkout linked to a separate privately managed API deployment, stage with `vercel deploy --prod --skip-domain`, test `/api/ask` on that deployment using `vercel curl`, then promote the tested deployment with `vercel promote`. Verify the stable API URL after promotion. The browser checks the exposed `X-Portfolio-API-Version` header and uses local evidence if the API contract is stale, rather than accepting the old scope refusals.
 
 Build the backend with `node scripts/build-api.mjs`; `vercel.json` deploys only its landing page and API function. `scripts/build.mjs` remains the separate allowlisted Pages build. A staged production API deployment should be tested before promotion and before setting `assets/config.js` to its stable `/api/ask` URL.
 
@@ -123,9 +123,10 @@ Runtime logs contain metadata only. The existing privacy note accurately mention
 there is no popup or separate announcement. Publish that note before enabling live logging.
 
 The Supabase project, table, retention job, authenticated ingestion function, and private
-notebook are provisioned. Live Vercel integration still requires its environment variables
-and a tested API deployment. The connected Vercel account currently cannot see the API
-project, so no live API release was made.
+notebook are provisioned. Configure the production ingestion variables before verifying
+that a production API call is saved. Git deployment checks can confirm a release even
+when a connected management account cannot inspect the API project. Keep production
+logging credentials out of preview environments.
 
 Schema snapshots are in `supabase/schema.sql`, `supabase/retention.sql`, and
 `supabase/hiring-analytics.sql`, in application order; hosted migration history records
