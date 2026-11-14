@@ -21,8 +21,8 @@ export const evidence = [
     title: "Connecting commerce and operations",
     url: "projects/integrations.html",
     keywords:
-      "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
-    text: "Zach builds reliable business integrations and automation, improves data quality, and develops tools for nontechnical teams.",
+      "commerce crm integrations api synchronization automation reliability data integrity self-service workflows ai-assisted review backend applications",
+    text: "At Super-Sod, Zach improved the reliability of commerce and operations integrations, reduced manual correction work, and implemented AI-assisted data review. He built self-service tools that made routine business maintenance easier for nontechnical staff and maintained integrations between business applications and external services. His work includes APIs, relational data integrity, backend automation, and practical application development.",
   },
   {
     id: "backend",
