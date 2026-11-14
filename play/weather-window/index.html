@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#e9eee9" />
+    <title>Weather Window — Play by Zach Vance</title>
+    <meta
+      name="description"
+      content="Make a little weather. A layered, interactive landscape with rain, wind, and daylight controls, built entirely in the browser."
+    />
+    <link rel="icon" href="../../images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../shared/shell.css" />
+    <link rel="stylesheet" href="../shared/studio.css" />
+    <link rel="stylesheet" href="scene.css" />
+    <script type="module" src="main.mjs"></script>
+  </head>
+  <body class="studio-page weather-page">
+    <a class="skip" href="#main">Skip to scene</a>
+    <header class="play-header">
+      <a
+        class="play-brand"
+        href="../../index.html"
+        aria-label="Zach Vance, home"
+        >zv<span>.</span><small>ZACH VANCE</small></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../../index.html#work">Work</a><a href="../">Play ↗</a
+        ><a href="../../resume.html">Résumé</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="studio-heading">
+        <div>
+          <p class="overline">PLAY / 002 — AN ATMOSPHERIC EXPERIMENT</p>
+          <h1>Weather <em>Window.</em></h1>
+        </div>
+        <p>
+          Somewhere slow.<br />Make a little weather. Let the world outside
+          change its mind.
+        </p>
+      </section>
+      <div class="studio-toolbar">
+        <div class="studio-tabs" aria-label="Weather presets">
+          <button type="button" data-preset="clear" aria-pressed="false">
+            Clear day</button
+          ><button type="button" data-preset="evening" aria-pressed="true">
+            Rainy evening</button
+          ><button type="button" data-preset="night" aria-pressed="false">
+            Stormy night
+          </button>
+        </div>
+        <div class="studio-actions">
+          <button id="pause-weather" type="button">Pause motion Ⅱ</button
+          ><button id="reset-weather" type="button">Reset ↻</button>
+        </div>
+      </div>
+      <div id="weather-stage" class="studio-stage weather-stage">
+        <canvas
+          id="weather-canvas"
+          width="1200"
+          height="700"
+          role="img"
+          aria-label="An illustrated tidal landscape through a three-pane window, with clouds, moving rain, and changing light."
+        ></canvas>
+        <div class="scene-plaque">
+          <span>THE VIEW FROM HERE</span
+          ><strong id="scene-name">Rainy evening</strong>
+        </div>
+      </div>
+      <p id="scene-error" class="stage-error" hidden>
+        This browser couldn’t start the scene. You can explore the other
+        experiments from Play.
+      </p>
+      <div class="studio-caption">
+        <span>CREATIVE WEATHER SCENE / MANUAL CONTROLS</span
+        ><span id="motion-state">MOTION ON</span>
+      </div>
+      <section class="studio-controls" aria-label="Scene controls">
+        <div class="studio-control">
+          <div>
+            <label for="rain">RAIN</label
+            ><output id="rain-value" for="rain">63%</output>
+          </div>
+          <input id="rain" type="range" min="0" max="100" value="63" />
+        </div>
+        <div class="studio-control">
+          <div>
+            <label for="wind">WIND</label
+            ><output id="wind-value" for="wind">32% →</output>
+          </div>
+          <input id="wind" type="range" min="-100" max="100" value="32" />
+        </div>
+        <div class="studio-control">
+          <div>
+            <label for="light">DAYLIGHT</label
+            ><output id="light-value" for="light">36%</output>
+          </div>
+          <input id="light" type="range" min="0" max="100" value="36" />
+        </div>
+      </section>
+      <section class="studio-note">
+        <h2>A different pace.<br /><em>A different point of view.</em></h2>
+        <div>
+          <p>
+            Turn up the rain. Follow the clouds. Move from bright daylight to
+            the blue of a late night. This is an illustrated scene you control,
+            rather than a live weather report.
+          </p>
+          <details>
+            <summary>How the scene works</summary>
+            <p>
+              Layers of procedural scenery, seeded rain particles, and smoothly
+              changing parameters create depth without downloading video or
+              textures. Particle counts are bounded. Motion pauses when the
+              scene is offscreen or the tab is hidden; reduced-motion settings
+              start with a still scene.
+            </p>
+            <a
+              href="https://github.com/Zach-Vance/personal-website/tree/main/play/weather-window"
+              >Explore the source ↗</a
+            >
+          </details>
+        </div>
+      </section>
+      <noscript
+        ><p class="stage-error">
+          Enable JavaScript to explore the weather scene.
+        </p></noscript
+      >
+    </main>
+    <footer class="play-footer">
+      <a href="../">← Back to Play</a
+      ><span>A little experiment by Zach Vance.</span
+      ><a href="../living-sketchbook/">Living Sketchbook ↗</a>
+    </footer>
+  </body>
+</html>

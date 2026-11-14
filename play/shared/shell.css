@@ -1,0 +1,155 @@
+* {
+  box-sizing: border-box;
+}
+body,
+h1,
+h2,
+p {
+  margin: 0;
+}
+button,
+input {
+  font: inherit;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+[hidden] {
+  display: none !important;
+}
+:root {
+  --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --paper: #f5f5ef;
+  --ink: #222b25;
+  --muted: #626a61;
+  --lime: #d5f68b;
+}
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+}
+:focus-visible {
+  outline: 2px solid #b1d667;
+  outline-offset: 5px;
+}
+.play-header,
+.play-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(1320px, calc(100% - 96px));
+  margin-inline: auto;
+}
+.play-header {
+  height: 94px;
+  border-bottom: 1px solid #ffffff18;
+}
+.play-brand {
+  display: flex;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 750;
+  letter-spacing: -3px;
+}
+.play-brand > span {
+  color: #b6cd83;
+}
+.play-brand small {
+  font: 10px var(--mono);
+  letter-spacing: 0.12em;
+  margin-left: 18px;
+}
+.play-header nav {
+  display: flex;
+  gap: 32px;
+  font-size: 13px;
+}
+.play-header nav a {
+  opacity: 0.7;
+}
+.play-header nav a:hover {
+  opacity: 1;
+}
+.play-footer {
+  padding-block: 34px;
+  border-top: 1px solid #ffffff18;
+  margin-top: 72px;
+  font-size: 12px;
+}
+.play-footer > span {
+  opacity: 0.5;
+}
+.overline {
+  font: 10px/1.6 var(--mono);
+  letter-spacing: 0.12em;
+}
+.skip {
+  position: fixed;
+  left: 20px;
+  top: -100px;
+  background: #d5f68b;
+  color: #162116;
+  padding: 12px;
+  z-index: 50;
+}
+.skip:focus {
+  top: 20px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 700px) {
+  .play-header,
+  .play-footer {
+    width: calc(100% - 36px);
+  }
+  .play-header {
+    height: 76px;
+  }
+  .play-brand small {
+    display: none;
+  }
+  .play-header nav {
+    gap: 22px;
+  }
+  .play-footer {
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .play-footer > span {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}

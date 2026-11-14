@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f3f0e7" />
+    <title>Living Sketchbook — Play by Zach Vance</title>
+    <meta
+      name="description"
+      content="Draw a line. Let it become something. A generative sketchbook with botanical growth, flowing particles, seeded variations, undo, and image export."
+    />
+    <link rel="icon" href="../../images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../shared/shell.css" />
+    <link rel="stylesheet" href="../shared/studio.css" />
+    <link rel="stylesheet" href="sketch.css" />
+    <script type="module" src="main.mjs"></script>
+  </head>
+  <body class="studio-page sketch-page">
+    <a class="skip" href="#main">Skip to sketchbook</a>
+    <header class="play-header">
+      <a
+        class="play-brand"
+        href="../../index.html"
+        aria-label="Zach Vance, home"
+        >zv<span>.</span><small>ZACH VANCE</small></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="../../index.html#work">Work</a><a href="../">Play ↗</a
+        ><a href="../../resume.html">Résumé</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="studio-heading">
+        <div>
+          <p class="overline">PLAY / 003 — A GENERATIVE EXPERIMENT</p>
+          <h1>Living <em>Sketchbook.</em></h1>
+        </div>
+        <p>
+          Draw a line.<br />Let it become something you didn’t quite expect.
+        </p>
+      </section>
+      <div class="studio-toolbar">
+        <div class="studio-tabs" aria-label="Drawing mode">
+          <button type="button" data-mode="botanical" aria-pressed="true">
+            Botanical</button
+          ><button type="button" data-mode="flow" aria-pressed="false">
+            Flow
+          </button>
+        </div>
+        <div class="studio-actions">
+          <button id="undo" type="button" disabled>Undo ↶</button
+          ><button id="redo" type="button" disabled>Redo ↷</button
+          ><button id="export" class="export-button" type="button">
+            Save PNG ↗
+          </button>
+        </div>
+      </div>
+      <div id="sketch-stage" class="studio-stage sketch-stage">
+        <canvas
+          id="sketch-canvas"
+          width="1200"
+          height="800"
+          tabindex="0"
+          role="img"
+          aria-label="Drawing canvas. Draw with a mouse, pen, or touch. For keyboard exploration, choose the example buttons below, then change mode, palette, growth, or seed."
+          aria-describedby="drawing-instructions"
+        ></canvas>
+        <div class="paper-label" aria-hidden="true">
+          A STUDY IN LITTLE POSSIBILITIES
+        </div>
+      </div>
+      <p id="sketch-error" class="stage-error" hidden>
+        This browser couldn’t start the drawing canvas. Explore the other
+        experiments from Play.
+      </p>
+      <div class="studio-caption">
+        <span id="drawing-state">EXAMPLE / DRAW TO START YOUR OWN</span
+        ><span>PNG / 1800 × 1200</span>
+      </div>
+      <section class="sketch-settings" aria-label="Artwork settings">
+        <div>
+          <div class="setting-label">
+            <span>PALETTE</span><span id="palette-name">Fern</span>
+          </div>
+          <div class="palette-options">
+            <button
+              type="button"
+              data-palette="fern"
+              aria-label="Fern palette"
+              aria-pressed="true"
+            >
+              <i style="background: #345d4c"></i
+              ><i style="background: #72966d"></i
+              ><i style="background: #b9b376"></i></button
+            ><button
+              type="button"
+              data-palette="coral"
+              aria-label="Terracotta palette"
+              aria-pressed="false"
+            >
+              <i style="background: #a45445"></i
+              ><i style="background: #d29474"></i
+              ><i style="background: #c4aa78"></i></button
+            ><button
+              type="button"
+              data-palette="indigo"
+              aria-label="Indigo palette"
+              aria-pressed="false"
+            >
+              <i style="background: #3b537c"></i
+              ><i style="background: #778bb0"></i
+              ><i style="background: #b8a7b8"></i>
+            </button>
+          </div>
+        </div>
+        <div class="studio-control">
+          <div>
+            <label for="growth">GROWTH / SPREAD</label
+            ><output id="growth-value" for="growth">70%</output>
+          </div>
+          <input id="growth" type="range" min="20" max="100" value="70" />
+        </div>
+        <div>
+          <label for="seed" class="setting-label">VARIATION SEED</label>
+          <div class="seed-input">
+            <input
+              type="number"
+              id="seed"
+              min="1"
+              max="999999"
+              value="1482"
+            /><button type="button" id="new-variation">New variation ↻</button>
+          </div>
+        </div>
+      </section>
+      <div class="sketch-tools">
+        <div class="studio-actions">
+          <button id="pause-sketch" type="button">Pause motion Ⅱ</button
+          ><button id="clear-sketch" type="button">Clear canvas</button>
+        </div>
+        <div class="studio-actions">
+          <button id="save-draft" type="button">Save local draft</button
+          ><button id="load-draft" type="button" disabled>Load draft</button>
+        </div>
+      </div>
+      <p id="sketch-status" role="status" aria-live="polite">
+        An example to get you started. Your first stroke begins a new piece.
+      </p>
+      <section class="example-row" aria-label="Example drawings">
+        <span class="overline">A STARTING POINT</span>
+        <div class="studio-actions">
+          <button type="button" data-example="sprig">A single sprig</button
+          ><button type="button" data-example="garden">A small garden</button
+          ><button type="button" data-example="ribbon">A winding ribbon</button>
+        </div>
+      </section>
+      <section class="studio-note">
+        <h2>A gesture.<br /><em>A little possibility.</em></h2>
+        <div>
+          <p id="drawing-instructions">
+            Draw a continuous line with your mouse, pen, or finger. Try a new
+            seed to vary the same strokes, or switch modes to see them
+            differently. Undo restores earlier changes, including a cleared
+            canvas. The examples and settings work with a keyboard too.
+          </p>
+          <details>
+            <summary>How the sketchbook works</summary>
+            <p>
+              Normalized strokes and a seed define each piece. Botanical mode
+              grows bounded branches and leaves; Flow arranges a bounded
+              particle field around the same gestures. Undo rebuilds the piece
+              from its drawing data. A dedicated export render creates the 1800
+              × 1200 PNG.
+            </p>
+            <p>
+              Drafts are saved only when you choose Save local draft, on this
+              browser. Drawings are not uploaded. The sketchbook limits strokes,
+              points, generated shapes, and undo history to keep work and memory
+              bounded.
+            </p>
+            <a
+              href="https://github.com/Zach-Vance/personal-website/tree/main/play/living-sketchbook"
+              >Explore the source ↗</a
+            >
+          </details>
+        </div>
+      </section>
+      <noscript
+        ><p class="stage-error">
+          Enable JavaScript to draw or generate a sketch.
+        </p></noscript
+      >
+    </main>
+    <footer class="play-footer">
+      <a href="../">← Back to Play</a
+      ><span>A little experiment by Zach Vance.</span
+      ><a href="../weather-window/">Weather Window ↗</a>
+    </footer>
+  </body>
+</html>

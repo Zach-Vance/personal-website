@@ -1,0 +1,246 @@
+.studio-page {
+  --ink: #203d3b;
+  --muted: #627572;
+  background: #e9eee9;
+  color: var(--ink);
+}
+.studio-page .play-header,
+.studio-page .play-footer {
+  border-color: #bccdc480;
+}
+.studio-page .play-brand > span {
+  color: #6b8a62;
+}
+.studio-page main {
+  width: min(1320px, calc(100% - 96px));
+  margin: auto;
+}
+.studio-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 55px 0 35px;
+  gap: 30px;
+}
+.studio-heading h1 {
+  font-size: clamp(54px, 6.5vw, 91px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.06em;
+  margin-top: 16px;
+}
+.studio-heading h1 em {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  color: #64826a;
+}
+.studio-heading > p {
+  max-width: 275px;
+  font-size: 14px;
+  color: var(--muted);
+  padding-bottom: 5px;
+}
+.studio-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+.studio-tabs {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.studio-tabs button,
+.studio-actions button,
+.studio-button {
+  border: 1px solid #9bb2a580;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  padding: 9px 15px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.studio-tabs button[aria-pressed="true"] {
+  background: #294d43;
+  color: #f0f4e9;
+  border-color: #294d43;
+}
+.studio-actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.studio-actions button:hover,
+.studio-button:hover {
+  background: #d9e3d8;
+}
+.studio-stage {
+  position: relative;
+  border: 1px solid #49625960;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #98b1b2;
+  box-shadow: 0 20px 60px #2c4d3a16;
+}
+.studio-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.studio-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+  font: 9px/1.6 var(--mono);
+  letter-spacing: 0.06em;
+  color: #6b8073;
+}
+.studio-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  padding: 32px 0;
+  border-bottom: 1px solid #a5baaa80;
+}
+.studio-control > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+.studio-control label,
+.studio-control output {
+  font: 10px var(--mono);
+  letter-spacing: 0.06em;
+}
+.studio-control output {
+  color: #74846c;
+}
+.studio-control input[type="range"] {
+  accent-color: #3e6550;
+  width: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.studio-note {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+  padding: 38px 0 0;
+}
+.studio-note h2 {
+  font-size: 25px;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.studio-note h2 em {
+  font-family: Georgia, serif;
+  color: #6c876b;
+  font-weight: 400;
+}
+.studio-note p {
+  font-size: 13px;
+  color: #65786a;
+  max-width: 670px;
+}
+.studio-note details {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #496850;
+}
+.studio-note summary {
+  cursor: pointer;
+}
+.studio-note details p {
+  margin-top: 12px;
+  font-size: 12px;
+}
+.studio-note a {
+  display: inline-block;
+  margin-top: 12px;
+  text-decoration: underline;
+}
+.studio-page .play-footer {
+  margin-top: 55px;
+}
+.studio-page :focus-visible {
+  outline-color: #325e4b;
+}
+.stage-error {
+  padding: 30px;
+  color: #183d34;
+  background: #e5ebde;
+  font-size: 14px;
+}
+@media (max-width: 800px) {
+  .studio-page main {
+    width: calc(100% - 36px);
+  }
+  .studio-heading {
+    padding-top: 35px;
+  }
+  .studio-heading > p {
+    max-width: 205px;
+    font-size: 12px;
+  }
+  .studio-controls {
+    gap: 25px;
+  }
+  .studio-note {
+    gap: 30px;
+  }
+}
+@media (max-width: 600px) {
+  .studio-heading {
+    display: block;
+    padding-bottom: 25px;
+  }
+  .studio-heading h1 {
+    font-size: 57px;
+  }
+  .studio-heading > p {
+    max-width: 300px;
+    margin-top: 18px;
+  }
+  .studio-toolbar {
+    flex-wrap: wrap;
+  }
+  .studio-tabs button,
+  .studio-actions button,
+  .studio-button {
+    font-size: 10px;
+    padding: 9px 12px;
+  }
+  .studio-controls {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 26px 0;
+  }
+  .studio-control > div {
+    margin-bottom: 10px;
+  }
+  .studio-caption {
+    font-size: 8px;
+    align-items: flex-start;
+  }
+  .studio-caption > span:last-child {
+    text-align: right;
+  }
+  .studio-note {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-top: 28px;
+  }
+  .studio-note h2 {
+    font-size: 24px;
+  }
+  .studio-note p {
+    font-size: 12px;
+  }
+}
