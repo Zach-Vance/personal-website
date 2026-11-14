@@ -115,7 +115,7 @@ test("AI workflow and hiring answers remain persuasive when the provider fails",
   );
   await ask(page, "How does Zach integrate AI into systems?");
   let turn = page.locator(".chat-turn").last();
-  await expect(turn.locator(".chat-answer")).toContainText("Shopify-to-ERP");
+  await expect(turn.locator(".chat-answer")).toContainText("integration reliability");
   await expect(turn.locator(".chat-answer")).toContainText(
     "conversational AI assistant",
   );
@@ -131,7 +131,7 @@ test("AI workflow and hiring answers remain persuasive when the provider fails",
   await expect(turn.locator(".chat-answer")).toContainText(
     "Yes—Zach makes a strong case",
   );
-  await expect(turn.locator(".chat-answer")).toContainText("17% to under 1%");
+  await expect(turn.locator(".chat-answer")).toContainText("reducing repetitive manual work");
 });
 
 test("the Kyle joke stays limited to direct questions, including local fallback", async ({
