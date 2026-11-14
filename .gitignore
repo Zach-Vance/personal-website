@@ -9,3 +9,13 @@ tmp/
 .vercel
 test-results/
 playwright-report/
+
+# Local data and private operational notes
+*.sqlite
+*.sqlite3
+*.pyc
+__pycache__/
+*.pem
+*OWNERSHIP*AUDIT*.md
+docs/*auth-repair*.md
+docs/*infrastructure-audit*.md
