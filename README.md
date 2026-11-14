@@ -20,7 +20,7 @@ Open `http://127.0.0.1:4173/personal-website/`. The preview deliberately tests t
 
 Merge the redesign branch after reviewing it. In **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source. `.github/workflows/pages.yml` validates PRs and deploys `dist/` on pushes to `main` or a manual run on `main`.
 
-The deployment allowlist excludes backend code, source notes, tests, and development files. Existing `MortgageCalc.html` and `tickers.html` URLs redirect to selected work; their original source remains in Git history and the checkout. The homepage does not feature those retired experiments.
+The deployment allowlist excludes backend code, tests, and development files. Existing `MortgageCalc.html` and `tickers.html` URLs redirect to selected work; their original source remains in Git history and the checkout. The homepage does not feature those retired experiments.
 
 ## “Ask about my work”
 
@@ -72,7 +72,7 @@ To activate it:
 
 The endpoint fails closed without its credentials, model, and two rate-limit bindings. It bounds request length, accepts only the configured origin, requests at most 650 output tokens, times out upstream calls, and limits requests per client and site per Cloudflare location. Those platform limits are approximate local limits, **not a hard global spending cap**. Configure provider billing limits and alerts before exposing the paid endpoint. CORS is a browser restriction, not authentication.
 
-On upstream failures or interrupted generation, the UI replaces the partial response with published evidence and explains the fallback. Stop cancels an active request. Unknown questions receive a limitation instead of invented facts. 
+On upstream failures or interrupted generation, the UI replaces the partial response with published evidence and explains the fallback. Stop cancels an active request. Unknown questions receive a limitation instead of invented facts.
 
 Live model calls and hosted Worker deployment require account configuration; automated tests use a mock provider stream, not paid requests. Review answer grounding with a real configured model before enabling public AI mode. Prompt constraints reduce hallucinations but cannot guarantee factual correctness.
 
