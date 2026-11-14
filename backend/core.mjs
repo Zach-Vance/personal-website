@@ -115,9 +115,10 @@ export function createHandler(upstreamFetch = fetch) {
     };
     let upstream;
     try {
-      const upstreamUrl = env.GATEWAY
-        ? "https://ai-gateway.vercel.sh/v1/responses"
-        : "https://api.openai.com/v1/responses";
+      const upstreamUrl =
+        env.PROVIDER === "groq"
+          ? "https://api.groq.com/openai/v1/responses"
+          : "https://api.openai.com/v1/responses";
       upstream = await upstreamFetch(upstreamUrl, {
         method: "POST",
         headers: {
@@ -128,8 +129,8 @@ export function createHandler(upstreamFetch = fetch) {
         body: JSON.stringify({
           model: env.MODEL || env.OPENAI_MODEL,
           stream: true,
-          store: false,
-          max_output_tokens: 650,
+          ...(env.PROVIDER === "groq" ? {} : { store: false }),
+          max_output_tokens: env.MAX_OUTPUT_TOKENS || 650,
           ...(env.REASONING_EFFORT
             ? { reasoning: { effort: env.REASONING_EFFORT } }
             : {}),
@@ -142,7 +143,9 @@ export function createHandler(upstreamFetch = fetch) {
         }),
       });
       if (!upstream.ok || !upstream.body) {
-        console.error('portfolio_ai_upstream_failure', {status: upstream.status});
+        console.error("portfolio_ai_upstream_failure", {
+          status: upstream.status,
+        });
         await upstream.body?.cancel();
         cleanup();
         return error(502, "AI service unavailable.");

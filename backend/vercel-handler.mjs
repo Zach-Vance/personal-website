@@ -2,7 +2,6 @@ import { createHandler } from "./core.mjs";
 import { createLimits } from "./limits.mjs";
 
 export function createVercelHandler({
-  getToken,
   getClientIp,
   env,
   upstreamFetch = fetch,
@@ -10,23 +9,13 @@ export function createVercelHandler({
 }) {
   const handle = createHandler(upstreamFetch);
   return async function handleVercel(request) {
-    let token;
-    if (
-      request.method === "POST" &&
-      request.headers.get("Origin") === env.ALLOWED_ORIGIN
-    ) {
-      try {
-        token = await getToken();
-      } catch {
-        console.error("portfolio_ask_identity_unavailable");
-      }
-    }
     return handle(request, {
       ...limits,
-      API_TOKEN: token,
-      MODEL: env.AI_GATEWAY_MODEL,
-      GATEWAY: true,
-      REASONING_EFFORT: "none",
+      API_TOKEN: env.GROQ_API_KEY,
+      MODEL: env.GROQ_MODEL || "openai/gpt-oss-20b",
+      PROVIDER: "groq",
+      REASONING_EFFORT: "low",
+      MAX_OUTPUT_TOKENS: 1536,
       ASK_PATH: "/api/ask",
       ALLOWED_ORIGIN: env.ALLOWED_ORIGIN,
       clientKey: getClientIp,
