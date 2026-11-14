@@ -1,6 +1,7 @@
 import { config } from "./config.js";
 import { retrieve, sourceFor } from "./knowledge.mjs";
 import { readEvents } from "./stream.mjs";
+import { hasValidCitations } from "./answer.mjs";
 
 document.querySelectorAll("[data-year]").forEach((el) => {
   el.textContent = new Date().getFullYear();
@@ -18,7 +19,10 @@ if (form) {
   const status = document.querySelector("#ask-status");
   const mode = document.querySelector("#ask-mode");
   const note = document.querySelector("#ask-note");
+  const clear = document.querySelector("#ask-clear");
+  const suggestions = document.querySelectorAll("[data-question]");
   let active = null;
+  let timedOut = false;
   const endpoint = config.askEndpoint;
   if (endpoint) {
     mode.textContent = "AI + sources";
@@ -73,9 +77,21 @@ if (form) {
       return;
     }
     const controller = new AbortController();
+    timedOut = false;
+    const timer = endpoint
+      ? setTimeout(() => {
+          timedOut = true;
+          controller.abort();
+        }, 30000)
+      : null;
     active = controller;
     submit.disabled = true;
     input.disabled = true;
+    clear.disabled = true;
+    clear.hidden = false;
+    suggestions.forEach((button) => {
+      button.disabled = true;
+    });
     stop.hidden = !endpoint;
     log.setAttribute("aria-busy", "true");
     status.textContent = endpoint
@@ -137,6 +153,8 @@ if (form) {
           log.scrollTop = log.scrollHeight;
         }
         if (!completed || !result.trim()) throw new Error("Answer interrupted");
+        if (docs.length && !hasValidCitations(result, docs.length))
+          throw new Error("Answer has invalid citations");
         label.textContent = docs.length
           ? "ANSWER · PORTFOLIO SOURCES"
           : "PORTFOLIO SCOPE";
@@ -144,21 +162,28 @@ if (form) {
       }
       status.textContent = `Answer ready. ${result}`;
     } catch (error) {
-      if (controller.signal.aborted) {
+      if (controller.signal.aborted && !timedOut) {
         label.textContent = "STOPPED";
         answer.textContent = "Answer stopped. You can ask another question.";
         sources.replaceChildren();
         status.textContent = "Answer stopped.";
       } else {
         result = showEvidence(question, label, answer, sources);
-        label.textContent = "AI UNAVAILABLE · SHOWING PORTFOLIO EVIDENCE";
+        label.textContent = timedOut
+          ? "AI TIMED OUT · SHOWING PORTFOLIO EVIDENCE"
+          : "AI UNAVAILABLE · SHOWING PORTFOLIO EVIDENCE";
         status.textContent = `The AI service is unavailable. Showing published evidence instead. ${result}`;
       }
     } finally {
       active = null;
+      clearTimeout(timer);
       log.removeAttribute("aria-busy");
       submit.disabled = false;
       input.disabled = false;
+      clear.disabled = false;
+      suggestions.forEach((button) => {
+        button.disabled = false;
+      });
       stop.hidden = true;
       input.value = "";
       log.scrollTop = log.scrollHeight;
@@ -181,4 +206,12 @@ if (form) {
       button.addEventListener("click", () => ask(button.dataset.question)),
     );
   stop.addEventListener("click", () => active?.abort());
+  clear.addEventListener("click", () => {
+    if (active) return;
+    log.querySelectorAll(".chat-turn").forEach((turn) => turn.remove());
+    clear.hidden = true;
+    status.textContent = "Conversation cleared. Ask a new question.";
+    input.value = "";
+    input.focus({ preventScroll: true });
+  });
 }
