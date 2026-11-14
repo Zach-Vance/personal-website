@@ -1,5 +1,3 @@
-// Approved public portfolio facts. Shared by static search and the AI backend.
-// Never put private résumé notes, employer source, or credentials in this file.
 export const evidence = [
   {
     id: "overview",
