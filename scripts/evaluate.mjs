@@ -91,14 +91,15 @@ const html =
   body +
   template.slice(template.indexOf('      <div class="case-next">'));
 const page = html
-  .replace(
+  .replaceAll(
     "Portfolio assistant &amp; website — Zach Vance",
     "Assistant evaluation — Zach Vance",
   )
-  .replace(
+  .replaceAll(
     "An AI-powered portfolio assistant with cited sources, conversational context, streaming, and local evidence fallback.",
     "Reproducible synthetic evaluation of portfolio source selection, response requirements, citation references, and API failure behavior.",
   )
+  .replace("projects/portfolio.html", "projects/assistant-evaluation.html")
   .replace(/[ \t]+$/gm, "");
 const pageFile = new URL(
   "../projects/assistant-evaluation.html",
