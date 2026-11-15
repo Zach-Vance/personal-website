@@ -82,10 +82,11 @@ const body = `      <header class="case-hero">
 function asOfDate(value) {
   return value.slice(0, 10);
 }
-const template = await readFile(
-  new URL("../projects/portfolio.html", import.meta.url),
-  "utf8",
-);
+// Normalize line endings so a CRLF checkout (Windows autocrlf) generates the
+// same LF page that is committed and checked.
+const template = (
+  await readFile(new URL("../projects/portfolio.html", import.meta.url), "utf8")
+).replace(/\r\n/g, "\n");
 const html =
   template.slice(0, template.indexOf('      <header class="case-hero">')) +
   body +

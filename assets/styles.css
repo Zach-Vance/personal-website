@@ -2222,7 +2222,8 @@
       margin-top: 0;
     }
     .case-screens {
-      gap: 14px;
+      grid-template-columns: minmax(0, 260px);
+      gap: 20px;
     }
   }
 }
