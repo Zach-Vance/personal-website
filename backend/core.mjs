@@ -1,50 +1,119 @@
 import {
   portfolioAnswer,
-  MAX_HISTORY,
   API_CONTRACT_VERSION,
 } from "../assets/conversation.mjs";
 import { readEvents } from "../assets/stream.mjs";
 import { hasValidCitations } from "../assets/answer.mjs";
 import { evidence } from "../assets/knowledge.mjs";
-import { buildInstructions } from "./prompt.mjs";
 import { startCallLog } from "./call-log.mjs";
+import { readQuestion } from "./request.mjs";
+import {
+  baseHeaders,
+  frame,
+  sseResponse,
+  staticAnswerResponse,
+} from "./sse.mjs";
+import { requestCompletion } from "./upstream.mjs";
+import { MAX_ANSWER_CHARS, assertAnswerAllowed } from "./guardrails.mjs";
 
-const MAX_BYTES = 16384;
-async function readQuestion(request) {
-  if (!request.headers.get("content-type")?.startsWith("application/json"))
-    throw new Error("content-type");
-  if (!request.body) throw new Error("empty");
-  const reader = request.body.getReader();
-  const decoder = new TextDecoder();
-  let bytes = 0,
-    text = "";
-  try {
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      bytes += value.byteLength;
-      if (bytes > MAX_BYTES) throw new Error("size");
-      text += decoder.decode(value, { stream: true });
-    }
-    text += decoder.decode();
-    const body = JSON.parse(text);
-    if (typeof body.question !== "string") throw new Error("question");
-    const question = body.question.trim();
-    if (!question || question.length > 600) throw new Error("length");
-    const history = body.history ?? [];
-    if (
-      !Array.isArray(history) ||
-      history.length > MAX_HISTORY ||
-      history.some(
-        (item) => typeof item !== "string" || !item.trim() || item.length > 600,
-      )
+const UPSTREAM_TIMEOUT_MS = 25000;
+
+// Lead with retrieved evidence but let broad portfolio questions draw on the
+// whole public corpus. Keep named projects and workflow AI questions focused.
+function selectDocs(answerPlan) {
+  if (
+    answerPlan.kind !== "evidence" ||
+    /\b(setwise|mesonet|super sod|portfolio|website|chatbot|assistant|this site|personal site)\b/.test(
+      answerPlan.query,
+    ) ||
+    answerPlan.docs.every((doc) =>
+      ["ai-reconciliation", "portfolio-agent"].includes(doc.id),
     )
-      throw new Error("history");
-    return { question, history: history.map((item) => item.trim()) };
-  } finally {
-    await reader.cancel().catch(() => {});
-    reader.releaseLock();
-  }
+  )
+    return answerPlan.docs;
+  return [
+    ...answerPlan.docs,
+    ...evidence.filter(
+      (doc) => !answerPlan.docs.some((selected) => selected.id === doc.id),
+    ),
+  ];
+}
+
+// Streams validated model text to the browser. Any provider failure or
+// guardrail rejection becomes a single `error` event so the page can fall back
+// to local evidence. `call.finish` records only the first outcome.
+function streamModelAnswer({ upstream, docs, headers, abort, cleanup, call }) {
+  let answer = "";
+  let complete = false;
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        controller.enqueue(
+          frame({ type: "sources", ids: docs.map((doc) => doc.id) }),
+        );
+        for await (const event of readEvents(upstream.body)) {
+          if (event.type === "response.output_text.delta") {
+            if (typeof event.delta !== "string")
+              throw new Error("Invalid text event");
+            answer += event.delta;
+            if (answer.length > MAX_ANSWER_CHARS)
+              throw new Error("Answer exceeds limit");
+            controller.enqueue(frame({ type: "delta", text: event.delta }));
+          } else if (event.type === "response.completed") complete = true;
+          else if (
+            ["response.failed", "response.incomplete", "error"].includes(
+              event.type,
+            )
+          )
+            throw new Error("Generation failed");
+        }
+        if (!complete) throw new Error("Incomplete generation");
+        assertAnswerAllowed(answer, docs);
+        controller.enqueue(frame({ type: "done" }));
+        controller.close();
+        call.finish({
+          status: 200,
+          outcome: "completed",
+          accepted: true,
+          citationsValid: true,
+          providerCompleted: true,
+          response: answer,
+        });
+      } catch (reason) {
+        // Reasons are static strings; never log question or answer text here.
+        console.error("portfolio_ai_stream_rejected", {
+          reason: reason instanceof Error ? reason.message : "unknown",
+        });
+        try {
+          controller.enqueue(frame({ type: "error" }));
+          controller.close();
+        } catch {
+          /* client disconnected */
+        }
+      } finally {
+        call.finish({
+          status: 200,
+          outcome: abort.signal.aborted ? "aborted_or_timeout" : "stream_error",
+          accepted: false,
+          providerCompleted: complete,
+          citationsValid: hasValidCitations(answer, docs.length),
+          response: answer,
+        });
+        cleanup();
+      }
+    },
+    cancel() {
+      call.finish({
+        status: 200,
+        outcome: "cancelled",
+        accepted: false,
+        response: answer,
+      });
+      abort.abort();
+      cleanup();
+    },
+  });
+  return sseResponse(stream, headers);
 }
 
 export function createHandler(upstreamFetch = fetch, logCall = () => {}) {
@@ -52,16 +121,7 @@ export function createHandler(upstreamFetch = fetch, logCall = () => {}) {
     const call = startCallLog(logCall);
     call.context.apiVersion = API_CONTRACT_VERSION;
     const origin = request.headers.get("Origin");
-    const headers = {
-      "Access-Control-Allow-Origin": env.ALLOWED_ORIGIN || "",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Expose-Headers": "X-Portfolio-API-Version",
-      "X-Portfolio-API-Version": API_CONTRACT_VERSION,
-      Vary: "Origin",
-      "Cache-Control": "no-store",
-      "X-Content-Type-Options": "nosniff",
-    };
+    const headers = baseHeaders(env);
     const error = (status, message) => {
       call.finish({ status, outcome: `http_${status}`, response: message });
       return Response.json({ error: message }, { status, headers });
@@ -93,63 +153,25 @@ export function createHandler(upstreamFetch = fetch, logCall = () => {}) {
     }
     Object.assign(call.context, { question, historyCount: history.length });
     const answerPlan = portfolioAnswer(question, history);
-    // Lead with retrieved evidence but let broad portfolio questions draw on the
-    // whole public corpus. Keep named projects and workflow AI questions focused.
-    const docs =
-      answerPlan.kind === "evidence" &&
-      !/\b(setwise|mesonet|super sod|portfolio|website|chatbot|assistant|this site|personal site)\b/.test(
-        answerPlan.query,
-      ) &&
-      !answerPlan.docs.every((doc) =>
-        ["ai-reconciliation", "portfolio-agent"].includes(doc.id),
-      )
-        ? [
-            ...answerPlan.docs,
-            ...evidence.filter(
-              (doc) =>
-                !answerPlan.docs.some((selected) => selected.id === doc.id),
-            ),
-          ]
-        : answerPlan.docs;
+    const docs = selectDocs(answerPlan);
     Object.assign(call.context, {
       sourceIds: docs.map((doc) => doc.id),
       kind: answerPlan.kind,
       provider: env.PROVIDER || "openai",
       model: env.MODEL || env.OPENAI_MODEL,
     });
-    const encoder = new TextEncoder();
-    const frame = (value) =>
-      encoder.encode(`data: ${JSON.stringify(value)}\n\n`);
-    if (!["evidence", "discovery"].includes(answerPlan.kind))
-      return new Response(
-        new ReadableStream({
-          start(controller) {
-            controller.enqueue(
-              frame({ type: "sources", ids: docs.map((doc) => doc.id) }),
-            );
-            controller.enqueue(
-              frame({
-                type: "answer",
-                text: answerPlan.text,
-              }),
-            );
-            controller.enqueue(frame({ type: "done" }));
-            controller.close();
-            call.finish({
-              status: 200,
-              outcome: answerPlan.kind,
-              accepted: true,
-              response: answerPlan.text,
-            });
-          },
-        }),
-        {
-          headers: {
-            ...headers,
-            "Content-Type": "text/event-stream; charset=utf-8",
-          },
-        },
-      );
+    if (!["evidence", "discovery"].includes(answerPlan.kind)) {
+      // The stream's start() runs on construction, so the answer is already
+      // enqueued when the call is recorded.
+      const response = staticAnswerResponse(docs, answerPlan.text, headers);
+      call.finish({
+        status: 200,
+        outcome: answerPlan.kind,
+        accepted: true,
+        response: answerPlan.text,
+      });
+      return response;
+    }
 
     const ip = env.clientKey
       ? env.clientKey(request)
@@ -169,45 +191,20 @@ export function createHandler(upstreamFetch = fetch, logCall = () => {}) {
     const onAbort = () => abort.abort();
     request.signal.addEventListener("abort", onAbort, { once: true });
     if (request.signal.aborted) onAbort();
-    const timeout = setTimeout(onAbort, 25000);
+    const timeout = setTimeout(onAbort, UPSTREAM_TIMEOUT_MS);
     const cleanup = () => {
       clearTimeout(timeout);
       request.signal.removeEventListener("abort", onAbort);
     };
     let upstream;
     try {
-      const upstreamUrl =
-        env.PROVIDER === "groq"
-          ? "https://api.groq.com/openai/v1/responses"
-          : "https://api.openai.com/v1/responses";
-      upstream = await upstreamFetch(upstreamUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${env.API_TOKEN || env.OPENAI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
+      upstream = await requestCompletion({
+        upstreamFetch,
+        env,
         signal: abort.signal,
-        body: JSON.stringify({
-          model: env.MODEL || env.OPENAI_MODEL,
-          stream: true,
-          ...(env.PROVIDER === "groq"
-            ? { temperature: 0.2 }
-            : { store: false }),
-          max_output_tokens: env.MAX_OUTPUT_TOKENS || 650,
-          ...(env.REASONING_EFFORT
-            ? { reasoning: { effort: env.REASONING_EFFORT } }
-            : {}),
-          instructions: buildInstructions(docs),
-          input: [
-            {
-              role: "user",
-              content: JSON.stringify({
-                question,
-                reference: answerPlan.query,
-              }),
-            },
-          ],
-        }),
+        question,
+        reference: answerPlan.query,
+        docs,
       });
       if (!upstream.ok || !upstream.body) {
         console.error("portfolio_ai_upstream_failure", {
@@ -221,95 +218,6 @@ export function createHandler(upstreamFetch = fetch, logCall = () => {}) {
       cleanup();
       return error(502, "AI service unavailable.");
     }
-
-    let answer = "";
-    let complete = false;
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          controller.enqueue(
-            frame({ type: "sources", ids: docs.map((doc) => doc.id) }),
-          );
-          for await (const event of readEvents(upstream.body)) {
-            if (event.type === "response.output_text.delta") {
-              if (typeof event.delta !== "string")
-                throw new Error("Invalid text event");
-              answer += event.delta;
-              if (answer.length > 16000)
-                throw new Error("Answer exceeds limit");
-              controller.enqueue(frame({ type: "delta", text: event.delta }));
-            } else if (event.type === "response.completed") complete = true;
-            else if (
-              ["response.failed", "response.incomplete", "error"].includes(
-                event.type,
-              )
-            )
-              throw new Error("Generation failed");
-          }
-          if (!complete) throw new Error("Incomplete generation");
-          if (!hasValidCitations(answer, docs.length))
-            throw new Error("Invalid citations");
-          const citesSetwise = [...answer.matchAll(/\[(\d+)\]/g)].some(
-            (match) =>
-              [
-                "setwise",
-                "offline",
-                "recommendations",
-                "verification",
-              ].includes(docs[Number(match[1]) - 1]?.id),
-          );
-          if (
-            (/\bsetwise\b/i.test(answer) || citesSetwise) &&
-            !/\bactive development\b/i.test(answer)
-          )
-            throw new Error("Missing project status");
-          controller.enqueue(frame({ type: "done" }));
-          controller.close();
-          call.finish({
-            status: 200,
-            outcome: "completed",
-            accepted: true,
-            citationsValid: true,
-            providerCompleted: true,
-            response: answer,
-          });
-        } catch {
-          try {
-            controller.enqueue(frame({ type: "error" }));
-            controller.close();
-          } catch {
-            /* client disconnected */
-          }
-        } finally {
-          call.finish({
-            status: 200,
-            outcome: abort.signal.aborted
-              ? "aborted_or_timeout"
-              : "stream_error",
-            accepted: false,
-            providerCompleted: complete,
-            citationsValid: hasValidCitations(answer, docs.length),
-            response: answer,
-          });
-          cleanup();
-        }
-      },
-      cancel() {
-        call.finish({
-          status: 200,
-          outcome: "cancelled",
-          accepted: false,
-          response: answer,
-        });
-        abort.abort();
-        cleanup();
-      },
-    });
-    return new Response(stream, {
-      headers: {
-        ...headers,
-        "Content-Type": "text/event-stream; charset=utf-8",
-      },
-    });
+    return streamModelAnswer({ upstream, docs, headers, abort, cleanup, call });
   };
 }
