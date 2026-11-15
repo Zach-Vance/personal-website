@@ -1,6 +1,7 @@
 import { mkdir, cp, writeFile, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import sharp from "sharp";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const out = path.join(root, "dist");
 // Output is always a fixed child of the checkout. Never publish the repository root.
@@ -12,11 +13,31 @@ for (const file of [
   ".nojekyll",
   "assets",
   "projects",
-  "play",
 ])
   await cp(path.join(root, file), path.join(out, file), { recursive: true });
-for (const file of ["vanceZach.jpg", "favicon.svg"])
+// Pre-optimized images: favicon, link-preview card (scripts/og-card/), and
+// Setwise screenshots rendered from its fixture harness with synthetic data.
+for (const file of [
+  "favicon.svg",
+  "og-card.png",
+  "setwise-workout.webp",
+  "setwise-workout.png",
+  "setwise-logged.webp",
+  "setwise-logged.png",
+])
   await cp(path.join(root, "images", file), path.join(out, "images", file));
+// The source headshot is large; publish a 3:4 image sized for the page.
+const headshot = sharp(path.join(root, "images", "vanceZach.jpg"))
+  .rotate()
+  .resize(720, 960, { fit: "cover" });
+await headshot
+  .clone()
+  .jpeg({ quality: 78, mozjpeg: true })
+  .toFile(path.join(out, "images", "vanceZach.jpg"));
+await headshot
+  .clone()
+  .webp({ quality: 74 })
+  .toFile(path.join(out, "images", "vanceZach.webp"));
 // Keep existing external demo URLs useful while the old experiments are retired.
 for (const file of ["MortgageCalc.html", "tickers.html"])
   await writeFile(

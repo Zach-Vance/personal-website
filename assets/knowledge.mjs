@@ -54,7 +54,7 @@ export const evidence = [
     url: "projects/setwise.html#offline",
     keywords:
       "offline sync synchronization durable reliability retries connection connectivity workout logging setwise browser storage",
-    text: "Setwise is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns.",
+    text: "Setwise is in active development and is designed to keep workout logging durable through connectivity interruptions and synchronize changes when connectivity returns. Offline reliability and retry behavior are important design concerns.",
   },
   {
     id: "recommendations",
@@ -62,7 +62,7 @@ export const evidence = [
     url: "projects/setwise.html#recommendations",
     keywords:
       "recommendations prediction algorithm logic history load reps rir volume setwise training ai model",
-    text: "Setwise uses workout history and deterministic domain logic to suggest loads, repetitions, and reps in reserve, with conservative, user-overridable volume adjustments. These recommendations are not described as generative AI. AI coding tools support development, which is separate from the application’s recommendation logic.",
+    text: "Setwise is in active development and uses workout history and deterministic domain logic to suggest loads, repetitions, and reps in reserve, with conservative, user-overridable volume adjustments. These recommendations are not described as generative AI. The recommendation logic is separate from AI-assisted development.",
   },
   {
     id: "verification",
@@ -70,7 +70,7 @@ export const evidence = [
     url: "projects/setwise.html#verification",
     keywords:
       "security authorization rls row level database migrations tests testing ci cd github actions quality verification prisma setwise",
-    text: "Setwise uses reviewed SQL migrations, row-level security, explicit server-side authorization, automated tests, and CI checks that validate migrations against disposable PostgreSQL databases. Server authorization matters because a privileged database connection can bypass row-level security. The public GitHub repository provides the implementation and current development status.",
+    text: "Setwise is in active development and uses reviewed SQL migrations, row-level security, explicit server-side authorization, automated tests, and CI checks that validate migrations against disposable PostgreSQL databases. Server authorization matters because a privileged database connection can bypass row-level security. The public GitHub repository provides the implementation and current development status.",
   },
   {
     id: "mesonet",
@@ -91,11 +91,51 @@ export const evidence = [
   },
   {
     id: "approach",
-    title: "Engineering approach & AI tools",
+    title: "Engineering approach & development tools",
     url: "index.html#about",
     keywords:
-      "approach philosophy maintainable scalability scalable architecture ai tools claude codex agentic development engineering review",
-    text: "Zach uses Claude Code in his professional development workflow and Codex on personal projects. He retains responsibility for requirements, technical decisions, review, testing, and what ships. His engineering focus is solving underlying problems and creating maintainable systems rather than treating generated code as automatically correct.",
+      "approach philosophy maintainable scalability scalable architecture coding tools claude codex development engineering review slop",
+    text: "Zach focuses on understanding underlying problems and building reliable, maintainable systems. He owns requirements, technical decisions, code review, testing, and release decisions. AI coding assistants (Claude Code at work and Codex for personal projects) are supporting development tools.",
+  },
+  {
+    id: "ai-reconciliation",
+    title: "AI workflow · Data consistency",
+    url: "projects/integrations.html#reconciliation",
+    keywords:
+      "ai artificial intelligence llm workflows automation integration business data consistency reliability review human exceptions",
+    text: "At Super-Sod, Zach improves business-data integration reliability and reduces repetitive correction work. His work includes AI-assisted review to improve data consistency, with observable automation and clear paths for human review when exceptions need attention.",
+  },
+  {
+    id: "portfolio-agent",
+    title: "Portfolio assistant · AI with cited evidence",
+    url: "projects/portfolio.html#assistant",
+    keywords:
+      "personal website site portfolio chatbot chat agent assistant ai artificial intelligence llm workflows retrieval sources citations streaming followups groq",
+    text: "Zach built this personal website’s conversational AI assistant. It resolves follow-up questions using up to four recent questions, retrieves curated public portfolio evidence, and sends the current question, resolved topic, and evidence to a server-side Groq Responses API integration. Answers stream to the browser with numbered source links. This is an AI-powered question-to-evidence-to-answer workflow; it does not autonomously change external systems.",
+  },
+  {
+    id: "portfolio-reliability",
+    title: "Portfolio assistant · Failure handling & boundaries",
+    url: "projects/portfolio.html#reliability",
+    keywords:
+      "personal website portfolio assistant chatbot reliability security testing tests fallback timeout cancellation validation citations limits privacy architecture",
+    text: "The portfolio assistant validates citation numbers against supplied sources and checks Setwise answers for active-development status; these checks do not prove every claim is true. Provider failures, invalid or incomplete answers, timeouts, and API version mismatches fall back to local portfolio evidence. The interface supports stopping answers and clearing recent-question context. Provider credentials stay server-side; request validation and per-instance throttles bound requests. Automated tests cover API behavior, follow-up resolution, citations, and browser fallback flows.",
+  },
+  {
+    id: "portfolio-site",
+    title: "Personal website · Static delivery",
+    url: "projects/portfolio.html#site",
+    keywords:
+      "personal website site portfolio features architecture static github pages vercel resume print",
+    text: "Zach’s personal website combines a static-first GitHub Pages frontend, a separate Vercel AI API, engineering case studies, and a printable résumé. The site build checks local links and evidence anchors and publishes an allowlisted static output without backend code or credentials.",
+  },
+  {
+    id: "assistant-evaluation",
+    title: "Portfolio assistant · Published regression evaluation",
+    url: "projects/assistant-evaluation.html",
+    keywords:
+      "personal website portfolio assistant chatbot evaluation accuracy quality benchmark test testing sources citations fallback reliability",
+    text: "The portfolio assistant has a published, reproducible regression evaluation with 12 synthetic questions covering AI workflows, backend skills, hiring, project status, follow-ups, and scope. It checks expected source selection, required content, citation-number validity, and four mocked API failure scenarios. These are deterministic evidence-mode checks, not a measurement of live-model answer accuracy or semantic citation support. Visitor logs are private and are not part of the public evaluation dataset.",
   },
 ];
 
@@ -172,6 +212,18 @@ export function retrieve(question, limit = 3) {
     )
   )
     return [evidence[5], evidence[2], evidence[9]].slice(0, limit);
+  const normalized = normalize(question);
+  // Broad AI questions should surface implemented workflows before coding tools.
+  if (
+    /\b(ai|artificial intelligence|llm)\b/.test(normalized) &&
+    !/\b(code|coding|claude|codex|slop|setwise|mesonet|tensorflow|website|chatbot|assistant|portfolio)\b/.test(
+      normalized,
+    )
+  )
+    return [sourceFor("ai-reconciliation"), sourceFor("portfolio-agent")].slice(
+      0,
+      limit,
+    );
   const query = tokenize(question);
   if (!query.length) return [];
   return evidence

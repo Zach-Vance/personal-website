@@ -32,8 +32,13 @@ if (form) {
   const endpoint = config.askEndpoint;
   if (endpoint) {
     mode.textContent = "AI + sources";
-    note.textContent =
-      "AI answers use published portfolio evidence. Your question and up to four recent questions are sent to the AI service for follow-ups. Please leave out personal information.";
+    const privacy = document.createElement("a");
+    privacy.href = "projects/portfolio.html#privacy";
+    privacy.textContent = "How questions are used ↗";
+    note.replaceChildren(
+      "AI answers cite published portfolio evidence. Please leave out personal information. ",
+      privacy,
+    );
   }
 
   function sourceLinks(container, docs, answerText = null) {

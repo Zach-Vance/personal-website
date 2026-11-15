@@ -1,6 +1,11 @@
-import { portfolioAnswer } from "../assets/conversation.mjs";
+import {
+  portfolioAnswer,
+  API_CONTRACT_VERSION,
+} from "../assets/conversation.mjs";
 import { readEvents } from "../assets/stream.mjs";
+import { hasValidCitations } from "../assets/answer.mjs";
 import { evidence } from "../assets/knowledge.mjs";
+import { startCallLog } from "./call-log.mjs";
 import { readQuestion } from "./request.mjs";
 import {
   baseHeaders,
@@ -14,11 +19,16 @@ import { MAX_ANSWER_CHARS, assertAnswerAllowed } from "./guardrails.mjs";
 const UPSTREAM_TIMEOUT_MS = 25000;
 
 // Lead with retrieved evidence but let broad portfolio questions draw on the
-// whole public corpus. Keep named-project questions within their own scope.
+// whole public corpus. Keep named projects and workflow AI questions focused.
 function selectDocs(answerPlan) {
   if (
     answerPlan.kind !== "evidence" ||
-    /\b(setwise|mesonet|super sod)\b/.test(answerPlan.query)
+    /\b(setwise|mesonet|super sod|portfolio|website|chatbot|assistant|this site|personal site)\b/.test(
+      answerPlan.query,
+    ) ||
+    answerPlan.docs.every((doc) =>
+      ["ai-reconciliation", "portfolio-agent"].includes(doc.id),
+    )
   )
     return answerPlan.docs;
   return [
@@ -31,16 +41,16 @@ function selectDocs(answerPlan) {
 
 // Streams validated model text to the browser. Any provider failure or
 // guardrail rejection becomes a single `error` event so the page can fall back
-// to local evidence.
-function streamModelAnswer(upstream, docs, headers, abort, cleanup) {
+// to local evidence. `call.finish` records only the first outcome.
+function streamModelAnswer({ upstream, docs, headers, abort, cleanup, call }) {
+  let answer = "";
+  let complete = false;
   const stream = new ReadableStream({
     async start(controller) {
       try {
         controller.enqueue(
           frame({ type: "sources", ids: docs.map((doc) => doc.id) }),
         );
-        let complete = false;
-        let answer = "";
         for await (const event of readEvents(upstream.body)) {
           if (event.type === "response.output_text.delta") {
             if (typeof event.delta !== "string")
@@ -61,8 +71,16 @@ function streamModelAnswer(upstream, docs, headers, abort, cleanup) {
         assertAnswerAllowed(answer, docs);
         controller.enqueue(frame({ type: "done" }));
         controller.close();
+        call.finish({
+          status: 200,
+          outcome: "completed",
+          accepted: true,
+          citationsValid: true,
+          providerCompleted: true,
+          response: answer,
+        });
       } catch (reason) {
-        // Reasons are static strings; never log question or answer text.
+        // Reasons are static strings; never log question or answer text here.
         console.error("portfolio_ai_stream_rejected", {
           reason: reason instanceof Error ? reason.message : "unknown",
         });
@@ -73,10 +91,24 @@ function streamModelAnswer(upstream, docs, headers, abort, cleanup) {
           /* client disconnected */
         }
       } finally {
+        call.finish({
+          status: 200,
+          outcome: abort.signal.aborted ? "aborted_or_timeout" : "stream_error",
+          accepted: false,
+          providerCompleted: complete,
+          citationsValid: hasValidCitations(answer, docs.length),
+          response: answer,
+        });
         cleanup();
       }
     },
     cancel() {
+      call.finish({
+        status: 200,
+        outcome: "cancelled",
+        accepted: false,
+        response: answer,
+      });
       abort.abort();
       cleanup();
     },
@@ -84,18 +116,24 @@ function streamModelAnswer(upstream, docs, headers, abort, cleanup) {
   return sseResponse(stream, headers);
 }
 
-export function createHandler(upstreamFetch = fetch) {
+export function createHandler(upstreamFetch = fetch, logCall = () => {}) {
   return async function handle(request, env) {
+    const call = startCallLog(logCall);
+    call.context.apiVersion = API_CONTRACT_VERSION;
     const origin = request.headers.get("Origin");
     const headers = baseHeaders(env);
-    const error = (status, message) =>
-      Response.json({ error: message }, { status, headers });
+    const error = (status, message) => {
+      call.finish({ status, outcome: `http_${status}`, response: message });
+      return Response.json({ error: message }, { status, headers });
+    };
     if (!origin || origin !== env.ALLOWED_ORIGIN)
       return error(403, "Origin not allowed.");
     if (new URL(request.url).pathname !== (env.ASK_PATH || "/ask"))
       return error(404, "Not found.");
-    if (request.method === "OPTIONS")
+    if (request.method === "OPTIONS") {
+      call.finish({ status: 204, outcome: "preflight" });
       return new Response(null, { status: 204, headers });
+    }
     if (request.method !== "POST") return error(405, "Use POST.");
     if (
       !(env.API_TOKEN || env.OPENAI_API_KEY) ||
@@ -113,10 +151,27 @@ export function createHandler(upstreamFetch = fetch) {
         "Send a question of 1–600 characters and up to four recent questions as JSON.",
       );
     }
+    Object.assign(call.context, { question, historyCount: history.length });
     const answerPlan = portfolioAnswer(question, history);
     const docs = selectDocs(answerPlan);
-    if (!["evidence", "discovery"].includes(answerPlan.kind))
-      return staticAnswerResponse(docs, answerPlan.text, headers);
+    Object.assign(call.context, {
+      sourceIds: docs.map((doc) => doc.id),
+      kind: answerPlan.kind,
+      provider: env.PROVIDER || "openai",
+      model: env.MODEL || env.OPENAI_MODEL,
+    });
+    if (!["evidence", "discovery"].includes(answerPlan.kind)) {
+      // The stream's start() runs on construction, so the answer is already
+      // enqueued when the call is recorded.
+      const response = staticAnswerResponse(docs, answerPlan.text, headers);
+      call.finish({
+        status: 200,
+        outcome: answerPlan.kind,
+        accepted: true,
+        response: answerPlan.text,
+      });
+      return response;
+    }
 
     const ip = env.clientKey
       ? env.clientKey(request)
@@ -163,6 +218,6 @@ export function createHandler(upstreamFetch = fetch) {
       cleanup();
       return error(502, "AI service unavailable.");
     }
-    return streamModelAnswer(upstream, docs, headers, abort, cleanup);
+    return streamModelAnswer({ upstream, docs, headers, abort, cleanup, call });
   };
 }

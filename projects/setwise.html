@@ -9,6 +9,14 @@
       name="description"
       content="Building reliable strength-training software with durable offline logging, history-based recommendations, and careful data boundaries."
     />
+    <meta property="og:title" content="Setwise — Zach Vance" />
+    <meta property="og:description" content="Building reliable strength-training software with durable offline logging, history-based recommendations, and careful data boundaries." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://zach-vance.github.io/personal-website/projects/setwise.html" />
+    <meta property="og:image" content="https://zach-vance.github.io/personal-website/images/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="../images/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../assets/styles.css" />
     <script type="module" src="../assets/main.js"></script>
@@ -88,6 +96,36 @@
               useful than assuming every request will succeed.
             </p>
           </div>
+          <figure class="case-screens">
+            <div>
+              <picture>
+                <source srcset="../images/setwise-workout.webp" type="image/webp" />
+                <img
+                  src="../images/setwise-workout.png"
+                  alt="Setwise workout in progress: 2 of 7 sets recorded, a 185 lb bench press recommendation marked low confidence, and a Synced status"
+                  width="600"
+                  height="1298"
+                  loading="lazy"
+                />
+              </picture>
+            </div>
+            <div>
+              <picture>
+                <source srcset="../images/setwise-logged.webp" type="image/webp" />
+                <img
+                  src="../images/setwise-logged.png"
+                  alt="Setwise workout with all 7 sets recorded and each bench press set marked Synced"
+                  width="600"
+                  height="1298"
+                  loading="lazy"
+                />
+              </picture>
+            </div>
+            <figcaption>
+              The real workout screen, rendered with synthetic sample data. Each
+              set is saved on the device first, then marked Synced.
+            </figcaption>
+          </figure>
         </section>
         <section id="recommendations">
           <h2>Recommendations grounded in history.</h2>

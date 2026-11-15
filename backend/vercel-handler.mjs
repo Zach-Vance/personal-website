@@ -1,4 +1,5 @@
 import { createHandler } from "./core.mjs";
+import { supabaseLogger } from "./supabase-log.mjs";
 import { createLimits } from "./limits.mjs";
 
 export function createVercelHandler({
@@ -6,8 +7,16 @@ export function createVercelHandler({
   env,
   upstreamFetch = fetch,
   limits = createLimits(),
+  waitUntil,
+  logCall = supabaseLogger({
+    url: env.AI_LOG_INGEST_URL,
+    token: env.AI_LOG_INGEST_TOKEN,
+    waitUntil,
+    enabled: env.AI_CALL_LOGGING !== "off",
+    content: env.AI_LOG_CONTENT !== "off",
+  }),
 }) {
-  const handle = createHandler(upstreamFetch);
+  const handle = createHandler(upstreamFetch, logCall);
   return async function handleVercel(request) {
     return handle(request, {
       ...limits,
