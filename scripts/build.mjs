@@ -13,13 +13,19 @@ for (const file of [
   ".nojekyll",
   "assets",
   "projects",
-  "play",
 ])
   await cp(path.join(root, file), path.join(out, file), { recursive: true });
-await cp(
-  path.join(root, "images", "favicon.svg"),
-  path.join(out, "images", "favicon.svg"),
-);
+// Pre-optimized images: favicon, link-preview card (scripts/og-card/), and
+// Setwise screenshots rendered from its fixture harness with synthetic data.
+for (const file of [
+  "favicon.svg",
+  "og-card.png",
+  "setwise-workout.webp",
+  "setwise-workout.png",
+  "setwise-logged.webp",
+  "setwise-logged.png",
+])
+  await cp(path.join(root, "images", file), path.join(out, "images", file));
 // The source headshot is large; publish a 3:4 image sized for the page.
 const headshot = sharp(path.join(root, "images", "vanceZach.jpg"))
   .rotate()

@@ -619,95 +619,6 @@
     color: #57654d;
     letter-spacing: 0.06em;
   }
-  .workout-ui {
-    background: #fafcf6;
-    padding: 22px 25px 15px;
-    margin: 24px auto 0;
-    max-width: 360px;
-    border: 1px solid #d3dec8;
-    border-radius: 8px;
-    box-shadow: 0 14px 28px #4b603419;
-    transform: rotate(-2deg);
-  }
-  .workout-heading {
-    font: 8px var(--mono);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    color: #738268;
-  }
-  .tiny-badge {
-    background: #e7efdc;
-    padding: 4px 8px;
-    border-radius: 10px;
-    font-size: 7px;
-    color: #546943;
-  }
-  .workout-ui h3 {
-    font-size: 32px;
-    letter-spacing: -0.05em;
-    margin-top: 15px;
-  }
-  .exercise {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 18px 0 12px;
-    font-size: 11px;
-  }
-  .exercise-number {
-    font: 9px var(--mono);
-    color: #6f7d63;
-  }
-  .exercise > span:last-child {
-    margin-left: auto;
-  }
-  .exercise small {
-    display: block;
-    font-size: 9px;
-    color: #7c8575;
-  }
-  .set-grid {
-    display: grid;
-    grid-template-columns: 0.6fr 1.2fr 1fr 0.6fr;
-    align-items: center;
-    text-align: center;
-    font-size: 10px;
-  }
-  .set-grid > span {
-    color: #7c8572;
-    padding-bottom: 7px;
-    font: 7px var(--mono);
-  }
-  .set-grid strong,
-  .set-grid b {
-    border-top: 1px solid #e3e9db;
-    padding-block: 8px;
-    font-weight: 500;
-  }
-  .set-grid small {
-    color: #7a8770;
-    font-size: 8px;
-  }
-  .set-grid b {
-    color: #50713a;
-  }
-  .set-grid .pending {
-    color: #9baa8a;
-  }
-  .sync-line {
-    border-top: 1px solid #e3e9db;
-    margin-top: 4px;
-    padding-top: 10px;
-    color: #647456;
-    font-size: 9px;
-  }
-  .sync-line .status-dot {
-    width: 4px;
-    height: 4px;
-    margin-right: 5px;
-  }
   .preview-index {
     display: block;
     font: 8px var(--mono);
@@ -1635,24 +1546,6 @@
     .preview-caption {
       font-size: 7px;
     }
-    .workout-ui {
-      padding: 18px 15px 12px;
-    }
-    .workout-heading {
-      font-size: 6px;
-    }
-    .tiny-badge {
-      font-size: 6px;
-    }
-    .workout-ui h3 {
-      font-size: 27px;
-    }
-    .exercise {
-      font-size: 9px;
-    }
-    .exercise small {
-      font-size: 8px;
-    }
     .project-copy h3 {
       font-size: 33px;
     }
@@ -1890,31 +1783,6 @@
     }
     .preview-caption {
       font-size: 8px;
-    }
-    .workout-ui {
-      padding: 23px 25px 16px;
-    }
-    .workout-heading {
-      font-size: 7px;
-    }
-    .tiny-badge {
-      font-size: 7px;
-    }
-    .workout-ui h3 {
-      font-size: 32px;
-    }
-    .exercise {
-      font-size: 11px;
-    }
-    .exercise small {
-      font-size: 9px;
-    }
-    .set-grid {
-      font-size: 11px;
-    }
-    .set-grid strong,
-    .set-grid b {
-      padding-block: 9px;
     }
     .project-copy h3 {
       font-size: 33px;
@@ -2217,6 +2085,144 @@
     @page {
       size: letter;
       margin: 0.55in;
+    }
+  }
+}
+@layer components {
+  .setwise-shot {
+    display: block;
+    width: min(250px, 78%);
+    aspect-ratio: 600 / 820;
+    margin: 22px auto 0;
+    overflow: hidden;
+    border: 7px solid #1b1f1c;
+    border-radius: 26px;
+    background: #151816;
+    box-shadow: 0 18px 36px #2f3f2633;
+    transform: rotate(-2deg);
+  }
+  .setwise-shot img,
+  .case-screens img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .case-screens {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 260px));
+    justify-content: center;
+    gap: 28px;
+    margin-top: 40px;
+  }
+  .case-screens > div {
+    aspect-ratio: 600 / 1000;
+    overflow: hidden;
+    border: 6px solid #1b1f1c;
+    border-radius: 24px;
+    background: #151816;
+  }
+  .case-screens figcaption {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+  }
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .contact-actions .button {
+    gap: 18px;
+  }
+  .about-links {
+    display: inline-flex;
+    gap: 20px;
+  }
+}
+/* Readability floor and touch targets. Last in the responsive layer so it
+   overrides the size reductions above; screen only so print stays compact. */
+@layer responsive {
+  @media screen {
+    .eyebrow,
+    .hero-copy > .eyebrow,
+    .section-heading .eyebrow,
+    .project-copy .eyebrow,
+    .project-compact .eyebrow,
+    .ask-copy .eyebrow,
+    .about-copy .eyebrow,
+    .integration-source small,
+    .integration-center small,
+    .art-note small,
+    .hero-footnote,
+    .mode-label,
+    .tag-list span,
+    .case-meta dt,
+    .case-next p {
+      font-size: 11px;
+    }
+    .project-status,
+    .about-details,
+    .role-heading > span,
+    .discipline-strip .wrap,
+    .suggested-questions button,
+    .ask-form #ask-stop,
+    .ask-note,
+    .answer-sources a,
+    .site-footer .brand,
+    .site-footer > div,
+    .resume-role span {
+      font-size: 12px;
+    }
+    .preview-caption,
+    .preview-index,
+    .about-image > span,
+    .art-coordinate,
+    .art-bottom,
+    .window-bar,
+    .mini-label,
+    .window-content .mini-label,
+    .system-flow > div,
+    .code-lines {
+      font-size: 10px;
+    }
+    .site-footer > div a,
+    .about-links a {
+      display: inline-block;
+      padding-block: 6px;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .site-header {
+      flex-wrap: wrap;
+      row-gap: 4px;
+      min-height: 0;
+      padding-block: 16px 8px;
+    }
+    .site-header .brand > span:last-child {
+      display: inline;
+    }
+    .site-header nav {
+      width: 100%;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .site-header nav a[href$="#experience"] {
+      display: inline;
+    }
+    .site-header nav .nav-ask {
+      font-size: 12px;
+      padding: 7px 10px;
+    }
+    .contact-section .contact-actions {
+      margin-top: 22px;
+    }
+    .contact-section .contact-actions .button {
+      margin-top: 0;
+    }
+    .case-screens {
+      gap: 14px;
     }
   }
 }

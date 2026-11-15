@@ -248,35 +248,9 @@ test("ingestion authenticates before writing and rejects malformed or oversized 
   assert.equal(normalizeRecord(fixture).accepted, true);
 });
 
-test("Kyle Easter egg requires a direct current question and works without a provider", async () => {
-  const handle = createHandler(() => {
-    throw Error("Must not call provider");
-  });
-  for (const question of [
-    "Who is Kyle?",
-    "What about Kyle?",
-    "What do you think of Kyle?",
-    "Tell me about Kyle",
-    "Does Kyle suck?",
-  ]) {
-    const plan = portfolioAnswer(question);
-    assert.equal(plan.text, "Kyle Sucks");
-    assert.equal(plan.kind, "easter-egg");
-    const result = await events(await handle(request(question), env));
-    assert.equal(result[1].text, "Kyle Sucks");
-    assert.deepEqual(result[0].ids, []);
-  }
-  for (const question of [
-    "What backend experience does Zach have?",
-    "Kyle asked me to visit",
-    "I was talking to Kyle yesterday",
-    "Does Zach know Kyle?",
-    "Tell me about Kyler",
-  ])
-    assert.notEqual(
-      portfolioAnswer(question, ["Who is Kyle?"]).text,
-      "Kyle Sucks",
-    );
+test("questions about other people get no joke answer", () => {
+  for (const question of ["Who is Kyle?", "Does Kyle suck?"])
+    assert.notEqual(portfolioAnswer(question).text, "Kyle Sucks");
 });
 
 test("cancelling a response records a single partial outcome and aborts upstream", async () => {

@@ -138,25 +138,6 @@ test("AI workflow and hiring answers remain persuasive when the provider fails",
   );
 });
 
-test("the Kyle joke stays limited to direct questions, including local fallback", async ({
-  page,
-}) => {
-  await mockApi(page, (route) =>
-    route.fulfill({ status: 502, headers: corsHeaders, body: "Unavailable" }),
-  );
-  await ask(page, "Who is Kyle?");
-  await expect(
-    page.locator(".chat-turn").last().locator(".chat-answer"),
-  ).toHaveText("Kyle Sucks");
-  await page
-    .locator("#question")
-    .fill("What backend experience does Zach have?");
-  await page.locator("#ask-submit").click();
-  const answer = page.locator(".chat-turn").last().locator(".chat-answer");
-  await expect(answer).toContainText("Go REST APIs");
-  await expect(answer).not.toContainText("Kyle Sucks");
-});
-
 test("the public evaluation links to synthetic results and states its measurement limits", async ({
   page,
 }) => {

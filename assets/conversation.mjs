@@ -76,13 +76,6 @@ export function portfolioAnswer(question, history = [], now = new Date()) {
     kind,
   });
   const is = (pattern) => pattern.test(query);
-  // Current question only: a prior mention must never leak this joke into follow-ups.
-  if (
-    /^(?:kyle[?.!]*|(?:who is|who['’]s|what about|tell me about|what do you think (?:of|about)|do you know|how is)\s+kyle[?.!]*|(?:is|does)\s+kyle\s+[^?]+\?)$/i.test(
-      question.trim(),
-    )
-  )
-    return result([], "Kyle Sucks", "easter-egg");
   if (
     is(
       /\b(implement|implmenet|write|code|solve)\b.*\b(binary search|algorithm|leetcode|sorting|tree)\b/,
