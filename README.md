@@ -64,7 +64,7 @@ References: [GitHub Pages deployment](https://docs.github.com/en/get-started/sta
 Broad AI questions prioritize data integration improvements and this website’s
 conversational assistant. Coding assistants are supporting tools, discussed when relevant
 to a coding question. The assistant’s retrieval, citations, context, failure handling,
-and static delivery have public references in
+static delivery, and playground features have public references in
 `projects/portfolio.html`. Keep those references aligned with the implementation.
 Hiring answers lead with a positive recommendation backed by published work and engineering experience, without promising fit for every role. API contract version 4 prevents the
 updated frontend from accepting the previous API’s answer behavior; deploy both services

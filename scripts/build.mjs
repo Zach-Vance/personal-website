@@ -13,6 +13,7 @@ for (const file of [
   ".nojekyll",
   "assets",
   "projects",
+  "play",
 ])
   await cp(path.join(root, file), path.join(out, file), { recursive: true });
 // Pre-optimized images: favicon, link-preview card (scripts/og-card/), and

@@ -123,11 +123,11 @@ export const evidence = [
   },
   {
     id: "portfolio-site",
-    title: "Personal website · Static delivery",
+    title: "Personal website · Static delivery & interactive projects",
     url: "projects/portfolio.html#site",
     keywords:
-      "personal website site portfolio features architecture static github pages vercel resume print",
-    text: "Zach’s personal website combines a static-first GitHub Pages frontend, a separate Vercel AI API, engineering case studies, and a printable résumé. The site build checks local links and evidence anchors and publishes an allowlisted static output without backend code or credentials.",
+      "personal website site portfolio features architecture static github pages vercel resume print games playground neon drift replay ghost simulation",
+    text: "Zach’s personal website combines a static-first GitHub Pages frontend, a separate Vercel AI API, engineering case studies, a printable résumé, and an interactive playground. Neon Drift includes a fixed-step driving simulation, checkpoint-validated laps, and a locally saved best-run ghost replay. The site build checks local links and evidence anchors and publishes an allowlisted static output without backend code or credentials.",
   },
   {
     id: "assistant-evaluation",
